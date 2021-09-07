@@ -5,6 +5,7 @@ import os
 import ChartRender
 import asyncio
 from datetime import datetime
+import SinglePath
 
 protocols = ['ICMP','IGMP','GGP','IP-in-IP','ST','TCP','CBT','EGP','IGP','BBN-RCC-MON','NVP-II','PUP','ARGUS','EMCON','XNET','CHAOS','UDP','MUX','DCN-MEAS','HMP','PRM','XNS-IDP','TRUNK-1','TRUNK-2','LEAF-1','LEAF-2','RDP','IRTP','ISO-TP4','NETBLT','MFE-NSP','MERIT-INP','DCCP','3PC','IDPR','XTP','DDP','IDPR-CMTP','TP++','IL','IPv6','SDRP','IPv6-Route','IPv6-Frag','IDRP','RSVP','GRE','DSR','BNA','ESP','AH','I-NLSP','SwIPe','NARP','MOBILE','TLSP','SKIP','IPv6-ICMP','IPv6-NoNxt','IPv6-Opts','','CFTP','','SAT-EXPAK','KRYPTOLAN','RVD','IPPC','','SAT-MON','VISA','IPCU','CPNX','CPHB','WSN','PVP','BR-SAT-MON','SUN-ND','WB-MON','WB-EXPAK','ISO-IP','VMTP','SECURE-VMTP','VINES','TTP','IPTM','NSFNET-IGP','DGP','TCF','EIGRP','OSPF','Sprite-RPC','LARP','MTP','AX.25','OS','MICP','SCC-SP','ETHERIP','ENCAP','','GMTP','IFMP','PNNI','PIM','ARIS','SCPS','QNX','A/N','IPComp','SNP','Compaq-Peer','IPX-in-IP','VRRP','PGM','','L2TP','DDX','IATP','STP','SRP','UTI','SMP','SM','PTP','IS-IS over IPv4','FIRE','CRTP','CRUDP','SSCOPMCE','IPLT','SPS','PIPE','SCTP','FC','RSVP-E2E-IGNORE','Mobility Header','UDPLite','MPLS-in-IP','manet','HIP','Shim6','WESP','ROHC','Ethernet']
 TEMPLATE_DIR = os.path.abspath('templates')
@@ -191,6 +192,33 @@ def iptoip():
     compareTableByPackage = table.execute()
     return render_template('iptoip.html', compareTable = compareTable, sip=sip,dip=dip, compareTableByPro=compareTableByPro,compareTableByPackage=compareTableByPackage)
 
+@app.route('/singlepathsimple', methods=['GET'])
+def singlepathSampleInit():
+    global startdate
+    global enddate
+    global protocols
+    #handle request
+    _startdate = startdate
+    _enddate = enddate
+    _counts = 10
+    return render_template('singlepathInit.html',
+    startdate=datetime.strptime(startdate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'), 
+    enddate=datetime.strptime(enddate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'))
+
+@app.route('/singlepathsimple', methods=['POST'])
+def singplepathSampleAnalysis():
+    _startdate = datetime.strptime(request.form['startdate'] + ':00','%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
+    _enddate = datetime.strptime(request.form['enddate'] + ':00','%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
+    _counts = request.form['counts']
+    _sensor = request.form['sensor']
+    _id = request.form['ip']
+    #init data
+    command = 'rwfilter --start={start} --end={end} --sensor={sensor} --type=in,inweb,out,outweb --any-address={ip} --pass=traffic.rw'
+    os.chdir('data')
+    os.system(command)
+    os.chdir('..')
+    singlepath = SinglePath.SinglePath('traffic.rw', _counts)
+    
 
     
 if __name__ == '__main__':
