@@ -8,52 +8,46 @@ class SinglePath:
         self.counts = counts
 
     def lowbyte(self):
-        command = 'rwfilter {filename} --bytes=0-300 --pass=stdout | rwuniq --bin-time=3600 --fields=stime,type --values=records --sort-output>low-byte.txt'.format(filename=self.filename)
+        command = 'rwfilter {filename} --bytes=0-300 --pass=stdout | rwuniq --bin-time=3600 --fields=stime,etime,type --values=records --sort-output --no-columns>low-byte.txt'.format(filename=self.filename)
         table = TableFromCommand.TableFromCommand(command, 'low-byte.txt')
-        table = table.execute()
-        return table
+        return table.execute().Table
     
     def medbyte(self):
-        command = 'rwfilter {filename} --bytes=301-100000 --pass=stdout | rwuniq --bin-time=3600 --fields=stime,type --values=records --sort-output>med-byte.txt'.format(filename=self.filename)
+        command = 'rwfilter {filename} --bytes=301-100000 --pass=stdout | rwuniq --bin-time=3600 --fields=stime,etime,type --values=records --sort-output --no-columns>med-byte.txt'.format(filename=self.filename)
         table = TableFromCommand.TableFromCommand(command, 'med-byte.txt')
-        table = table.execute()
-        return table
+        return table.execute().Table
 
     def highbyte(self):
-        command = 'rwfilter {filename} --bytes=100001- --pass=stdout | rwuniq --bin-time=3600 --fields=stime,type --values=records --sort-output>high-byte.txt'.format(filename=self.filename)
+        command = 'rwfilter {filename} --bytes=100001- --pass=stdout | rwuniq --bin-time=3600 --fields=stime,etime,type --values=records --sort-output --no-columns>high-byte.txt'.format(filename=self.filename)
         table = TableFromCommand.TableFromCommand(command, 'high-byte.txt')
-        table = table.execute()
-        return table
+        return table.execute().Table
 
     def shortduration(self):
-        command = 'rwfilter {filename} --duration=0-60 --pass=stdout | rwuniq --bin-time=3600 --fields=stime,type --values=records --sort-output>short-duration.txt'.format(filename=self.filename)
+        command = 'rwfilter {filename} --duration=0-60 --pass=stdout | rwuniq --bin-time=3600 --fields=stime,etime,type --values=records --sort-output --no-columns>short-duration.txt'.format(filename=self.filename)
         table = TableFromCommand.TableFromCommand(command, 'short-duration.txt')
-        table = table.execute()
-        return table
+        return table.execute().Table
 
     def medduration(self):
-        command = 'rwfilter {filename} --duration=0-60 --pass=stdout | rwuniq --bin-time=3600 --fields=stime,type --values=records --sort-output>med-duration.txt'.format(filename=self.filename)
+        command = 'rwfilter {filename} --duration=61-120 --pass=stdout | rwuniq --bin-time=3600 --fields=stime,etime,type --values=records --sort-output --no-columns>med-duration.txt'.format(filename=self.filename)
         table = TableFromCommand.TableFromCommand(command, 'med-duration.txt')
-        table = table.execute()
-        return table
+        return table.execute().Table
 
     def longduration(self):
-        command = 'rwfilter {filename} --duration=0-60 --pass=stdout | rwuniq --bin-time=3600 --fields=stime,type --values=records --sort-output>long-duration.txt'.format(filename=self.filename)
+        command = 'rwfilter {filename} --duration=121- --pass=stdout | rwuniq --bin-time=3600 --fields=stime,etime,type --values=records --sort-output --no-columns>long-duration.txt'.format(filename=self.filename)
         table = TableFromCommand.TableFromCommand(command, 'long-duration.txt')
-        table = table.execute()
-        return table
+        return table.execute().Table
 
     def overallview(self):
-        result = dict()
-        command = 'rwcut --fields=1-4,protocol,bytes,duration --num-recs={counts} traffic.rw > overrallview.txt'.format(counts = self.counts)
+        result = list()
+        command = 'rwcut --fields=1-4,protocol,bytes,duration --num-recs={counts} traffic.rw --no-columns > overallview.txt'.format(counts = self.counts)
         overalltable = TableFromCommand.TableFromCommand(command, 'overallview.txt')
-        overalltable = overalltable.execute()
-        result['overall'] = overalltable
+        overalltable = overalltable.execute().Table
+        result.append(overalltable)
         datatype = ['protocol', 'sip', 'dip', 'sport', 'dport']
         for x in datatype:
             command = 'rwstats --fields={datatype} --count={count} {filename} > {datatype}.txt'.format(filename = self.filename, datatype = x, count = self.counts)
             temptable = TableFromCommand.TableFromCommand(command, x + '.txt')
-            temptable = temptable.execute()
-            result[x] = temptable
+            temptable = temptable.execute().Table
+            result.append(temptable)
         return result
     
