@@ -14,7 +14,7 @@ protocols = ['ICMP','IGMP','GGP','IP-in-IP','ST','TCP','CBT','EGP','IGP','BBN-RC
 TEMPLATE_DIR = os.path.abspath('templates')
 STATIC_DIR = os.path.abspath('static')
 
-date=TableFromCommand.TableFromCommand('rwsiteinfo --fields=repo-start-date,repo-end-date >> repo-date.txt','repo-date.txt')
+date=TableFromCommand.TableFromCommand('rwsiteinfo --fields=repo-start-date,repo-end-date > repo-date.txt','repo-date.txt')
 date=date.execute()
 startdate=date.getColumn('Start-Date')[0]
 enddate=date.getColumn('End-Date')[0]
@@ -37,8 +37,8 @@ def index():
     if 'counts' in request.form:
         _counts = int(request.form['counts'])
     #calculate top flow record
-    topFlowByRecordCommand='''rwfilter --start={_startdate} --end={_enddate} --type=in,inweb,out,outweb --proto=0- --pass=stdout|rwstats --count {_counts} --fields sip,dip --values=records --no-columns >> topFlowByRecord.txt'''
-    topFlowBySizeCommand = '''rwfilter --type all --proto=0- --start={_startdate} --end={_enddate} --pass=stdout | rwstats --count {_counts} --fields sip,dip,bytes  --values=bytes --top --no-columns >> topFlowBySize.txt'''
+    topFlowByRecordCommand='''rwfilter --start={_startdate} --end={_enddate} --type=in,inweb,out,outweb --proto=0- --pass=stdout|rwstats --count {_counts} --fields sip,dip --values=records --no-columns > topFlowByRecord.txt'''
+    topFlowBySizeCommand = '''rwfilter --type all --proto=0- --start={_startdate} --end={_enddate} --pass=stdout | rwstats --count {_counts} --fields sip,dip,bytes  --values=bytes --top --no-columns > topFlowBySize.txt'''
     topFlowByRecordCommand = topFlowByRecordCommand.format(_startdate=_startdate, _enddate=_enddate, _counts=_counts)
     topFlowBySizeCommand = topFlowBySizeCommand.format(_startdate=_startdate, _enddate=_enddate, _counts=_counts)
 
@@ -74,7 +74,7 @@ def index():
     #pie chart 
     dataset = topFlowByRecordsTable.getColumn('%Records')
     if len(topFlowByRecordsTable.getColumn('cumul_%'))>0:
-        dataset.append(100 - int(topFlowByRecordsTable.getColumn('cumul_%')[-1]))
+        dataset.append(100 - float(topFlowByRecordsTable.getColumn('cumul_%')[-1]))
     else:
         dataset.append(100)
     topFlowByRecordsPieChart = ChartRender.customPieChart()
@@ -176,12 +176,12 @@ def iptoip():
         _startdate = request.args.get('enddate')
     sip = request.args.get('sip')
     dip = request.args.get('dip')
-    command = '''rm iptoip.rw; rwfilter --proto=0- --start={startdate} --end={enddate} --type=in,inweb,out,outweb --pass=iptoip.rw --saddress={sip} --daddress={dip}; rwsort iptoip.rw --fields=bytes --reverse | rwcut --fields=sTime,eTime,sip,sport,dip,dport,bytes --num-recs=50 --no-columns >> iptoip.txt'''
+    command = '''rm iptoip.rw; rwfilter --proto=0- --start={startdate} --end={enddate} --type=in,inweb,out,outweb --pass=iptoip.rw --saddress={sip} --daddress={dip}; rwsort iptoip.rw --fields=bytes --reverse | rwcut --fields=sTime,eTime,sip,sport,dip,dport,bytes --num-recs=50 --no-columns > iptoip.txt'''
     command = command.format(sip = sip, dip = dip, startdate = _startdate, enddate = _enddate)
     table = TableFromCommand.TableFromCommand(command, 'iptoip.txt')
     compareTable = table.execute()
     #by protocol
-    command = '''rm iptoip.rw; rwfilter --proto=0- --start={startdate} --end={enddate} --type=in,inweb,out,outweb --pass=iptoip.rw --saddress={sip} --daddress={dip}; rwsort iptoip.rw --fields=bytes --reverse | rwstats --count 50 --fields sip,dip,proto --values=records --no-columns >> iptoip.txt'''
+    command = '''rm iptoip.rw; rwfilter --proto=0- --start={startdate} --end={enddate} --type=in,inweb,out,outweb --pass=iptoip.rw --saddress={sip} --daddress={dip}; rwsort iptoip.rw --fields=bytes --reverse | rwstats --count 50 --fields sip,dip,proto --values=records --no-columns > iptoip.txt'''
     command = command.format(sip = sip, dip = dip, startdate = _startdate, enddate = _enddate)
     table = TableFromCommand.TableFromCommand(command, 'iptoip.txt')
     compareTableByPro = table.execute()
@@ -189,7 +189,7 @@ def iptoip():
     for index, row in compareTableByPro.Table.iterrows():
         compareTableByPro.Table.at[index, 'protocol'] = protocols[int(compareTableByPro.Table.at[index, 'protocol']) - 1]
     #by package
-    command = '''rm iptoip.rw; rwfilter --proto=0- --start={startdate} --end={enddate} --type=in,inweb,out,outweb --pass=iptoip.rw --saddress={sip} --daddress={dip}; rwsort iptoip.rw --fields=bytes --reverse | rwstats --count 50 --fields sip,dip,sport,dport --values=records --no-columns >> iptoip.txt'''
+    command = '''rm iptoip.rw; rwfilter --proto=0- --start={startdate} --end={enddate} --type=in,inweb,out,outweb --pass=iptoip.rw --saddress={sip} --daddress={dip}; rwsort iptoip.rw --fields=bytes --reverse | rwstats --count 50 --fields sip,dip,sport,dport --values=records --no-columns > iptoip.txt'''
     command = command.format(sip = sip, dip = dip, startdate = _startdate, enddate = _enddate)
     table = TableFromCommand.TableFromCommand(command, 'iptoip.txt')
     compareTableByPackage = table.execute()

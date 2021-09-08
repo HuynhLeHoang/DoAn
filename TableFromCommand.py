@@ -13,6 +13,7 @@ class TableFromCommand:
 
         
     def execute(self):
+        
         os.chdir('data')
         os.system(self.command)
         os.chdir('..')
