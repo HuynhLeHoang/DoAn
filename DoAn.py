@@ -1,3 +1,5 @@
+
+
 from flask import Flask, redirect, url_for, render_template, request
 import TableFromFile
 import TableFromCommand
@@ -219,15 +221,71 @@ def singplepathSampleAnalysis():
     os.system(command)
     os.chdir('..')
     singlepathanaliser = SinglePath.SinglePath('traffic.rw', _counts)
-    print(type(singlepathanaliser.lowbyte()))
+    overall = singlepathanaliser.overallview()
+    lowbyte = singlepathanaliser.lowbyte()
+    medbyte = singlepathanaliser.medbyte()
+    highbyte = singlepathanaliser.highbyte()
+    shortduration = singlepathanaliser.shortduration()
+    medduration = singlepathanaliser.medduration()
+    longduration = singlepathanaliser.longduration()
+    byte_duration_list = [lowbyte, medbyte, highbyte, shortduration, medduration, longduration]
+    labels = list()
+    byte_duration_charts = list()
+    for dataset in byte_duration_list:
+        in_data = list()
+        out_data = list()
+        inweb_data = list()
+        outweb_data = list()
+        labels = list()
+        rows = dataset.getAllRow()
+        checker = 0
+        for row in rows:
+            if row[0] not in labels:
+                if checker != 4:
+                    if len(in_data) != len(labels):
+                        in_data.append(0)
+                    if len(out_data) != len(labels):
+                        out_data.append(0)
+                    if len(inweb_data) != len(labels):
+                        inweb_data.append(0)
+                    if len(outweb_data) != len(labels):
+                        outweb_data.append(0)
+                labels.append(row[0])
+                checker = 0
+            if row[1] == 'in':
+                in_data.append(row[2])
+                checker += 1
+            elif row[1] == 'out':
+                out_data.append(row[2])
+                checker += 1
+            elif row[1] == 'inweb':
+                inweb_data.append(row[2])
+                checker += 1
+            elif row[1] == 'outweb':
+                outweb_data.append(row[2])
+                checker += 1
+        if len(in_data) != len(labels):
+            in_data.append(0)
+        if len(out_data) != len(labels):
+            out_data.append(0)
+        if len(inweb_data) != len(labels):
+            inweb_data.append(0)
+        if len(outweb_data) != len(labels):
+            outweb_data.append(0)
+        in_dataset = ChartRender.dataSet('"rgba(255, 98, 0, 1)"',in_data,'"in"')
+        out_dataset = ChartRender.dataSet('"rgba(248, 255, 0, 1)"',out_data,'"out"')
+        inweb_dataset = ChartRender.dataSet('"rgba(0, 255, 34, 1)"', inweb_data, '"inweb"')
+        outweb_dataset = ChartRender.dataSet('"rgba(0, 141, 255, 1)"', outweb_data,'"outweb"')
+        chart_data = [in_dataset, out_dataset, inweb_dataset, outweb_dataset]
+        chart = ChartRender.barChart()
+        chart = chart.barChartRender(labels, chart_data, 'barchart' + str(byte_duration_list.index(dataset)), 'true')
+        byte_duration_charts.append(chart)
+
+
+    
     return render_template('singlepathOverall.html', 
-    overall = singlepathanaliser.overallview(),
-    lowbyte = singlepathanaliser.lowbyte(),
-    medbyte = singlepathanaliser.medbyte(),
-    highbyte = singlepathanaliser.highbyte(),
-    shortduration = singlepathanaliser.shortduration(),
-    medduration = singlepathanaliser.medduration(),
-    longduration = singlepathanaliser.longduration())
+    overall = overall, lowbyte = lowbyte, medbyte = medbyte, highbyte = highbyte, shortduration = shortduration, medduration = medduration, longduration = longduration,
+    byte_duration_charts = byte_duration_charts)
 
     
 if __name__ == '__main__':
