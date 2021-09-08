@@ -280,12 +280,16 @@ def singplepathSampleAnalysis():
         chart = ChartRender.barChart()
         chart = chart.barChartRender(labels, chart_data, 'barchart' + str(byte_duration_list.index(dataset)), 'true')
         byte_duration_charts.append(chart)
-
-
+    protocolTable = overall[1]
+    protocolPieChart = ChartRender.customPieChart()
+    protocolLabels = protocolTable.getColumn('pro')
+    protocolData = protocolTable.getColumn('%Records')
+    protocolPieChart = protocolPieChart.customPieChartRender('protocolPieChart', protocolLabels, protocolData)
+    
     
     return render_template('singlepathOverall.html', 
     overall = overall, lowbyte = lowbyte, medbyte = medbyte, highbyte = highbyte, shortduration = shortduration, medduration = medduration, longduration = longduration,
-    byte_duration_charts = byte_duration_charts)
+    byte_duration_charts = byte_duration_charts, protocolPieChart = protocolPieChart)
 
     
 if __name__ == '__main__':
