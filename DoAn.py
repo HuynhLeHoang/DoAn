@@ -176,12 +176,12 @@ def iptoip():
         _startdate = request.args.get('enddate')
     sip = request.args.get('sip')
     dip = request.args.get('dip')
-    command = '''rm iptoip.rw; rwfilter --proto=0- --start={startdate} --end={enddate} --type=in,inweb,out,outweb --pass=iptoip.rw --saddress={sip} --daddress={dip}; rwsort iptoip.rw --fields=bytes --reverse | rwcut --fields=sTime,eTime,sip,sport,dip,dport,bytes --num-recs=50 --no-columns > iptoip.txt'''
+    command = '''rm iptoip.rw; rwfilter --proto=0- --start={startdate} --end={enddate} --type=all --pass=iptoip.rw --saddress={sip} --daddress={dip}; rwsort iptoip.rw --fields=bytes --reverse | rwcut --fields=sTime,eTime,sip,sport,dip,dport,bytes --num-recs=50 --no-columns > iptoip.txt'''
     command = command.format(sip = sip, dip = dip, startdate = _startdate, enddate = _enddate)
     table = TableFromCommand.TableFromCommand(command, 'iptoip.txt')
     compareTable = table.execute()
     #by protocol
-    command = '''rm iptoip.rw; rwfilter --proto=0- --start={startdate} --end={enddate} --type=in,inweb,out,outweb --pass=iptoip.rw --saddress={sip} --daddress={dip}; rwsort iptoip.rw --fields=bytes --reverse | rwstats --count 50 --fields sip,dip,proto --values=records --no-columns > iptoip.txt'''
+    command = '''rm iptoip.rw; rwfilter --proto=0- --start={startdate} --end={enddate} --type=all --pass=iptoip.rw --saddress={sip} --daddress={dip}; rwsort iptoip.rw --fields=bytes --reverse | rwstats --count 50 --fields sip,dip,proto --values=records --no-columns > iptoip.txt'''
     command = command.format(sip = sip, dip = dip, startdate = _startdate, enddate = _enddate)
     table = TableFromCommand.TableFromCommand(command, 'iptoip.txt')
     compareTableByPro = table.execute()
@@ -189,7 +189,7 @@ def iptoip():
     for index, row in compareTableByPro.Table.iterrows():
         compareTableByPro.Table.at[index, 'protocol'] = protocols[int(compareTableByPro.Table.at[index, 'protocol']) - 1]
     #by package
-    command = '''rm iptoip.rw; rwfilter --proto=0- --start={startdate} --end={enddate} --type=in,inweb,out,outweb --pass=iptoip.rw --saddress={sip} --daddress={dip}; rwsort iptoip.rw --fields=bytes --reverse | rwstats --count 50 --fields sip,dip,sport,dport --values=records --no-columns > iptoip.txt'''
+    command = '''rm iptoip.rw; rwfilter --proto=0- --start={startdate} --end={enddate} --type=all --pass=iptoip.rw --saddress={sip} --daddress={dip}; rwsort iptoip.rw --fields=bytes --reverse | rwstats --count 50 --fields sip,dip,sport,dport --values=records --no-columns > iptoip.txt'''
     command = command.format(sip = sip, dip = dip, startdate = _startdate, enddate = _enddate)
     table = TableFromCommand.TableFromCommand(command, 'iptoip.txt')
     compareTableByPackage = table.execute()
@@ -209,10 +209,10 @@ def singlepathSampleInit():
     enddate=datetime.strptime(enddate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'))
 
 @app.route('/singlepathsample', methods=['POST'])
-def singplepathSampleAnalysis():
+def singlepathInit():
     _startdate = datetime.strptime(request.form['startdate'] + ':00','%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
     _enddate = datetime.strptime(request.form['enddate'] + ':00','%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
-    _counts = request.form['counts']
+    
     _sensor = request.form['sensor']
     _ip = request.form['ip']
     #init data
@@ -220,7 +220,15 @@ def singplepathSampleAnalysis():
     os.chdir('data')
     os.system(command)
     os.chdir('..')
+    return redirect(url_for('overall'))
+
+@app.route('/overall', methods=['GET','POST'])
+def overall():
+    _counts = 20
+    if 'counts' in request.form:
+        _counts = request.form['counts']
     singlepathanaliser = SinglePath.SinglePath('traffic.rw', _counts)
+    binsize = singlepathanaliser.binsize()
     overall = singlepathanaliser.overallview()
     lowbyte = singlepathanaliser.lowbyte()
     medbyte = singlepathanaliser.medbyte()
@@ -287,11 +295,18 @@ def singplepathSampleAnalysis():
     protocolPieChart = protocolPieChart.customPieChartRender('protocolPieChart', protocolLabels, protocolData)
     
     
-    return render_template('singlepathOverall.html', 
-    overall = overall, lowbyte = lowbyte, medbyte = medbyte, highbyte = highbyte, shortduration = shortduration, medduration = medduration, longduration = longduration,
+    return render_template('singlepathOverall.html', counts=_counts,
+    overall = overall, lowbyte = lowbyte, medbyte = medbyte, highbyte = highbyte, shortduration = shortduration, medduration = medduration, longduration = longduration, binsize = binsize,
     byte_duration_charts = byte_duration_charts, protocolPieChart = protocolPieChart)
 
-    
+@app.route('/singlepathdetail',methods=['GET'])
+def singlepathdetailInit():
+    return render_template('singlepathdetailInit.html')
+
+@app.route('singlepathdetail', methods=['POST'])
+def singlepathdetail():
+    return render_template()
+
 if __name__ == '__main__':
     app.run(debug = True, host='0.0.0.0', port='2222')
    

@@ -61,3 +61,7 @@ class SinglePath:
             result.append(temptable)
         return result
     
+    def binsize(self):
+        command = 'rwcount --bin-size=600 {filename} > binsize.txt'.format(filename=self.filename)
+        table = TableFromCommand.TableFromCommand(command, 'binsize.txt')
+        return table.execute()

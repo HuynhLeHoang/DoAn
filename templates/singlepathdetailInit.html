@@ -94,35 +94,20 @@
                       <div class="form-group row">
                         <label class="col-sm-3 form-control-label">IP</label>
                         <div class="col-sm-9">
-                            <input name="ip" class="form-control mb-3 mb-3" value="10" type="text"/>
+                            <input name="ip" class="form-control mb-3 mb-3" value="" type="text"/>
                           
                         </div>                        
                       </div>
                       <div class="form-group row">
-                        <label class="col-sm-3 form-control-label">Sensor</label>
+                        <label class="col-sm-3 form-control-label">Port</label>
                         <div class="col-sm-9">
+                            <input name="port" class="form-control mb-3 mb-3" value="" type="text"/>
                           
-                          <input name="sensor" class="form-control mb-3 mb-3" max="{{enddate}}" min="{{startdate}}" type="text"/>
-                          
-                        </div>                        
-                      </div>
-                      <div class="form-group row">
-                        <label class="col-sm-3 form-control-label">Start date</label>
-                        <div class="col-sm-9">
-                          <input name="startdate" class="form-control mb-3 mb-3" max="{{enddate}}" min="{{startdate}}" type="datetime-local" value="{{startdate}}"/>
-                          
-                        </div>                        
-                      </div>
-                      <div class="form-group row">
-                        <label class="col-sm-3 form-control-label">End date</label>
-                        <div class="col-sm-9">
-                          <input name="enddate" class="form-control mb-3 mb-3" max="{{enddate}}" min="{{startdate}}" type="datetime-local" value="{{enddate}}"/>
-                                                   
                         </div>                        
                       </div>
                       <div class="form-group row">
                         <div class="col-sm-9 ml-auto">
-                          <button type="submit" class="btn btn-primary">Save changes</button>
+                          <button type="submit" class="btn btn-primary">Analyse</button>
                         </div>
                       </div>
                     </form>
@@ -132,6 +117,7 @@
             </div>
           </div>
         </section>
+        
         <footer class="footer">
           <div class="footer__block block no-margin-bottom">
             <div class="container-fluid text-center">
