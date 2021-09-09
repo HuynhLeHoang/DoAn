@@ -163,37 +163,34 @@ def port():
 
     return render_template('port.html', topCDPTable = topCDPTable, topCDPChart = topCDPChart, topCSPTable = topCSPTable, topCSPChart = topCSPChart, topODPTable = topODPTable, topODPChart = topODPChart, topOSPTable = topOSPTable, topOSPChart = topOSPChart)
 
-@app.route('/iptoip', methods = ['GET'])
+@app.route('/iptoip',methods=['GET'])
+def iptoipinit():
+    return render_template('iptoipInit.html')
+
+@app.route('/iptoip', methods = ['POST'])
 def iptoip():
-    global startdate
-    global enddate
     global protocols
-    _startdate = startdate
-    _enddate = enddate
-    if 'startdate' in request.args:
-        _startdate = request.args.get('startdate')
-    if 'enddate' in request.args:
-        _startdate = request.args.get('enddate')
-    sip = request.args.get('sip')
-    dip = request.args.get('dip')
-    command = '''rm iptoip.rw; rwfilter --proto=0- --start={startdate} --end={enddate} --type=all --pass=iptoip.rw --saddress={sip} --daddress={dip}; rwsort iptoip.rw --fields=bytes --reverse | rwcut --fields=sTime,eTime,sip,sport,dip,dport,bytes --num-recs=50 --no-columns > iptoip.txt'''
-    command = command.format(sip = sip, dip = dip, startdate = _startdate, enddate = _enddate)
+    _sip = request.form['sip']
+    _dip = request.form['dip']
+    _counts = request.form['counts']
+    command = '''rm iptoip.rw; rwfilter traffic.rw --type=all --pass=iptoip.rw --scidr={sip}/32,{dip}/32 --dcidr={dip}/32,{sip}/32; rwsort iptoip.rw --fields=bytes --reverse | rwuniq --fields=sTime,eTime,sip,sport,dip,dport,bytes --no-columns | head -200 > iptoip.txt'''
+    command = command.format(sip = _sip, dip = _dip, counts = _counts)
     table = TableFromCommand.TableFromCommand(command, 'iptoip.txt')
     compareTable = table.execute()
     #by protocol
-    command = '''rm iptoip.rw; rwfilter --proto=0- --start={startdate} --end={enddate} --type=all --pass=iptoip.rw --saddress={sip} --daddress={dip}; rwsort iptoip.rw --fields=bytes --reverse | rwstats --count 50 --fields sip,dip,proto --values=records --no-columns > iptoip.txt'''
-    command = command.format(sip = sip, dip = dip, startdate = _startdate, enddate = _enddate)
+    command = '''rm iptoip.rw; rwfilter traffic.rw --type=all --pass=iptoip.rw --scidr={sip}/32,{dip}/32 --dcidr={dip}/32,{sip}/32; rwsort iptoip.rw --fields=bytes --reverse | rwstats --count {counts} --fields sip,dip,proto --values=records --no-columns > iptoip.txt'''
+    command = command.format(sip = _sip, dip = _dip, counts = _counts)
     table = TableFromCommand.TableFromCommand(command, 'iptoip.txt')
     compareTableByPro = table.execute()
     compareTableByPro.Table['protocol'] = compareTableByPro.Table['protocol'].astype(str)
     for index, row in compareTableByPro.Table.iterrows():
         compareTableByPro.Table.at[index, 'protocol'] = protocols[int(compareTableByPro.Table.at[index, 'protocol']) - 1]
     #by package
-    command = '''rm iptoip.rw; rwfilter --proto=0- --start={startdate} --end={enddate} --type=all --pass=iptoip.rw --saddress={sip} --daddress={dip}; rwsort iptoip.rw --fields=bytes --reverse | rwstats --count 50 --fields sip,dip,sport,dport --values=records --no-columns > iptoip.txt'''
-    command = command.format(sip = sip, dip = dip, startdate = _startdate, enddate = _enddate)
+    command = '''rm iptoip.rw; rwfilter traffic.rw --type=all --pass=iptoip.rw --scidr={sip}/32,{dip}/32 --dcidr={dip}/32,{sip}/32; rwsort iptoip.rw --fields=bytes --reverse | rwstats --count {counts} --fields sip,dip,sport,dport --values=records --no-columns > iptoip.txt'''
+    command = command.format(sip = _sip, dip = _dip, counts = _counts)
     table = TableFromCommand.TableFromCommand(command, 'iptoip.txt')
     compareTableByPackage = table.execute()
-    return render_template('iptoip.html', compareTable = compareTable, sip=sip,dip=dip, compareTableByPro=compareTableByPro,compareTableByPackage=compareTableByPackage)
+    return render_template('iptoip.html', compareTable = compareTable, sip=_sip,dip=_dip, counts = _counts, compareTableByPro=compareTableByPro,compareTableByPackage=compareTableByPackage)
 
 @app.route('/singlepathsample', methods=['GET'])
 def singlepathSampleInit():
@@ -303,9 +300,23 @@ def overall():
 def singlepathdetailInit():
     return render_template('singlepathdetailInit.html')
 
-@app.route('singlepathdetail', methods=['POST'])
+@app.route('/singlepathdetail', methods=['POST'])
 def singlepathdetail():
-    return render_template()
+    _counts = 10
+    _ip = request.form['ip']
+    _counts = request.form['counts']
+    command = 'rwfilter traffic.rw --saddress={ip} --type=out,outweb --pass=stdout | rwstats --fields=dip,dport --count {counts} > saddress.txt'.format(ip=_ip, counts=_counts)
+    saddressTable = TableFromCommand.TableFromCommand(command, 'saddress.txt')
+    saddressTable = saddressTable.execute()
+    command = 'rwfilter traffic.rw --daddress={ip} --type=in,inweb --pass=stdout | rwstats --fields=sip,sport --count {counts} > daddress.txt'.format(ip=_ip, counts=_counts)
+    daddressTable = TableFromCommand.TableFromCommand(command, 'daddress.txt')
+    daddressTable = daddressTable.execute()
+
+    return render_template('singlepathDetail.html',
+    counts = _counts, ip = _ip,
+    saddressTable=saddressTable,daddressTable=daddressTable)
+
+
 
 if __name__ == '__main__':
     app.run(debug = True, host='0.0.0.0', port='2222')
