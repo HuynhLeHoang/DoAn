@@ -1,5 +1,6 @@
 
 
+from itertools import count
 from flask import Flask, redirect, url_for, render_template, request
 import TableFromFile
 import TableFromCommand
@@ -163,7 +164,7 @@ def port():
 
     return render_template('port.html', topCDPTable = topCDPTable, topCDPChart = topCDPChart, topCSPTable = topCSPTable, topCSPChart = topCSPChart, topODPTable = topODPTable, topODPChart = topODPChart, topOSPTable = topOSPTable, topOSPChart = topOSPChart)
 
-@app.route('/iptoip',methods=['GET'])
+@app.route('/iptoipsearch',methods=['GET'])
 def iptoipinit():
     return render_template('iptoipInit.html')
 
@@ -300,11 +301,12 @@ def overall():
 def singlepathdetailInit():
     return render_template('singlepathdetailInit.html')
 
-@app.route('/singlepathdetail', methods=['POST'])
-def singlepathdetail():
-    _counts = 10
-    _ip = request.form['ip']
-    _counts = request.form['counts']
+@app.route('/singlepathdetailIP', methods=['GET'])
+def singlepathdetailIP():
+    _counts = 20
+    _ip = request.args['ip']
+    if 'counts' in request.args and request.args['counts'] != '':
+        _counts = request.args['counts']
     command = 'rwfilter traffic.rw --saddress={ip} --type=out,outweb --pass=stdout | rwstats --fields=dip,dport --count {counts} > saddress.txt'.format(ip=_ip, counts=_counts)
     saddressTable = TableFromCommand.TableFromCommand(command, 'saddress.txt')
     saddressTable = saddressTable.execute()
