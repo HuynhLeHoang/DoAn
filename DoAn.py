@@ -1,7 +1,7 @@
 
-
+from werkzeug.utils import secure_filename
 from itertools import count
-from flask import Flask, redirect, url_for, render_template, request
+from flask import Flask, redirect, url_for, render_template, request, abort
 import TableFromFile
 import TableFromCommand
 import os
@@ -21,6 +21,10 @@ startdate=date.getColumn('Start-Date')[0]
 enddate=date.getColumn('End-Date')[0]
 
 app = Flask(__name__, static_folder="static")
+
+app.config['MAX_CONTENT_LENGTH'] = 100 * 1024 * 1024
+app.config['UPLOAD_EXTENSIONS'] = ['.pcap', '.pcapng']
+app.config['UPLOAD_PATH'] = 'uploads'
 
 @app.route('/', methods = ['GET','POST'])
 def index():
@@ -318,7 +322,41 @@ def singlepathdetailIP():
     counts = _counts, ip = _ip,
     saddressTable=saddressTable,daddressTable=daddressTable)
 
+@app.route("/upload", methods = ['GET'])
+def uploadFile():
+    return render_template('upload.html')
 
+@app.route('/uploader', methods = ['POST'])
+def uploader():
+    uploaded_file = request.files['fileupload']
+    filename = secure_filename(uploaded_file.filename)
+    if filename != '':
+        file_ext = os.path.splitext(filename)[1]
+        if file_ext not in app.config['UPLOAD_EXTENSIONS']:
+            abort(400)
+        uploaded_file.save(os.path.join(app.config['UPLOAD_PATH'], filename))
+    
+    return redirect(url_for('uploadFile'))
+
+@app.route("/analyseUpload", methods=['GET'])
+def analyseUploadChoseFile():
+    files = os.listdir('uploads')
+    filelist = list()
+    for file in files:
+        if file.endswith('.pcap') or file.endswith('.pcapng'):
+            filelist.append(file)
+    return render_template('analyseUploadChoseFile.html', files=filelist)
+
+@app.route('/initfile', methods=['GET'])
+def initfile():
+    filename = request.args['chosedfile']
+    current = os.getcwd()
+    filelink = current + '/uploads/' + filename
+    command = 'rm traffic.rw; rm traffic.yaf;yaf --in {file} --out traffic.yaf; rwipfix2silk traffic.yaf --silk-output=traffic.rw'.format(file=filelink)
+    os.chdir('data')
+    os.system(command)
+    os.chdir('..')
+    return redirect('/overall')
 
 if __name__ == '__main__':
     app.run(debug = True, host='0.0.0.0', port='2222')
