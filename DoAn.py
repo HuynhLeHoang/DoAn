@@ -358,6 +358,14 @@ def initfile():
     os.chdir('..')
     return redirect('/overall')
 
+@app.route('/realtime')
+def realtime():
+    os.chdir('data')
+    command = 'rm traffic.rw; rm traffic.yaf;yaf --in {file} --out traffic.yaf; rwipfix2silk traffic.yaf --silk-output=traffic.rw'.format(file='realtime.pcap')
+    os.system(command)
+    os.chdir('..')
+    return redirect('/overall')
+
 if __name__ == '__main__':
     app.run(debug = True, host='0.0.0.0', port='2222')
    
