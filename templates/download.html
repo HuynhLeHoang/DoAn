@@ -42,7 +42,7 @@
         </div>
         <div class="container-fluid d-flex align-items-center justify-content-between">
           <div class="navbar-header">
-            <!-- Navbar Header--><a href="index.html" class="navbar-brand">
+            <!-- Navbar Header--><a href="/" class="navbar-brand">
               <div class="brand-text brand-big visible text-uppercase"><strong class="text-primary">Dark</strong><strong>Admin</strong></div>
               <div class="brand-text brand-sm"><strong class="text-primary">D</strong><strong>A</strong></div></a>
             <!-- Sidebar Toggle Btn-->
@@ -65,24 +65,25 @@
         </div>
         <!-- Sidebar Navidation Menus--><span class="heading">Main</span>
         <ul class="list-unstyled">
-          <li><a href="/"> <i class="icon-home"></i>Home </a></li>
-          <li class="active"><a href="/port"> <i class="icon-grid"></i>Port</a></li>
-          <li><a href="#exampledropdownDropdown" aria-expanded="false" data-toggle="collapse"> <i class="icon-windows"></i>Single Path</a>
-            <ul id="exampledropdownDropdown" class="collapse list-unstyled ">
-              <li><a href="/singlepathsample">Init data</a></li>
-              <li><a href="/overall">Overall view</a></li>
-              <li><a href="/singlepathdetail">Detail</a></li>
-              <li><a href="/iptoipsearch">IP to IP</a></li>
-            </ul>
-          </li>
-          <li><a href="#exampledropdownDropdown1" aria-expanded="false" data-toggle="collapse"> <i class="icon-windows"></i>Others</a>
-            <ul id="exampledropdownDropdown1" class="collapse list-unstyled ">
-              <li><a href="/upload">Upload File</a></li>
-              <li><a href="/realtime">Real Time</a></li>
-              <li><a href="/graphic">Graphic</a></li>
-            </ul>
-          </li>
+                <li class="active"><a href="/"> <i class="icon-home"></i>Home </a></li>
+                <li><a href="/port"> <i class="icon-grid"></i>Port</a></li>
+                <li><a href="#exampledropdownDropdown" aria-expanded="false" data-toggle="collapse"> <i class="icon-windows"></i>Single Path</a>
+                  <ul id="exampledropdownDropdown" class="collapse list-unstyled ">
+                    <li><a href="/singlepathsample">Init data</a></li>
+                    <li><a href="/overall">Overall view</a></li>
+                    <li><a href="/singlepathdetail">Detail</a></li>
+                    <li><a href="/iptoipsearch">IP to IP</a></li>
+                  </ul>
+                </li>
+                <li><a href="#exampledropdownDropdown1" aria-expanded="false" data-toggle="collapse"> <i class="icon-windows"></i>Others</a>
+                  <ul id="exampledropdownDropdown1" class="collapse list-unstyled ">
+                    <li><a href="/upload">Upload File</a></li>
+                    <li><a href="/realtime">Real Time</a></li>
+                    <li><a href="/graphic">Graphic</a></li>
+                  </ul>
+                </li>
         </ul>
+        
       </nav>
       <!-- Sidebar Navigation end-->
       <div class="page-content">
@@ -91,112 +92,57 @@
             <h2 class="h5 no-margin-bottom">Dashboard</h2>
           </div>
         </div>
-        <section class="no-padding-top">
+        <section class="no-padding-bottom">
           <div class="container-fluid">
             <div class="row">
               <div class="col-lg-12">
                 <div class="block">
                   <div class="block-body">
-                    <form class="form-horizontal" action="/singlepathdetail" method="POST">
+                    <form class="form-horizontal" action="/download" method="GET">
                       <div class="form-group row">
-                        <label class="col-sm-3 form-control-label">IP</label>
-                        <div class="col-sm-9">
-                            <input name="ip" class="form-control mb-3 mb-3" value="{{ip}}" type="text"/>
-                          
+                        <label class="col-sm-3 form-control-label"><h4>In Traffic</h4></label>
+                        <div class="col-sm-12">
+                          <iframe class="form-control mb-3 mb-3" style="height: 400px;" src="static/img/ingraphic.gv.png"></iframe>
+                          <input value="Download" type="submit" class="btn btn-primary">
+                          <input name="file" type="hidden" value="static/img/ingraphic.gv.png" />
                         </div>                        
                       </div>
-                        
-                      <div class="form-group row">
-                        <label class="col-sm-3 form-control-label">Counts</label>
-                        <div class="col-sm-9">
-                            <input name="counts" class="form-control mb-3 mb-3" value="{{counts}}" type="number"/>
-                          
+                    </form>
+                    <form class="form-horizontal" action="/download" method="GET">                      <div class="form-group row">
+                        <label class="col-sm-3 form-control-label"><h4>Inweb Traffic</h4></label>
+                        <div class="col-sm-12">
+                          <iframe class="form-control mb-3 mb-3" style="height: 400px;" src="static/img/inwebgraphic.gv.png"></iframe>
+                          <input value="Download" type="submit" class="btn btn-primary">
+                          <input name="file" type="hidden" value="static/img/inwebgraphic.gv.png" />
                         </div>                        
                       </div>
+                    </form> 
+                    <form class="form-horizontal" action="/download" method="GET">
                       <div class="form-group row">
-                        <div class="col-sm-9 ml-auto">
-                          <button type="submit" class="btn btn-primary">Save changes</button>
-                        </div>
+                        <label class="col-sm-3 form-control-label"><h4>Out Traffic</h4></label>
+                        <div class="col-sm-12">
+                          <iframe class="form-control mb-3 mb-3" style="height: 400px;" src="static/img/outgraphic.gv.png"></iframe>
+                          <input value="Download" type="submit" class="btn btn-primary">
+                          <input name="file" type="hidden" value="static/img/outgraphic.gv.png" />
+                        </div>                        
+                      </div>
+                    </form>
+                    <form class="form-horizontal" action="/download" method="GET">
+                      <div class="form-group row">
+                        <label class="col-sm-3 form-control-label"><h4>Outweb Traffic</h4></label>
+                        <div class="col-sm-12">
+                          <iframe class="form-control mb-3 mb-3" style="height: 400px;" src="static/img/outwebgraphic.gv.png"></iframe>
+                          <input value="Download" type="submit" class="btn btn-primary">
+                          <input name="file" type="hidden" value="static/img/outwebgraphic.gv.png" />
+                        </div>                        
                       </div>
                     </form>
                   </div>
-                </div>
-              </div>            
-            </div>
-          </div>
-        </section>
-        <section class="no-padding-bottom">
-          <div class="container-fluid">
-            <div class="row">
-              <div class="col-lg-12">
-                <div class="block">
-                  <div class="title"><strong>Out going from {{ip}}</strong></div>
-                  <div class="table-responsive" style="overflow: scroll; height: 400px;"> 
-                    <table class="table table-striped table-sm">
-                      <thead>
-                        <tr>
-                          <th>Destination IP</th>
-                          <th>Destination Port</th>
-                          <th>Records</th>
-                          <th>Records/Total</th>
-                          <th>Progresive sum</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {% for x in saddressTable.Table.values.tolist() %}
-                          <tr>
-                            {% for y in x %}
-
-                              <td>{{y}}</td>
-
-                            {% endfor %}
-                          </tr>
-
-                        {% endfor %}                      
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>              
-            </div>
-          </div>
-        </section>
-        <section class="no-padding-bottom">
-            <div class="container-fluid">
-              <div class="row">
-                <div class="col-lg-12">
-                  <div class="block">
-                    <div class="title"><strong>In coming to {{ip}}</strong></div>
-                    <div class="table-responsive" style="overflow: scroll; height: 400px;"> 
-                      <table class="table table-striped table-sm">
-                        <thead>
-                          <tr>
-                            <th>Source IP</th>
-                            <th>Source Port</th>
-                            <th>Records</th>
-                            <th>Records/Total</th>
-                            <th>Progresive sum</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {% for x in daddressTable.Table.values.tolist() %}
-                            <tr>
-                              {% for y in x %}
-  
-                                <td>{{y}}</td>
-  
-                              {% endfor %}
-                            </tr>
-  
-                          {% endfor %}                      
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                </div>              
               </div>
+              
             </div>
-          </section>
+          </div>
+        </section>
         <footer class="footer">
           <div class="footer__block block no-margin-bottom">
             <div class="container-fluid text-center">
@@ -216,11 +162,6 @@
     <script src='static/vendor/jquery-validation/jquery.validate.min.js'></script>
     <script src='static/js/charts-home.js'></script>
     <script src='static/js/front.js'></script>
-        <!--chart render-->
-        {% block code %}
-        <script>
-        
-        </script>
-        {% endblock code %}
+
   </body>
 </html>

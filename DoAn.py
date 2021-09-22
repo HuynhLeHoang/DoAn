@@ -1,7 +1,8 @@
 
+from graphviz.backend import render
 from werkzeug.utils import secure_filename
 from itertools import count
-from flask import Flask, redirect, url_for, render_template, request, abort
+from flask import Flask, redirect, url_for, render_template, request, abort, send_file
 import TableFromFile
 import TableFromCommand
 import os
@@ -10,6 +11,7 @@ import asyncio
 from datetime import datetime
 import SinglePath
 import pandas as pd
+import Graphic
 
 protocols = ['ICMP','IGMP','GGP','IP-in-IP','ST','TCP','CBT','EGP','IGP','BBN-RCC-MON','NVP-II','PUP','ARGUS','EMCON','XNET','CHAOS','UDP','MUX','DCN-MEAS','HMP','PRM','XNS-IDP','TRUNK-1','TRUNK-2','LEAF-1','LEAF-2','RDP','IRTP','ISO-TP4','NETBLT','MFE-NSP','MERIT-INP','DCCP','3PC','IDPR','XTP','DDP','IDPR-CMTP','TP++','IL','IPv6','SDRP','IPv6-Route','IPv6-Frag','IDRP','RSVP','GRE','DSR','BNA','ESP','AH','I-NLSP','SwIPe','NARP','MOBILE','TLSP','SKIP','IPv6-ICMP','IPv6-NoNxt','IPv6-Opts','','CFTP','','SAT-EXPAK','KRYPTOLAN','RVD','IPPC','','SAT-MON','VISA','IPCU','CPNX','CPHB','WSN','PVP','BR-SAT-MON','SUN-ND','WB-MON','WB-EXPAK','ISO-IP','VMTP','SECURE-VMTP','VINES','TTP','IPTM','NSFNET-IGP','DGP','TCF','EIGRP','OSPF','Sprite-RPC','LARP','MTP','AX.25','OS','MICP','SCC-SP','ETHERIP','ENCAP','','GMTP','IFMP','PNNI','PIM','ARIS','SCPS','QNX','A/N','IPComp','SNP','Compaq-Peer','IPX-in-IP','VRRP','PGM','','L2TP','DDX','IATP','STP','SRP','UTI','SMP','SM','PTP','IS-IS over IPv4','FIRE','CRTP','CRUDP','SSCOPMCE','IPLT','SPS','PIPE','SCTP','FC','RSVP-E2E-IGNORE','Mobility Header','UDPLite','MPLS-in-IP','manet','HIP','Shim6','WESP','ROHC','Ethernet']
 TEMPLATE_DIR = os.path.abspath('templates')
@@ -212,8 +214,17 @@ def singlepathSampleInit():
 
 @app.route('/singlepathsample', methods=['POST'])
 def singlepathInit():
-    _startdate = datetime.strptime(request.form['startdate'] + ':00','%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
-    _enddate = datetime.strptime(request.form['enddate'] + ':00','%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
+    if len(request.form['startdate']) == 16:
+        temp1 = request.form['startdate'] + ':00'
+    else:
+        temp1 = request.form['startdate']
+    if len(request.form['enddate']) == 16:
+        temp2 = request.form['enddate'] + ':00'
+    else:
+        temp2 = request.form['enddate']
+    
+    _startdate = datetime.strptime(temp1,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
+    _enddate = datetime.strptime(temp2,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
     
     _sensor = request.form['sensor']
     _ip = request.form['ip']
@@ -222,6 +233,31 @@ def singlepathInit():
     os.chdir('data')
     os.system(command)
     os.chdir('..')
+    os.chdir('data')
+    command = 'rwfilter traffic.rw --type=in --pass=stdout | rwuniq --fields=sip,sport,dip,dport | head -30 > ingraphic.txt'
+    os.system(command)
+    os.chdir('..')
+    graphic = Graphic.Graphic('ingraphic.txt')
+    graphic.render('ingraphic', _sensor)
+    os.chdir('data')
+    command = 'rwfilter traffic.rw --type=inweb --pass=stdout | rwuniq --fields=sip,sport,dip,dport | head -130 > inwebgraphic.txt'
+    os.system(command)
+    os.chdir('..')
+    graphic = Graphic.Graphic('inwebgraphic.txt')
+    graphic.render('inwebgraphic', _sensor)
+    os.chdir('data')
+    command = 'rwfilter traffic.rw --type=out --pass=stdout | rwuniq --fields=sip,sport,dip,dport | head -30 > outgraphic.txt'
+    os.system(command)
+    os.chdir('..')
+    graphic = Graphic.Graphic('outgraphic.txt')
+    graphic.render('outgraphic', _sensor)
+    os.chdir('data')
+    command = 'rwfilter traffic.rw --type=outweb --pass=stdout | rwuniq --fields=sip,sport,dip,dport | head -30 > outwebgraphic.txt'
+    os.system(command)
+    os.chdir('..')
+    graphic = Graphic.Graphic('outwebgraphic.txt')
+    graphic.render('outwebgraphic', _sensor)
+
     return redirect(url_for('overall'))
 
 @app.route('/overall', methods=['GET','POST'])
@@ -365,6 +401,15 @@ def realtime():
     os.system(command)
     os.chdir('..')
     return redirect('/overall')
+
+@app.route('/graphic')
+def graphic():
+    return render_template('download.html')
+
+@app.route('/download', methods = ['GET'])
+def download():
+    path = request.args['file']
+    return send_file(path, as_attachment=True)
 
 if __name__ == '__main__':
     app.run(debug = True, host='0.0.0.0', port='2222')
