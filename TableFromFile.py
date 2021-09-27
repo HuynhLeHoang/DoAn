@@ -14,9 +14,10 @@ class TableFromFile():
         lines = thisfile.readlines()
         thisfile.close()
         newfile = open('data/' + filename, "w")
-        if 'INPUT' in lines[0]:
-            del lines[0]
-            del lines[0]
+        if len(lines)>0:
+            if 'INPUT' in lines[0]:
+                del lines[0]
+                del lines[0]
         for line in lines:
             newfile.write(line)
         newfile.close()

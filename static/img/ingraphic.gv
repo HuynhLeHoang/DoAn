@@ -1,0 +1,1806 @@
+graph {
+	"sip=192.168.16.1" [label="sip=192.168.16.1" color=aquamarine shape=box style=filled]
+	"sip=192.168.16.106" [label="sip=192.168.16.106" color=aquamarine shape=box style=filled]
+	"sip=185.86.139.59" [label="sip=185.86.139.59" color=aquamarine shape=box style=filled]
+	"sip=69.173.158.65" [label="sip=69.173.158.65" color=aquamarine shape=box style=filled]
+	"sip=104.131.183.181" [label="sip=104.131.183.181" color=aquamarine shape=box style=filled]
+	Sensor [label=Sensor color=green2 shape=invhouse style=filled]
+	"dip=192.168.16.1" [label="dip=192.168.16.1" color=aquamarine shape=box style=filled]
+	"dip=192.168.16.106" [label="dip=192.168.16.106" color=aquamarine shape=box style=filled]
+	"dip=185.86.139.59" [label="dip=185.86.139.59" color=aquamarine shape=box style=filled]
+	"dip=69.173.158.65" [label="dip=69.173.158.65" color=aquamarine shape=box style=filled]
+	"dip=104.131.183.181" [label="dip=104.131.183.181" color=aquamarine shape=box style=filled]
+	"sport=42308" [label="sport=42308" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=42308"
+	"sport=42308" -- Sensor
+	"sport=57986" [label="sport=57986" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=57986"
+	"sport=57986" -- Sensor
+	"sport=52055" [label="sport=52055" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=52055"
+	"sport=52055" -- Sensor
+	"sport=52656" [label="sport=52656" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=52656"
+	"sport=52656" -- Sensor
+	"sport=35197" [label="sport=35197" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=35197"
+	"sport=35197" -- Sensor
+	"sport=54162" [label="sport=54162" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=54162"
+	"sport=54162" -- Sensor
+	"sport=5353" [label="sport=5353" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=5353"
+	"sport=5353" -- Sensor
+	"sport=45159" [label="sport=45159" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=45159"
+	"sport=45159" -- Sensor
+	"sport=56452" [label="sport=56452" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=56452"
+	"sport=56452" -- Sensor
+	"sport=54744" [label="sport=54744" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=54744"
+	"sport=54744" -- Sensor
+	"sport=48856" [label="sport=48856" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=48856"
+	"sport=48856" -- Sensor
+	"sport=49980" [label="sport=49980" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=49980"
+	"sport=49980" -- Sensor
+	"sport=57796" [label="sport=57796" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=57796"
+	"sport=57796" -- Sensor
+	"sport=50192" [label="sport=50192" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=50192"
+	"sport=50192" -- Sensor
+	"sport=53692" [label="sport=53692" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=53692"
+	"sport=53692" -- Sensor
+	"sport=47376" [label="sport=47376" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=47376"
+	"sport=47376" -- Sensor
+	"sport=42103" [label="sport=42103" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=42103"
+	"sport=42103" -- Sensor
+	"sport=58134" [label="sport=58134" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=58134"
+	"sport=58134" -- Sensor
+	"sport=46982" [label="sport=46982" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=46982"
+	"sport=46982" -- Sensor
+	"sport=39190" [label="sport=39190" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=39190"
+	"sport=39190" -- Sensor
+	"sport=48842" [label="sport=48842" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=48842"
+	"sport=48842" -- Sensor
+	"sport=50438" [label="sport=50438" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=50438"
+	"sport=50438" -- Sensor
+	"sport=51159" [label="sport=51159" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=51159"
+	"sport=51159" -- Sensor
+	"sport=40872" [label="sport=40872" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=40872"
+	"sport=40872" -- Sensor
+	"sport=60164" [label="sport=60164" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=60164"
+	"sport=60164" -- Sensor
+	"sport=34554" [label="sport=34554" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=34554"
+	"sport=34554" -- Sensor
+	"sport=58394" [label="sport=58394" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=58394"
+	"sport=58394" -- Sensor
+	"sport=41719" [label="sport=41719" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=41719"
+	"sport=41719" -- Sensor
+	"sport=50828" [label="sport=50828" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=50828"
+	"sport=50828" -- Sensor
+	"sport=42877" [label="sport=42877" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=42877"
+	"sport=42877" -- Sensor
+	"sport=54285" [label="sport=54285" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=54285"
+	"sport=54285" -- Sensor
+	"sport=39827" [label="sport=39827" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=39827"
+	"sport=39827" -- Sensor
+	"sport=37256" [label="sport=37256" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=37256"
+	"sport=37256" -- Sensor
+	"sport=42759" [label="sport=42759" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=42759"
+	"sport=42759" -- Sensor
+	"sport=48522" [label="sport=48522" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=48522"
+	"sport=48522" -- Sensor
+	"sport=44974" [label="sport=44974" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=44974"
+	"sport=44974" -- Sensor
+	"sport=35942" [label="sport=35942" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=35942"
+	"sport=35942" -- Sensor
+	"sport=36802" [label="sport=36802" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=36802"
+	"sport=36802" -- Sensor
+	"sport=58622" [label="sport=58622" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=58622"
+	"sport=58622" -- Sensor
+	"sport=45574" [label="sport=45574" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=45574"
+	"sport=45574" -- Sensor
+	"sport=39302" [label="sport=39302" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=39302"
+	"sport=39302" -- Sensor
+	"sport=56873" [label="sport=56873" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=56873"
+	"sport=56873" -- Sensor
+	"sport=34174" [label="sport=34174" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=34174"
+	"sport=34174" -- Sensor
+	"sport=55984" [label="sport=55984" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=55984"
+	"sport=55984" -- Sensor
+	"sport=35019" [label="sport=35019" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=35019"
+	"sport=35019" -- Sensor
+	"sport=55372" [label="sport=55372" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=55372"
+	"sport=55372" -- Sensor
+	"sport=59737" [label="sport=59737" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=59737"
+	"sport=59737" -- Sensor
+	"sport=49806" [label="sport=49806" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=49806"
+	"sport=49806" -- Sensor
+	"sport=55090" [label="sport=55090" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=55090"
+	"sport=55090" -- Sensor
+	"sport=50058" [label="sport=50058" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=50058"
+	"sport=50058" -- Sensor
+	"sport=33274" [label="sport=33274" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=33274"
+	"sport=33274" -- Sensor
+	"sport=56213" [label="sport=56213" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=56213"
+	"sport=56213" -- Sensor
+	"sport=443" [label="sport=443" color=beige shape=box style=filled]
+	"sip=104.131.183.181" -- "sport=443"
+	"sport=443" -- Sensor
+	"sport=48997" [label="sport=48997" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=48997"
+	"sport=48997" -- Sensor
+	"sport=37560" [label="sport=37560" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=37560"
+	"sport=37560" -- Sensor
+	"sport=36978" [label="sport=36978" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=36978"
+	"sport=36978" -- Sensor
+	"sport=36556" [label="sport=36556" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=36556"
+	"sport=36556" -- Sensor
+	"sport=45031" [label="sport=45031" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=45031"
+	"sport=45031" -- Sensor
+	"sport=58831" [label="sport=58831" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=58831"
+	"sport=58831" -- Sensor
+	"sport=56306" [label="sport=56306" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=56306"
+	"sport=56306" -- Sensor
+	"sport=55978" [label="sport=55978" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=55978"
+	"sport=55978" -- Sensor
+	"sport=50624" [label="sport=50624" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=50624"
+	"sport=50624" -- Sensor
+	"sport=38876" [label="sport=38876" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=38876"
+	"sport=38876" -- Sensor
+	"sport=49371" [label="sport=49371" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=49371"
+	"sport=49371" -- Sensor
+	"sport=50446" [label="sport=50446" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=50446"
+	"sport=50446" -- Sensor
+	"sport=56783" [label="sport=56783" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=56783"
+	"sport=56783" -- Sensor
+	"sport=53206" [label="sport=53206" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=53206"
+	"sport=53206" -- Sensor
+	"sport=49830" [label="sport=49830" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=49830"
+	"sport=49830" -- Sensor
+	"sport=52915" [label="sport=52915" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=52915"
+	"sport=52915" -- Sensor
+	"sport=54166" [label="sport=54166" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=54166"
+	"sport=54166" -- Sensor
+	"sport=45250" [label="sport=45250" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=45250"
+	"sport=45250" -- Sensor
+	"sport=47564" [label="sport=47564" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=47564"
+	"sport=47564" -- Sensor
+	"sport=47582" [label="sport=47582" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=47582"
+	"sport=47582" -- Sensor
+	"sport=55016" [label="sport=55016" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=55016"
+	"sport=55016" -- Sensor
+	"sport=59522" [label="sport=59522" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=59522"
+	"sport=59522" -- Sensor
+	"sport=49818" [label="sport=49818" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=49818"
+	"sport=49818" -- Sensor
+	"sport=55210" [label="sport=55210" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=55210"
+	"sport=55210" -- Sensor
+	"sport=49922" [label="sport=49922" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=49922"
+	"sport=49922" -- Sensor
+	"sport=57738" [label="sport=57738" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=57738"
+	"sport=57738" -- Sensor
+	"sport=52705" [label="sport=52705" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=52705"
+	"sport=52705" -- Sensor
+	"sport=59344" [label="sport=59344" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=59344"
+	"sport=59344" -- Sensor
+	"sport=39480" [label="sport=39480" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=39480"
+	"sport=39480" -- Sensor
+	"sport=54764" [label="sport=54764" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=54764"
+	"sport=54764" -- Sensor
+	"sport=51979" [label="sport=51979" color=beige shape=box style=filled]
+	"sip=192.168.16.1" -- "sport=51979"
+	"sport=51979" -- Sensor
+	"sport=54972" [label="sport=54972" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=54972"
+	"sport=54972" -- Sensor
+	"sport=49471" [label="sport=49471" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=49471"
+	"sport=49471" -- Sensor
+	"sport=54760" [label="sport=54760" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=54760"
+	"sport=54760" -- Sensor
+	"sport=55068" [label="sport=55068" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=55068"
+	"sport=55068" -- Sensor
+	"sport=48272" [label="sport=48272" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=48272"
+	"sport=48272" -- Sensor
+	"sport=47083" [label="sport=47083" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=47083"
+	"sport=47083" -- Sensor
+	"sport=56384" [label="sport=56384" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=56384"
+	"sport=56384" -- Sensor
+	"sport=56432" [label="sport=56432" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=56432"
+	"sport=56432" -- Sensor
+	"sport=50186" [label="sport=50186" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=50186"
+	"sport=50186" -- Sensor
+	"sport=33077" [label="sport=33077" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=33077"
+	"sport=33077" -- Sensor
+	"sport=46381" [label="sport=46381" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=46381"
+	"sport=46381" -- Sensor
+	"sport=39253" [label="sport=39253" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=39253"
+	"sport=39253" -- Sensor
+	"sport=54170" [label="sport=54170" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=54170"
+	"sport=54170" -- Sensor
+	"sport=51862" [label="sport=51862" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=51862"
+	"sport=51862" -- Sensor
+	"sport=49908" [label="sport=49908" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=49908"
+	"sport=49908" -- Sensor
+	"sport=38042" [label="sport=38042" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=38042"
+	"sport=38042" -- Sensor
+	"sport=38488" [label="sport=38488" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=38488"
+	"sport=38488" -- Sensor
+	"sport=37824" [label="sport=37824" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=37824"
+	"sport=37824" -- Sensor
+	"sport=49714" [label="sport=49714" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=49714"
+	"sport=49714" -- Sensor
+	"sport=47096" [label="sport=47096" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=47096"
+	"sport=47096" -- Sensor
+	"sport=47915" [label="sport=47915" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=47915"
+	"sport=47915" -- Sensor
+	"sport=55030" [label="sport=55030" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=55030"
+	"sport=55030" -- Sensor
+	"sport=56072" [label="sport=56072" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=56072"
+	"sport=56072" -- Sensor
+	"sport=47016" [label="sport=47016" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=47016"
+	"sport=47016" -- Sensor
+	"sport=37999" [label="sport=37999" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=37999"
+	"sport=37999" -- Sensor
+	"sport=58396" [label="sport=58396" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=58396"
+	"sport=58396" -- Sensor
+	"sport=43652" [label="sport=43652" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=43652"
+	"sport=43652" -- Sensor
+	"sport=38675" [label="sport=38675" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=38675"
+	"sport=38675" -- Sensor
+	"sport=39386" [label="sport=39386" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=39386"
+	"sport=39386" -- Sensor
+	"sport=41571" [label="sport=41571" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=41571"
+	"sport=41571" -- Sensor
+	"sport=38522" [label="sport=38522" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=38522"
+	"sport=38522" -- Sensor
+	"sport=51908" [label="sport=51908" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=51908"
+	"sport=51908" -- Sensor
+	"sport=41563" [label="sport=41563" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=41563"
+	"sport=41563" -- Sensor
+	"sport=34465" [label="sport=34465" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=34465"
+	"sport=34465" -- Sensor
+	"sport=49924" [label="sport=49924" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=49924"
+	"sport=49924" -- Sensor
+	"sport=52060" [label="sport=52060" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=52060"
+	"sport=52060" -- Sensor
+	"sport=47110" [label="sport=47110" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=47110"
+	"sport=47110" -- Sensor
+	"sport=34365" [label="sport=34365" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=34365"
+	"sport=34365" -- Sensor
+	"sport=53245" [label="sport=53245" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=53245"
+	"sport=53245" -- Sensor
+	"sport=0" [label="sport=0" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=0"
+	"sport=0" -- Sensor
+	"sport=36372" [label="sport=36372" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=36372"
+	"sport=36372" -- Sensor
+	"sport=44106" [label="sport=44106" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=44106"
+	"sport=44106" -- Sensor
+	"sport=52128" [label="sport=52128" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=52128"
+	"sport=52128" -- Sensor
+	"sport=55373" [label="sport=55373" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=55373"
+	"sport=55373" -- Sensor
+	"sport=47166" [label="sport=47166" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=47166"
+	"sport=47166" -- Sensor
+	"sport=40324" [label="sport=40324" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=40324"
+	"sport=40324" -- Sensor
+	"sport=36285" [label="sport=36285" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=36285"
+	"sport=36285" -- Sensor
+	"sport=52056" [label="sport=52056" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=52056"
+	"sport=52056" -- Sensor
+	"sport=443" [label="sport=443" color=beige shape=box style=filled]
+	"sip=185.86.139.59" -- "sport=443"
+	"sport=443" -- Sensor
+	"sport=42569" [label="sport=42569" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=42569"
+	"sport=42569" -- Sensor
+	"sport=57879" [label="sport=57879" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=57879"
+	"sport=57879" -- Sensor
+	"sport=53" [label="sport=53" color=beige shape=box style=filled]
+	"sip=192.168.16.1" -- "sport=53"
+	"sport=53" -- Sensor
+	"sport=39976" [label="sport=39976" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=39976"
+	"sport=39976" -- Sensor
+	"sport=47824" [label="sport=47824" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=47824"
+	"sport=47824" -- Sensor
+	"sport=54756" [label="sport=54756" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=54756"
+	"sport=54756" -- Sensor
+	"sport=54758" [label="sport=54758" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=54758"
+	"sport=54758" -- Sensor
+	"sport=54754" [label="sport=54754" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=54754"
+	"sport=54754" -- Sensor
+	"sport=48454" [label="sport=48454" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=48454"
+	"sport=48454" -- Sensor
+	"sport=49828" [label="sport=49828" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=49828"
+	"sport=49828" -- Sensor
+	"sport=54104" [label="sport=54104" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=54104"
+	"sport=54104" -- Sensor
+	"sport=47098" [label="sport=47098" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=47098"
+	"sport=47098" -- Sensor
+	"sport=56689" [label="sport=56689" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=56689"
+	"sport=56689" -- Sensor
+	"sport=35332" [label="sport=35332" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=35332"
+	"sport=35332" -- Sensor
+	"sport=36214" [label="sport=36214" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=36214"
+	"sport=36214" -- Sensor
+	"sport=45380" [label="sport=45380" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=45380"
+	"sport=45380" -- Sensor
+	"sport=49998" [label="sport=49998" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=49998"
+	"sport=49998" -- Sensor
+	"sport=54740" [label="sport=54740" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=54740"
+	"sport=54740" -- Sensor
+	"sport=49702" [label="sport=49702" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=49702"
+	"sport=49702" -- Sensor
+	"sport=51872" [label="sport=51872" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=51872"
+	"sport=51872" -- Sensor
+	"sport=55184" [label="sport=55184" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=55184"
+	"sport=55184" -- Sensor
+	"sport=50194" [label="sport=50194" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=50194"
+	"sport=50194" -- Sensor
+	"sport=37830" [label="sport=37830" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=37830"
+	"sport=37830" -- Sensor
+	"sport=44948" [label="sport=44948" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=44948"
+	"sport=44948" -- Sensor
+	"sport=59148" [label="sport=59148" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=59148"
+	"sport=59148" -- Sensor
+	"sport=50002" [label="sport=50002" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=50002"
+	"sport=50002" -- Sensor
+	"sport=60350" [label="sport=60350" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=60350"
+	"sport=60350" -- Sensor
+	"sport=50810" [label="sport=50810" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=50810"
+	"sport=50810" -- Sensor
+	"sport=45382" [label="sport=45382" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=45382"
+	"sport=45382" -- Sensor
+	"sport=45671" [label="sport=45671" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=45671"
+	"sport=45671" -- Sensor
+	"sport=49494" [label="sport=49494" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=49494"
+	"sport=49494" -- Sensor
+	"sport=54172" [label="sport=54172" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=54172"
+	"sport=54172" -- Sensor
+	"sport=43326" [label="sport=43326" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=43326"
+	"sport=43326" -- Sensor
+	"sport=43593" [label="sport=43593" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=43593"
+	"sport=43593" -- Sensor
+	"sport=35987" [label="sport=35987" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=35987"
+	"sport=35987" -- Sensor
+	"sport=46803" [label="sport=46803" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=46803"
+	"sport=46803" -- Sensor
+	"sport=38173" [label="sport=38173" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=38173"
+	"sport=38173" -- Sensor
+	"sport=57670" [label="sport=57670" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=57670"
+	"sport=57670" -- Sensor
+	"sport=39872" [label="sport=39872" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=39872"
+	"sport=39872" -- Sensor
+	"sport=55390" [label="sport=55390" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=55390"
+	"sport=55390" -- Sensor
+	"sport=47087" [label="sport=47087" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=47087"
+	"sport=47087" -- Sensor
+	"sport=60594" [label="sport=60594" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=60594"
+	"sport=60594" -- Sensor
+	"sport=47174" [label="sport=47174" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=47174"
+	"sport=47174" -- Sensor
+	"sport=51236" [label="sport=51236" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=51236"
+	"sport=51236" -- Sensor
+	"sport=0" [label="sport=0" color=beige shape=box style=filled]
+	"sip=192.168.16.1" -- "sport=0"
+	"sport=0" -- Sensor
+	"sport=58152" [label="sport=58152" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=58152"
+	"sport=58152" -- Sensor
+	"sport=56386" [label="sport=56386" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=56386"
+	"sport=56386" -- Sensor
+	"sport=48470" [label="sport=48470" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=48470"
+	"sport=48470" -- Sensor
+	"sport=40926" [label="sport=40926" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=40926"
+	"sport=40926" -- Sensor
+	"sport=49992" [label="sport=49992" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=49992"
+	"sport=49992" -- Sensor
+	"sport=35023" [label="sport=35023" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=35023"
+	"sport=35023" -- Sensor
+	"sport=49920" [label="sport=49920" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=49920"
+	"sport=49920" -- Sensor
+	"sport=42804" [label="sport=42804" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=42804"
+	"sport=42804" -- Sensor
+	"sport=43049" [label="sport=43049" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=43049"
+	"sport=43049" -- Sensor
+	"sport=51524" [label="sport=51524" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=51524"
+	"sport=51524" -- Sensor
+	"sport=49938" [label="sport=49938" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=49938"
+	"sport=49938" -- Sensor
+	"sport=52775" [label="sport=52775" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=52775"
+	"sport=52775" -- Sensor
+	"sport=47532" [label="sport=47532" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=47532"
+	"sport=47532" -- Sensor
+	"sport=56728" [label="sport=56728" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=56728"
+	"sport=56728" -- Sensor
+	"sport=53451" [label="sport=53451" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=53451"
+	"sport=53451" -- Sensor
+	"sport=39781" [label="sport=39781" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=39781"
+	"sport=39781" -- Sensor
+	"sport=57136" [label="sport=57136" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=57136"
+	"sport=57136" -- Sensor
+	"sport=55834" [label="sport=55834" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=55834"
+	"sport=55834" -- Sensor
+	"sport=47714" [label="sport=47714" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=47714"
+	"sport=47714" -- Sensor
+	"sport=55374" [label="sport=55374" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=55374"
+	"sport=55374" -- Sensor
+	"sport=43195" [label="sport=43195" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=43195"
+	"sport=43195" -- Sensor
+	"sport=54186" [label="sport=54186" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=54186"
+	"sport=54186" -- Sensor
+	"sport=59848" [label="sport=59848" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=59848"
+	"sport=59848" -- Sensor
+	"sport=60210" [label="sport=60210" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=60210"
+	"sport=60210" -- Sensor
+	"sport=44686" [label="sport=44686" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=44686"
+	"sport=44686" -- Sensor
+	"sport=58520" [label="sport=58520" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=58520"
+	"sport=58520" -- Sensor
+	"sport=38839" [label="sport=38839" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=38839"
+	"sport=38839" -- Sensor
+	"sport=54164" [label="sport=54164" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=54164"
+	"sport=54164" -- Sensor
+	"sport=46992" [label="sport=46992" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=46992"
+	"sport=46992" -- Sensor
+	"sport=48446" [label="sport=48446" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=48446"
+	"sport=48446" -- Sensor
+	"sport=54244" [label="sport=54244" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=54244"
+	"sport=54244" -- Sensor
+	"sport=54412" [label="sport=54412" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=54412"
+	"sport=54412" -- Sensor
+	"sport=58778" [label="sport=58778" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=58778"
+	"sport=58778" -- Sensor
+	"sport=53202" [label="sport=53202" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=53202"
+	"sport=53202" -- Sensor
+	"sport=41867" [label="sport=41867" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=41867"
+	"sport=41867" -- Sensor
+	"sport=56536" [label="sport=56536" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=56536"
+	"sport=56536" -- Sensor
+	"sport=48858" [label="sport=48858" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=48858"
+	"sport=48858" -- Sensor
+	"sport=52512" [label="sport=52512" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=52512"
+	"sport=52512" -- Sensor
+	"sport=47000" [label="sport=47000" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=47000"
+	"sport=47000" -- Sensor
+	"sport=54720" [label="sport=54720" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=54720"
+	"sport=54720" -- Sensor
+	"sport=54746" [label="sport=54746" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=54746"
+	"sport=54746" -- Sensor
+	"sport=59717" [label="sport=59717" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=59717"
+	"sport=59717" -- Sensor
+	"sport=44680" [label="sport=44680" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=44680"
+	"sport=44680" -- Sensor
+	"sport=51932" [label="sport=51932" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=51932"
+	"sport=51932" -- Sensor
+	"sport=50177" [label="sport=50177" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=50177"
+	"sport=50177" -- Sensor
+	"sport=46100" [label="sport=46100" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=46100"
+	"sport=46100" -- Sensor
+	"sport=57782" [label="sport=57782" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=57782"
+	"sport=57782" -- Sensor
+	"sport=52058" [label="sport=52058" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=52058"
+	"sport=52058" -- Sensor
+	"sport=38115" [label="sport=38115" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=38115"
+	"sport=38115" -- Sensor
+	"sport=49994" [label="sport=49994" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=49994"
+	"sport=49994" -- Sensor
+	"sport=45605" [label="sport=45605" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=45605"
+	"sport=45605" -- Sensor
+	"sport=60865" [label="sport=60865" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=60865"
+	"sport=60865" -- Sensor
+	"sport=32894" [label="sport=32894" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=32894"
+	"sport=32894" -- Sensor
+	"sport=50730" [label="sport=50730" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=50730"
+	"sport=50730" -- Sensor
+	"sport=60864" [label="sport=60864" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=60864"
+	"sport=60864" -- Sensor
+	"sport=37244" [label="sport=37244" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=37244"
+	"sport=37244" -- Sensor
+	"sport=41087" [label="sport=41087" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=41087"
+	"sport=41087" -- Sensor
+	"sport=46239" [label="sport=46239" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=46239"
+	"sport=46239" -- Sensor
+	"sport=52828" [label="sport=52828" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=52828"
+	"sport=52828" -- Sensor
+	"sport=49906" [label="sport=49906" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=49906"
+	"sport=49906" -- Sensor
+	"sport=45100" [label="sport=45100" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=45100"
+	"sport=45100" -- Sensor
+	"sport=47352" [label="sport=47352" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=47352"
+	"sport=47352" -- Sensor
+	"sport=58218" [label="sport=58218" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=58218"
+	"sport=58218" -- Sensor
+	"sport=54229" [label="sport=54229" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=54229"
+	"sport=54229" -- Sensor
+	"sport=51700" [label="sport=51700" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=51700"
+	"sport=51700" -- Sensor
+	"sport=56434" [label="sport=56434" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=56434"
+	"sport=56434" -- Sensor
+	"sport=39985" [label="sport=39985" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=39985"
+	"sport=39985" -- Sensor
+	"sport=49904" [label="sport=49904" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=49904"
+	"sport=49904" -- Sensor
+	"sport=35037" [label="sport=35037" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=35037"
+	"sport=35037" -- Sensor
+	"sport=57595" [label="sport=57595" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=57595"
+	"sport=57595" -- Sensor
+	"sport=49826" [label="sport=49826" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=49826"
+	"sport=49826" -- Sensor
+	"sport=46510" [label="sport=46510" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=46510"
+	"sport=46510" -- Sensor
+	"sport=59562" [label="sport=59562" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=59562"
+	"sport=59562" -- Sensor
+	"sport=45103" [label="sport=45103" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=45103"
+	"sport=45103" -- Sensor
+	"sport=49764" [label="sport=49764" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=49764"
+	"sport=49764" -- Sensor
+	"sport=32828" [label="sport=32828" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=32828"
+	"sport=32828" -- Sensor
+	"sport=49189" [label="sport=49189" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=49189"
+	"sport=49189" -- Sensor
+	"sport=38028" [label="sport=38028" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=38028"
+	"sport=38028" -- Sensor
+	"sport=50814" [label="sport=50814" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=50814"
+	"sport=50814" -- Sensor
+	"sport=55028" [label="sport=55028" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=55028"
+	"sport=55028" -- Sensor
+	"sport=49032" [label="sport=49032" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=49032"
+	"sport=49032" -- Sensor
+	"sport=49588" [label="sport=49588" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=49588"
+	"sport=49588" -- Sensor
+	"sport=55800" [label="sport=55800" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=55800"
+	"sport=55800" -- Sensor
+	"sport=44544" [label="sport=44544" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=44544"
+	"sport=44544" -- Sensor
+	"sport=42396" [label="sport=42396" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=42396"
+	"sport=42396" -- Sensor
+	"sport=41591" [label="sport=41591" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=41591"
+	"sport=41591" -- Sensor
+	"sport=54762" [label="sport=54762" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=54762"
+	"sport=54762" -- Sensor
+	"sport=42416" [label="sport=42416" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=42416"
+	"sport=42416" -- Sensor
+	"sport=60926" [label="sport=60926" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=60926"
+	"sport=60926" -- Sensor
+	"sport=52793" [label="sport=52793" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=52793"
+	"sport=52793" -- Sensor
+	"sport=53648" [label="sport=53648" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=53648"
+	"sport=53648" -- Sensor
+	"sport=44892" [label="sport=44892" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=44892"
+	"sport=44892" -- Sensor
+	"sport=34206" [label="sport=34206" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=34206"
+	"sport=34206" -- Sensor
+	"sport=47094" [label="sport=47094" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=47094"
+	"sport=47094" -- Sensor
+	"sport=56028" [label="sport=56028" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=56028"
+	"sport=56028" -- Sensor
+	"sport=56904" [label="sport=56904" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=56904"
+	"sport=56904" -- Sensor
+	"sport=42549" [label="sport=42549" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=42549"
+	"sport=42549" -- Sensor
+	"sport=45079" [label="sport=45079" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=45079"
+	"sport=45079" -- Sensor
+	"sport=50183" [label="sport=50183" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=50183"
+	"sport=50183" -- Sensor
+	"sport=52679" [label="sport=52679" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=52679"
+	"sport=52679" -- Sensor
+	"sport=32810" [label="sport=32810" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=32810"
+	"sport=32810" -- Sensor
+	"sport=56352" [label="sport=56352" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=56352"
+	"sport=56352" -- Sensor
+	"sport=55577" [label="sport=55577" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=55577"
+	"sport=55577" -- Sensor
+	"sport=58935" [label="sport=58935" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=58935"
+	"sport=58935" -- Sensor
+	"sport=48844" [label="sport=48844" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=48844"
+	"sport=48844" -- Sensor
+	"sport=49452" [label="sport=49452" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=49452"
+	"sport=49452" -- Sensor
+	"sport=60580" [label="sport=60580" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=60580"
+	"sport=60580" -- Sensor
+	"sport=36888" [label="sport=36888" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=36888"
+	"sport=36888" -- Sensor
+	"sport=33717" [label="sport=33717" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=33717"
+	"sport=33717" -- Sensor
+	"sport=40158" [label="sport=40158" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=40158"
+	"sport=40158" -- Sensor
+	"sport=50721" [label="sport=50721" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=50721"
+	"sport=50721" -- Sensor
+	"sport=49044" [label="sport=49044" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=49044"
+	"sport=49044" -- Sensor
+	"sport=46864" [label="sport=46864" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=46864"
+	"sport=46864" -- Sensor
+	"sport=443" [label="sport=443" color=beige shape=box style=filled]
+	"sip=69.173.158.65" -- "sport=443"
+	"sport=443" -- Sensor
+	"sport=54738" [label="sport=54738" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=54738"
+	"sport=54738" -- Sensor
+	"sport=36890" [label="sport=36890" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=36890"
+	"sport=36890" -- Sensor
+	"sport=54748" [label="sport=54748" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=54748"
+	"sport=54748" -- Sensor
+	"sport=47261" [label="sport=47261" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=47261"
+	"sport=47261" -- Sensor
+	"sport=37074" [label="sport=37074" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=37074"
+	"sport=37074" -- Sensor
+	"sport=35069" [label="sport=35069" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=35069"
+	"sport=35069" -- Sensor
+	"sport=48926" [label="sport=48926" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=48926"
+	"sport=48926" -- Sensor
+	"sport=42790" [label="sport=42790" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=42790"
+	"sport=42790" -- Sensor
+	"sport=54742" [label="sport=54742" color=beige shape=box style=filled]
+	"sip=192.168.16.106" -- "sport=54742"
+	"sport=54742" -- Sensor
+	"dport=42308" [label="dport=42308" color=beige shape=invhouse style=filled]
+	"dport=42308" -- "dip=192.168.16.106"
+	Sensor -- "dport=42308"
+	"dport=57986" [label="dport=57986" color=beige shape=invhouse style=filled]
+	"dport=57986" -- "dip=192.168.16.106"
+	Sensor -- "dport=57986"
+	"dport=52055" [label="dport=52055" color=beige shape=invhouse style=filled]
+	"dport=52055" -- "dip=192.168.16.106"
+	Sensor -- "dport=52055"
+	"dport=52656" [label="dport=52656" color=beige shape=invhouse style=filled]
+	"dport=52656" -- "dip=192.168.16.106"
+	Sensor -- "dport=52656"
+	"dport=35197" [label="dport=35197" color=beige shape=invhouse style=filled]
+	"dport=35197" -- "dip=192.168.16.106"
+	Sensor -- "dport=35197"
+	"dport=54162" [label="dport=54162" color=beige shape=invhouse style=filled]
+	"dport=54162" -- "dip=192.168.16.106"
+	Sensor -- "dport=54162"
+	"dport=45159" [label="dport=45159" color=beige shape=invhouse style=filled]
+	"dport=45159" -- "dip=192.168.16.106"
+	Sensor -- "dport=45159"
+	"dport=56452" [label="dport=56452" color=beige shape=invhouse style=filled]
+	"dport=56452" -- "dip=192.168.16.106"
+	Sensor -- "dport=56452"
+	"dport=54744" [label="dport=54744" color=beige shape=invhouse style=filled]
+	"dport=54744" -- "dip=192.168.16.106"
+	Sensor -- "dport=54744"
+	"dport=48856" [label="dport=48856" color=beige shape=invhouse style=filled]
+	"dport=48856" -- "dip=192.168.16.106"
+	Sensor -- "dport=48856"
+	"dport=49980" [label="dport=49980" color=beige shape=invhouse style=filled]
+	"dport=49980" -- "dip=192.168.16.106"
+	Sensor -- "dport=49980"
+	"dport=57796" [label="dport=57796" color=beige shape=invhouse style=filled]
+	"dport=57796" -- "dip=192.168.16.106"
+	Sensor -- "dport=57796"
+	"dport=50192" [label="dport=50192" color=beige shape=invhouse style=filled]
+	"dport=50192" -- "dip=192.168.16.106"
+	Sensor -- "dport=50192"
+	"dport=53692" [label="dport=53692" color=beige shape=invhouse style=filled]
+	"dport=53692" -- "dip=192.168.16.106"
+	Sensor -- "dport=53692"
+	"dport=47376" [label="dport=47376" color=beige shape=invhouse style=filled]
+	"dport=47376" -- "dip=192.168.16.106"
+	Sensor -- "dport=47376"
+	"dport=42103" [label="dport=42103" color=beige shape=invhouse style=filled]
+	"dport=42103" -- "dip=192.168.16.106"
+	Sensor -- "dport=42103"
+	"dport=58134" [label="dport=58134" color=beige shape=invhouse style=filled]
+	"dport=58134" -- "dip=192.168.16.106"
+	Sensor -- "dport=58134"
+	"dport=46982" [label="dport=46982" color=beige shape=invhouse style=filled]
+	"dport=46982" -- "dip=192.168.16.106"
+	Sensor -- "dport=46982"
+	"dport=39190" [label="dport=39190" color=beige shape=invhouse style=filled]
+	"dport=39190" -- "dip=192.168.16.106"
+	Sensor -- "dport=39190"
+	"dport=48842" [label="dport=48842" color=beige shape=invhouse style=filled]
+	"dport=48842" -- "dip=192.168.16.106"
+	Sensor -- "dport=48842"
+	"dport=50438" [label="dport=50438" color=beige shape=invhouse style=filled]
+	"dport=50438" -- "dip=192.168.16.106"
+	Sensor -- "dport=50438"
+	"dport=51159" [label="dport=51159" color=beige shape=invhouse style=filled]
+	"dport=51159" -- "dip=192.168.16.106"
+	Sensor -- "dport=51159"
+	"dport=40872" [label="dport=40872" color=beige shape=invhouse style=filled]
+	"dport=40872" -- "dip=192.168.16.106"
+	Sensor -- "dport=40872"
+	"dport=60164" [label="dport=60164" color=beige shape=invhouse style=filled]
+	"dport=60164" -- "dip=192.168.16.106"
+	Sensor -- "dport=60164"
+	"dport=34554" [label="dport=34554" color=beige shape=invhouse style=filled]
+	"dport=34554" -- "dip=192.168.16.106"
+	Sensor -- "dport=34554"
+	"dport=58394" [label="dport=58394" color=beige shape=invhouse style=filled]
+	"dport=58394" -- "dip=192.168.16.106"
+	Sensor -- "dport=58394"
+	"dport=41719" [label="dport=41719" color=beige shape=invhouse style=filled]
+	"dport=41719" -- "dip=192.168.16.106"
+	Sensor -- "dport=41719"
+	"dport=50828" [label="dport=50828" color=beige shape=invhouse style=filled]
+	"dport=50828" -- "dip=192.168.16.106"
+	Sensor -- "dport=50828"
+	"dport=42877" [label="dport=42877" color=beige shape=invhouse style=filled]
+	"dport=42877" -- "dip=192.168.16.106"
+	Sensor -- "dport=42877"
+	"dport=54285" [label="dport=54285" color=beige shape=invhouse style=filled]
+	"dport=54285" -- "dip=192.168.16.106"
+	Sensor -- "dport=54285"
+	"dport=39827" [label="dport=39827" color=beige shape=invhouse style=filled]
+	"dport=39827" -- "dip=192.168.16.106"
+	Sensor -- "dport=39827"
+	"dport=37256" [label="dport=37256" color=beige shape=invhouse style=filled]
+	"dport=37256" -- "dip=192.168.16.106"
+	Sensor -- "dport=37256"
+	"dport=42759" [label="dport=42759" color=beige shape=invhouse style=filled]
+	"dport=42759" -- "dip=192.168.16.106"
+	Sensor -- "dport=42759"
+	"dport=48522" [label="dport=48522" color=beige shape=invhouse style=filled]
+	"dport=48522" -- "dip=192.168.16.106"
+	Sensor -- "dport=48522"
+	"dport=44974" [label="dport=44974" color=beige shape=invhouse style=filled]
+	"dport=44974" -- "dip=192.168.16.106"
+	Sensor -- "dport=44974"
+	"dport=35942" [label="dport=35942" color=beige shape=invhouse style=filled]
+	"dport=35942" -- "dip=192.168.16.106"
+	Sensor -- "dport=35942"
+	"dport=36802" [label="dport=36802" color=beige shape=invhouse style=filled]
+	"dport=36802" -- "dip=192.168.16.106"
+	Sensor -- "dport=36802"
+	"dport=58622" [label="dport=58622" color=beige shape=invhouse style=filled]
+	"dport=58622" -- "dip=192.168.16.106"
+	Sensor -- "dport=58622"
+	"dport=45574" [label="dport=45574" color=beige shape=invhouse style=filled]
+	"dport=45574" -- "dip=192.168.16.106"
+	Sensor -- "dport=45574"
+	"dport=39302" [label="dport=39302" color=beige shape=invhouse style=filled]
+	"dport=39302" -- "dip=192.168.16.106"
+	Sensor -- "dport=39302"
+	"dport=56873" [label="dport=56873" color=beige shape=invhouse style=filled]
+	"dport=56873" -- "dip=192.168.16.106"
+	Sensor -- "dport=56873"
+	"dport=34174" [label="dport=34174" color=beige shape=invhouse style=filled]
+	"dport=34174" -- "dip=192.168.16.106"
+	Sensor -- "dport=34174"
+	"dport=55984" [label="dport=55984" color=beige shape=invhouse style=filled]
+	"dport=55984" -- "dip=192.168.16.106"
+	Sensor -- "dport=55984"
+	"dport=35019" [label="dport=35019" color=beige shape=invhouse style=filled]
+	"dport=35019" -- "dip=192.168.16.106"
+	Sensor -- "dport=35019"
+	"dport=55372" [label="dport=55372" color=beige shape=invhouse style=filled]
+	"dport=55372" -- "dip=192.168.16.106"
+	Sensor -- "dport=55372"
+	"dport=59737" [label="dport=59737" color=beige shape=invhouse style=filled]
+	"dport=59737" -- "dip=192.168.16.106"
+	Sensor -- "dport=59737"
+	"dport=49806" [label="dport=49806" color=beige shape=invhouse style=filled]
+	"dport=49806" -- "dip=192.168.16.106"
+	Sensor -- "dport=49806"
+	"dport=55090" [label="dport=55090" color=beige shape=invhouse style=filled]
+	"dport=55090" -- "dip=192.168.16.106"
+	Sensor -- "dport=55090"
+	"dport=50058" [label="dport=50058" color=beige shape=invhouse style=filled]
+	"dport=50058" -- "dip=192.168.16.106"
+	Sensor -- "dport=50058"
+	"dport=33274" [label="dport=33274" color=beige shape=invhouse style=filled]
+	"dport=33274" -- "dip=192.168.16.106"
+	Sensor -- "dport=33274"
+	"dport=56213" [label="dport=56213" color=beige shape=invhouse style=filled]
+	"dport=56213" -- "dip=192.168.16.106"
+	Sensor -- "dport=56213"
+	"dport=443" [label="dport=443" color=beige shape=invhouse style=filled]
+	"dport=443" -- "dip=104.131.183.181"
+	Sensor -- "dport=443"
+	"dport=48997" [label="dport=48997" color=beige shape=invhouse style=filled]
+	"dport=48997" -- "dip=192.168.16.106"
+	Sensor -- "dport=48997"
+	"dport=37560" [label="dport=37560" color=beige shape=invhouse style=filled]
+	"dport=37560" -- "dip=192.168.16.106"
+	Sensor -- "dport=37560"
+	"dport=36978" [label="dport=36978" color=beige shape=invhouse style=filled]
+	"dport=36978" -- "dip=192.168.16.106"
+	Sensor -- "dport=36978"
+	"dport=36556" [label="dport=36556" color=beige shape=invhouse style=filled]
+	"dport=36556" -- "dip=192.168.16.106"
+	Sensor -- "dport=36556"
+	"dport=45031" [label="dport=45031" color=beige shape=invhouse style=filled]
+	"dport=45031" -- "dip=192.168.16.106"
+	Sensor -- "dport=45031"
+	"dport=58831" [label="dport=58831" color=beige shape=invhouse style=filled]
+	"dport=58831" -- "dip=192.168.16.106"
+	Sensor -- "dport=58831"
+	"dport=56306" [label="dport=56306" color=beige shape=invhouse style=filled]
+	"dport=56306" -- "dip=192.168.16.106"
+	Sensor -- "dport=56306"
+	"dport=55978" [label="dport=55978" color=beige shape=invhouse style=filled]
+	"dport=55978" -- "dip=192.168.16.106"
+	Sensor -- "dport=55978"
+	"dport=50624" [label="dport=50624" color=beige shape=invhouse style=filled]
+	"dport=50624" -- "dip=192.168.16.106"
+	Sensor -- "dport=50624"
+	"dport=38876" [label="dport=38876" color=beige shape=invhouse style=filled]
+	"dport=38876" -- "dip=192.168.16.106"
+	Sensor -- "dport=38876"
+	"dport=49371" [label="dport=49371" color=beige shape=invhouse style=filled]
+	"dport=49371" -- "dip=192.168.16.106"
+	Sensor -- "dport=49371"
+	"dport=50446" [label="dport=50446" color=beige shape=invhouse style=filled]
+	"dport=50446" -- "dip=192.168.16.106"
+	Sensor -- "dport=50446"
+	"dport=56783" [label="dport=56783" color=beige shape=invhouse style=filled]
+	"dport=56783" -- "dip=192.168.16.106"
+	Sensor -- "dport=56783"
+	"dport=53206" [label="dport=53206" color=beige shape=invhouse style=filled]
+	"dport=53206" -- "dip=192.168.16.106"
+	Sensor -- "dport=53206"
+	"dport=49830" [label="dport=49830" color=beige shape=invhouse style=filled]
+	"dport=49830" -- "dip=192.168.16.106"
+	Sensor -- "dport=49830"
+	"dport=52915" [label="dport=52915" color=beige shape=invhouse style=filled]
+	"dport=52915" -- "dip=192.168.16.106"
+	Sensor -- "dport=52915"
+	"dport=54166" [label="dport=54166" color=beige shape=invhouse style=filled]
+	"dport=54166" -- "dip=192.168.16.106"
+	Sensor -- "dport=54166"
+	"dport=45250" [label="dport=45250" color=beige shape=invhouse style=filled]
+	"dport=45250" -- "dip=192.168.16.106"
+	Sensor -- "dport=45250"
+	"dport=47582" [label="dport=47582" color=beige shape=invhouse style=filled]
+	"dport=47582" -- "dip=192.168.16.106"
+	Sensor -- "dport=47582"
+	"dport=55016" [label="dport=55016" color=beige shape=invhouse style=filled]
+	"dport=55016" -- "dip=192.168.16.106"
+	Sensor -- "dport=55016"
+	"dport=59522" [label="dport=59522" color=beige shape=invhouse style=filled]
+	"dport=59522" -- "dip=192.168.16.106"
+	Sensor -- "dport=59522"
+	"dport=49818" [label="dport=49818" color=beige shape=invhouse style=filled]
+	"dport=49818" -- "dip=192.168.16.106"
+	Sensor -- "dport=49818"
+	"dport=55210" [label="dport=55210" color=beige shape=invhouse style=filled]
+	"dport=55210" -- "dip=192.168.16.106"
+	Sensor -- "dport=55210"
+	"dport=49922" [label="dport=49922" color=beige shape=invhouse style=filled]
+	"dport=49922" -- "dip=192.168.16.106"
+	Sensor -- "dport=49922"
+	"dport=57738" [label="dport=57738" color=beige shape=invhouse style=filled]
+	"dport=57738" -- "dip=192.168.16.106"
+	Sensor -- "dport=57738"
+	"dport=52705" [label="dport=52705" color=beige shape=invhouse style=filled]
+	"dport=52705" -- "dip=192.168.16.106"
+	Sensor -- "dport=52705"
+	"dport=59344" [label="dport=59344" color=beige shape=invhouse style=filled]
+	"dport=59344" -- "dip=192.168.16.106"
+	Sensor -- "dport=59344"
+	"dport=39480" [label="dport=39480" color=beige shape=invhouse style=filled]
+	"dport=39480" -- "dip=192.168.16.106"
+	Sensor -- "dport=39480"
+	"dport=54764" [label="dport=54764" color=beige shape=invhouse style=filled]
+	"dport=54764" -- "dip=192.168.16.106"
+	Sensor -- "dport=54764"
+	"dport=54972" [label="dport=54972" color=beige shape=invhouse style=filled]
+	"dport=54972" -- "dip=192.168.16.106"
+	Sensor -- "dport=54972"
+	"dport=49471" [label="dport=49471" color=beige shape=invhouse style=filled]
+	"dport=49471" -- "dip=192.168.16.106"
+	Sensor -- "dport=49471"
+	"dport=54760" [label="dport=54760" color=beige shape=invhouse style=filled]
+	"dport=54760" -- "dip=192.168.16.106"
+	Sensor -- "dport=54760"
+	"dport=55068" [label="dport=55068" color=beige shape=invhouse style=filled]
+	"dport=55068" -- "dip=192.168.16.106"
+	Sensor -- "dport=55068"
+	"dport=48272" [label="dport=48272" color=beige shape=invhouse style=filled]
+	"dport=48272" -- "dip=192.168.16.106"
+	Sensor -- "dport=48272"
+	"dport=47083" [label="dport=47083" color=beige shape=invhouse style=filled]
+	"dport=47083" -- "dip=192.168.16.106"
+	Sensor -- "dport=47083"
+	"dport=56432" [label="dport=56432" color=beige shape=invhouse style=filled]
+	"dport=56432" -- "dip=192.168.16.106"
+	Sensor -- "dport=56432"
+	"dport=50186" [label="dport=50186" color=beige shape=invhouse style=filled]
+	"dport=50186" -- "dip=192.168.16.106"
+	Sensor -- "dport=50186"
+	"dport=33077" [label="dport=33077" color=beige shape=invhouse style=filled]
+	"dport=33077" -- "dip=192.168.16.106"
+	Sensor -- "dport=33077"
+	"dport=46381" [label="dport=46381" color=beige shape=invhouse style=filled]
+	"dport=46381" -- "dip=192.168.16.106"
+	Sensor -- "dport=46381"
+	"dport=39253" [label="dport=39253" color=beige shape=invhouse style=filled]
+	"dport=39253" -- "dip=192.168.16.106"
+	Sensor -- "dport=39253"
+	"dport=51862" [label="dport=51862" color=beige shape=invhouse style=filled]
+	"dport=51862" -- "dip=192.168.16.106"
+	Sensor -- "dport=51862"
+	"dport=49908" [label="dport=49908" color=beige shape=invhouse style=filled]
+	"dport=49908" -- "dip=192.168.16.106"
+	Sensor -- "dport=49908"
+	"dport=38042" [label="dport=38042" color=beige shape=invhouse style=filled]
+	"dport=38042" -- "dip=192.168.16.106"
+	Sensor -- "dport=38042"
+	"dport=38488" [label="dport=38488" color=beige shape=invhouse style=filled]
+	"dport=38488" -- "dip=192.168.16.106"
+	Sensor -- "dport=38488"
+	"dport=37824" [label="dport=37824" color=beige shape=invhouse style=filled]
+	"dport=37824" -- "dip=192.168.16.106"
+	Sensor -- "dport=37824"
+	"dport=49714" [label="dport=49714" color=beige shape=invhouse style=filled]
+	"dport=49714" -- "dip=192.168.16.106"
+	Sensor -- "dport=49714"
+	"dport=47096" [label="dport=47096" color=beige shape=invhouse style=filled]
+	"dport=47096" -- "dip=192.168.16.106"
+	Sensor -- "dport=47096"
+	"dport=47915" [label="dport=47915" color=beige shape=invhouse style=filled]
+	"dport=47915" -- "dip=192.168.16.106"
+	Sensor -- "dport=47915"
+	"dport=55030" [label="dport=55030" color=beige shape=invhouse style=filled]
+	"dport=55030" -- "dip=192.168.16.106"
+	Sensor -- "dport=55030"
+	"dport=56072" [label="dport=56072" color=beige shape=invhouse style=filled]
+	"dport=56072" -- "dip=192.168.16.106"
+	Sensor -- "dport=56072"
+	"dport=37999" [label="dport=37999" color=beige shape=invhouse style=filled]
+	"dport=37999" -- "dip=192.168.16.106"
+	Sensor -- "dport=37999"
+	"dport=58396" [label="dport=58396" color=beige shape=invhouse style=filled]
+	"dport=58396" -- "dip=192.168.16.106"
+	Sensor -- "dport=58396"
+	"dport=43652" [label="dport=43652" color=beige shape=invhouse style=filled]
+	"dport=43652" -- "dip=192.168.16.106"
+	Sensor -- "dport=43652"
+	"dport=38675" [label="dport=38675" color=beige shape=invhouse style=filled]
+	"dport=38675" -- "dip=192.168.16.106"
+	Sensor -- "dport=38675"
+	"dport=41571" [label="dport=41571" color=beige shape=invhouse style=filled]
+	"dport=41571" -- "dip=192.168.16.106"
+	Sensor -- "dport=41571"
+	"dport=38522" [label="dport=38522" color=beige shape=invhouse style=filled]
+	"dport=38522" -- "dip=192.168.16.106"
+	Sensor -- "dport=38522"
+	"dport=51908" [label="dport=51908" color=beige shape=invhouse style=filled]
+	"dport=51908" -- "dip=192.168.16.106"
+	Sensor -- "dport=51908"
+	"dport=41563" [label="dport=41563" color=beige shape=invhouse style=filled]
+	"dport=41563" -- "dip=192.168.16.106"
+	Sensor -- "dport=41563"
+	"dport=34465" [label="dport=34465" color=beige shape=invhouse style=filled]
+	"dport=34465" -- "dip=192.168.16.106"
+	Sensor -- "dport=34465"
+	"dport=49924" [label="dport=49924" color=beige shape=invhouse style=filled]
+	"dport=49924" -- "dip=192.168.16.106"
+	Sensor -- "dport=49924"
+	"dport=52060" [label="dport=52060" color=beige shape=invhouse style=filled]
+	"dport=52060" -- "dip=192.168.16.106"
+	Sensor -- "dport=52060"
+	"dport=47110" [label="dport=47110" color=beige shape=invhouse style=filled]
+	"dport=47110" -- "dip=192.168.16.106"
+	Sensor -- "dport=47110"
+	"dport=34365" [label="dport=34365" color=beige shape=invhouse style=filled]
+	"dport=34365" -- "dip=192.168.16.106"
+	Sensor -- "dport=34365"
+	"dport=53245" [label="dport=53245" color=beige shape=invhouse style=filled]
+	"dport=53245" -- "dip=192.168.16.106"
+	Sensor -- "dport=53245"
+	"dport=36372" [label="dport=36372" color=beige shape=invhouse style=filled]
+	"dport=36372" -- "dip=192.168.16.106"
+	Sensor -- "dport=36372"
+	"dport=44106" [label="dport=44106" color=beige shape=invhouse style=filled]
+	"dport=44106" -- "dip=192.168.16.106"
+	Sensor -- "dport=44106"
+	"dport=52128" [label="dport=52128" color=beige shape=invhouse style=filled]
+	"dport=52128" -- "dip=192.168.16.106"
+	Sensor -- "dport=52128"
+	"dport=55373" [label="dport=55373" color=beige shape=invhouse style=filled]
+	"dport=55373" -- "dip=192.168.16.106"
+	Sensor -- "dport=55373"
+	"dport=47166" [label="dport=47166" color=beige shape=invhouse style=filled]
+	"dport=47166" -- "dip=192.168.16.106"
+	Sensor -- "dport=47166"
+	"dport=40324" [label="dport=40324" color=beige shape=invhouse style=filled]
+	"dport=40324" -- "dip=192.168.16.106"
+	Sensor -- "dport=40324"
+	"dport=36285" [label="dport=36285" color=beige shape=invhouse style=filled]
+	"dport=36285" -- "dip=192.168.16.106"
+	Sensor -- "dport=36285"
+	"dport=52056" [label="dport=52056" color=beige shape=invhouse style=filled]
+	"dport=52056" -- "dip=192.168.16.106"
+	Sensor -- "dport=52056"
+	"dport=443" [label="dport=443" color=beige shape=invhouse style=filled]
+	"dport=443" -- "dip=185.86.139.59"
+	Sensor -- "dport=443"
+	"dport=42569" [label="dport=42569" color=beige shape=invhouse style=filled]
+	"dport=42569" -- "dip=192.168.16.106"
+	Sensor -- "dport=42569"
+	"dport=57879" [label="dport=57879" color=beige shape=invhouse style=filled]
+	"dport=57879" -- "dip=192.168.16.106"
+	Sensor -- "dport=57879"
+	"dport=53" [label="dport=53" color=beige shape=invhouse style=filled]
+	"dport=53" -- "dip=192.168.16.1"
+	Sensor -- "dport=53"
+	"dport=39976" [label="dport=39976" color=beige shape=invhouse style=filled]
+	"dport=39976" -- "dip=192.168.16.106"
+	Sensor -- "dport=39976"
+	"dport=47824" [label="dport=47824" color=beige shape=invhouse style=filled]
+	"dport=47824" -- "dip=192.168.16.106"
+	Sensor -- "dport=47824"
+	"dport=54756" [label="dport=54756" color=beige shape=invhouse style=filled]
+	"dport=54756" -- "dip=192.168.16.106"
+	Sensor -- "dport=54756"
+	"dport=54758" [label="dport=54758" color=beige shape=invhouse style=filled]
+	"dport=54758" -- "dip=192.168.16.106"
+	Sensor -- "dport=54758"
+	"dport=54754" [label="dport=54754" color=beige shape=invhouse style=filled]
+	"dport=54754" -- "dip=192.168.16.106"
+	Sensor -- "dport=54754"
+	"dport=48454" [label="dport=48454" color=beige shape=invhouse style=filled]
+	"dport=48454" -- "dip=192.168.16.106"
+	Sensor -- "dport=48454"
+	"dport=49828" [label="dport=49828" color=beige shape=invhouse style=filled]
+	"dport=49828" -- "dip=192.168.16.106"
+	Sensor -- "dport=49828"
+	"dport=54104" [label="dport=54104" color=beige shape=invhouse style=filled]
+	"dport=54104" -- "dip=192.168.16.106"
+	Sensor -- "dport=54104"
+	"dport=47098" [label="dport=47098" color=beige shape=invhouse style=filled]
+	"dport=47098" -- "dip=192.168.16.106"
+	Sensor -- "dport=47098"
+	"dport=56689" [label="dport=56689" color=beige shape=invhouse style=filled]
+	"dport=56689" -- "dip=192.168.16.106"
+	Sensor -- "dport=56689"
+	"dport=35332" [label="dport=35332" color=beige shape=invhouse style=filled]
+	"dport=35332" -- "dip=192.168.16.106"
+	Sensor -- "dport=35332"
+	"dport=36214" [label="dport=36214" color=beige shape=invhouse style=filled]
+	"dport=36214" -- "dip=192.168.16.106"
+	Sensor -- "dport=36214"
+	"dport=45380" [label="dport=45380" color=beige shape=invhouse style=filled]
+	"dport=45380" -- "dip=192.168.16.106"
+	Sensor -- "dport=45380"
+	"dport=54740" [label="dport=54740" color=beige shape=invhouse style=filled]
+	"dport=54740" -- "dip=192.168.16.106"
+	Sensor -- "dport=54740"
+	"dport=49702" [label="dport=49702" color=beige shape=invhouse style=filled]
+	"dport=49702" -- "dip=192.168.16.106"
+	Sensor -- "dport=49702"
+	"dport=51872" [label="dport=51872" color=beige shape=invhouse style=filled]
+	"dport=51872" -- "dip=192.168.16.106"
+	Sensor -- "dport=51872"
+	"dport=55184" [label="dport=55184" color=beige shape=invhouse style=filled]
+	"dport=55184" -- "dip=192.168.16.106"
+	Sensor -- "dport=55184"
+	"dport=50194" [label="dport=50194" color=beige shape=invhouse style=filled]
+	"dport=50194" -- "dip=192.168.16.106"
+	Sensor -- "dport=50194"
+	"dport=37830" [label="dport=37830" color=beige shape=invhouse style=filled]
+	"dport=37830" -- "dip=192.168.16.106"
+	Sensor -- "dport=37830"
+	"dport=44948" [label="dport=44948" color=beige shape=invhouse style=filled]
+	"dport=44948" -- "dip=192.168.16.106"
+	Sensor -- "dport=44948"
+	"dport=59148" [label="dport=59148" color=beige shape=invhouse style=filled]
+	"dport=59148" -- "dip=192.168.16.106"
+	Sensor -- "dport=59148"
+	"dport=50002" [label="dport=50002" color=beige shape=invhouse style=filled]
+	"dport=50002" -- "dip=192.168.16.106"
+	Sensor -- "dport=50002"
+	"dport=60350" [label="dport=60350" color=beige shape=invhouse style=filled]
+	"dport=60350" -- "dip=192.168.16.106"
+	Sensor -- "dport=60350"
+	"dport=50810" [label="dport=50810" color=beige shape=invhouse style=filled]
+	"dport=50810" -- "dip=192.168.16.106"
+	Sensor -- "dport=50810"
+	"dport=45382" [label="dport=45382" color=beige shape=invhouse style=filled]
+	"dport=45382" -- "dip=192.168.16.106"
+	Sensor -- "dport=45382"
+	"dport=45671" [label="dport=45671" color=beige shape=invhouse style=filled]
+	"dport=45671" -- "dip=192.168.16.106"
+	Sensor -- "dport=45671"
+	"dport=49494" [label="dport=49494" color=beige shape=invhouse style=filled]
+	"dport=49494" -- "dip=192.168.16.106"
+	Sensor -- "dport=49494"
+	"dport=54172" [label="dport=54172" color=beige shape=invhouse style=filled]
+	"dport=54172" -- "dip=192.168.16.106"
+	Sensor -- "dport=54172"
+	"dport=43326" [label="dport=43326" color=beige shape=invhouse style=filled]
+	"dport=43326" -- "dip=192.168.16.106"
+	Sensor -- "dport=43326"
+	"dport=43593" [label="dport=43593" color=beige shape=invhouse style=filled]
+	"dport=43593" -- "dip=192.168.16.106"
+	Sensor -- "dport=43593"
+	"dport=35987" [label="dport=35987" color=beige shape=invhouse style=filled]
+	"dport=35987" -- "dip=192.168.16.106"
+	Sensor -- "dport=35987"
+	"dport=46803" [label="dport=46803" color=beige shape=invhouse style=filled]
+	"dport=46803" -- "dip=192.168.16.106"
+	Sensor -- "dport=46803"
+	"dport=38173" [label="dport=38173" color=beige shape=invhouse style=filled]
+	"dport=38173" -- "dip=192.168.16.106"
+	Sensor -- "dport=38173"
+	"dport=57670" [label="dport=57670" color=beige shape=invhouse style=filled]
+	"dport=57670" -- "dip=192.168.16.106"
+	Sensor -- "dport=57670"
+	"dport=39872" [label="dport=39872" color=beige shape=invhouse style=filled]
+	"dport=39872" -- "dip=192.168.16.106"
+	Sensor -- "dport=39872"
+	"dport=55390" [label="dport=55390" color=beige shape=invhouse style=filled]
+	"dport=55390" -- "dip=192.168.16.106"
+	Sensor -- "dport=55390"
+	"dport=47087" [label="dport=47087" color=beige shape=invhouse style=filled]
+	"dport=47087" -- "dip=192.168.16.106"
+	Sensor -- "dport=47087"
+	"dport=60594" [label="dport=60594" color=beige shape=invhouse style=filled]
+	"dport=60594" -- "dip=192.168.16.106"
+	Sensor -- "dport=60594"
+	"dport=47174" [label="dport=47174" color=beige shape=invhouse style=filled]
+	"dport=47174" -- "dip=192.168.16.106"
+	Sensor -- "dport=47174"
+	"dport=51236" [label="dport=51236" color=beige shape=invhouse style=filled]
+	"dport=51236" -- "dip=192.168.16.106"
+	Sensor -- "dport=51236"
+	"dport=58152" [label="dport=58152" color=beige shape=invhouse style=filled]
+	"dport=58152" -- "dip=192.168.16.106"
+	Sensor -- "dport=58152"
+	"dport=56386" [label="dport=56386" color=beige shape=invhouse style=filled]
+	"dport=56386" -- "dip=192.168.16.106"
+	Sensor -- "dport=56386"
+	"dport=48470" [label="dport=48470" color=beige shape=invhouse style=filled]
+	"dport=48470" -- "dip=192.168.16.106"
+	Sensor -- "dport=48470"
+	"dport=40926" [label="dport=40926" color=beige shape=invhouse style=filled]
+	"dport=40926" -- "dip=192.168.16.106"
+	Sensor -- "dport=40926"
+	"dport=49992" [label="dport=49992" color=beige shape=invhouse style=filled]
+	"dport=49992" -- "dip=192.168.16.106"
+	Sensor -- "dport=49992"
+	"dport=35023" [label="dport=35023" color=beige shape=invhouse style=filled]
+	"dport=35023" -- "dip=192.168.16.106"
+	Sensor -- "dport=35023"
+	"dport=49920" [label="dport=49920" color=beige shape=invhouse style=filled]
+	"dport=49920" -- "dip=192.168.16.106"
+	Sensor -- "dport=49920"
+	"dport=42804" [label="dport=42804" color=beige shape=invhouse style=filled]
+	"dport=42804" -- "dip=192.168.16.106"
+	Sensor -- "dport=42804"
+	"dport=43049" [label="dport=43049" color=beige shape=invhouse style=filled]
+	"dport=43049" -- "dip=192.168.16.106"
+	Sensor -- "dport=43049"
+	"dport=51524" [label="dport=51524" color=beige shape=invhouse style=filled]
+	"dport=51524" -- "dip=192.168.16.106"
+	Sensor -- "dport=51524"
+	"dport=49938" [label="dport=49938" color=beige shape=invhouse style=filled]
+	"dport=49938" -- "dip=192.168.16.106"
+	Sensor -- "dport=49938"
+	"dport=52775" [label="dport=52775" color=beige shape=invhouse style=filled]
+	"dport=52775" -- "dip=192.168.16.106"
+	Sensor -- "dport=52775"
+	"dport=47532" [label="dport=47532" color=beige shape=invhouse style=filled]
+	"dport=47532" -- "dip=192.168.16.106"
+	Sensor -- "dport=47532"
+	"dport=56728" [label="dport=56728" color=beige shape=invhouse style=filled]
+	"dport=56728" -- "dip=192.168.16.106"
+	Sensor -- "dport=56728"
+	"dport=53451" [label="dport=53451" color=beige shape=invhouse style=filled]
+	"dport=53451" -- "dip=192.168.16.106"
+	Sensor -- "dport=53451"
+	"dport=39781" [label="dport=39781" color=beige shape=invhouse style=filled]
+	"dport=39781" -- "dip=192.168.16.106"
+	Sensor -- "dport=39781"
+	"dport=57136" [label="dport=57136" color=beige shape=invhouse style=filled]
+	"dport=57136" -- "dip=192.168.16.106"
+	Sensor -- "dport=57136"
+	"dport=55834" [label="dport=55834" color=beige shape=invhouse style=filled]
+	"dport=55834" -- "dip=192.168.16.106"
+	Sensor -- "dport=55834"
+	"dport=47714" [label="dport=47714" color=beige shape=invhouse style=filled]
+	"dport=47714" -- "dip=192.168.16.106"
+	Sensor -- "dport=47714"
+	"dport=55374" [label="dport=55374" color=beige shape=invhouse style=filled]
+	"dport=55374" -- "dip=192.168.16.106"
+	Sensor -- "dport=55374"
+	"dport=43195" [label="dport=43195" color=beige shape=invhouse style=filled]
+	"dport=43195" -- "dip=192.168.16.106"
+	Sensor -- "dport=43195"
+	"dport=54186" [label="dport=54186" color=beige shape=invhouse style=filled]
+	"dport=54186" -- "dip=192.168.16.106"
+	Sensor -- "dport=54186"
+	"dport=59848" [label="dport=59848" color=beige shape=invhouse style=filled]
+	"dport=59848" -- "dip=192.168.16.106"
+	Sensor -- "dport=59848"
+	"dport=60210" [label="dport=60210" color=beige shape=invhouse style=filled]
+	"dport=60210" -- "dip=192.168.16.106"
+	Sensor -- "dport=60210"
+	"dport=44686" [label="dport=44686" color=beige shape=invhouse style=filled]
+	"dport=44686" -- "dip=192.168.16.106"
+	Sensor -- "dport=44686"
+	"dport=58520" [label="dport=58520" color=beige shape=invhouse style=filled]
+	"dport=58520" -- "dip=192.168.16.106"
+	Sensor -- "dport=58520"
+	"dport=38839" [label="dport=38839" color=beige shape=invhouse style=filled]
+	"dport=38839" -- "dip=192.168.16.106"
+	Sensor -- "dport=38839"
+	"dport=54164" [label="dport=54164" color=beige shape=invhouse style=filled]
+	"dport=54164" -- "dip=192.168.16.106"
+	Sensor -- "dport=54164"
+	"dport=46992" [label="dport=46992" color=beige shape=invhouse style=filled]
+	"dport=46992" -- "dip=192.168.16.106"
+	Sensor -- "dport=46992"
+	"dport=48446" [label="dport=48446" color=beige shape=invhouse style=filled]
+	"dport=48446" -- "dip=192.168.16.106"
+	Sensor -- "dport=48446"
+	"dport=54244" [label="dport=54244" color=beige shape=invhouse style=filled]
+	"dport=54244" -- "dip=192.168.16.106"
+	Sensor -- "dport=54244"
+	"dport=54412" [label="dport=54412" color=beige shape=invhouse style=filled]
+	"dport=54412" -- "dip=192.168.16.106"
+	Sensor -- "dport=54412"
+	"dport=58778" [label="dport=58778" color=beige shape=invhouse style=filled]
+	"dport=58778" -- "dip=192.168.16.106"
+	Sensor -- "dport=58778"
+	"dport=53202" [label="dport=53202" color=beige shape=invhouse style=filled]
+	"dport=53202" -- "dip=192.168.16.106"
+	Sensor -- "dport=53202"
+	"dport=41867" [label="dport=41867" color=beige shape=invhouse style=filled]
+	"dport=41867" -- "dip=192.168.16.106"
+	Sensor -- "dport=41867"
+	"dport=56536" [label="dport=56536" color=beige shape=invhouse style=filled]
+	"dport=56536" -- "dip=192.168.16.106"
+	Sensor -- "dport=56536"
+	"dport=48858" [label="dport=48858" color=beige shape=invhouse style=filled]
+	"dport=48858" -- "dip=192.168.16.106"
+	Sensor -- "dport=48858"
+	"dport=52512" [label="dport=52512" color=beige shape=invhouse style=filled]
+	"dport=52512" -- "dip=192.168.16.106"
+	Sensor -- "dport=52512"
+	"dport=47000" [label="dport=47000" color=beige shape=invhouse style=filled]
+	"dport=47000" -- "dip=192.168.16.106"
+	Sensor -- "dport=47000"
+	"dport=54720" [label="dport=54720" color=beige shape=invhouse style=filled]
+	"dport=54720" -- "dip=192.168.16.106"
+	Sensor -- "dport=54720"
+	"dport=54746" [label="dport=54746" color=beige shape=invhouse style=filled]
+	"dport=54746" -- "dip=192.168.16.106"
+	Sensor -- "dport=54746"
+	"dport=59717" [label="dport=59717" color=beige shape=invhouse style=filled]
+	"dport=59717" -- "dip=192.168.16.106"
+	Sensor -- "dport=59717"
+	"dport=44680" [label="dport=44680" color=beige shape=invhouse style=filled]
+	"dport=44680" -- "dip=192.168.16.106"
+	Sensor -- "dport=44680"
+	"dport=51932" [label="dport=51932" color=beige shape=invhouse style=filled]
+	"dport=51932" -- "dip=192.168.16.106"
+	Sensor -- "dport=51932"
+	"dport=50177" [label="dport=50177" color=beige shape=invhouse style=filled]
+	"dport=50177" -- "dip=192.168.16.106"
+	Sensor -- "dport=50177"
+	"dport=46100" [label="dport=46100" color=beige shape=invhouse style=filled]
+	"dport=46100" -- "dip=192.168.16.106"
+	Sensor -- "dport=46100"
+	"dport=52058" [label="dport=52058" color=beige shape=invhouse style=filled]
+	"dport=52058" -- "dip=192.168.16.106"
+	Sensor -- "dport=52058"
+	"dport=38115" [label="dport=38115" color=beige shape=invhouse style=filled]
+	"dport=38115" -- "dip=192.168.16.106"
+	Sensor -- "dport=38115"
+	"dport=49994" [label="dport=49994" color=beige shape=invhouse style=filled]
+	"dport=49994" -- "dip=192.168.16.106"
+	Sensor -- "dport=49994"
+	"dport=45605" [label="dport=45605" color=beige shape=invhouse style=filled]
+	"dport=45605" -- "dip=192.168.16.106"
+	Sensor -- "dport=45605"
+	"dport=60865" [label="dport=60865" color=beige shape=invhouse style=filled]
+	"dport=60865" -- "dip=192.168.16.106"
+	Sensor -- "dport=60865"
+	"dport=32894" [label="dport=32894" color=beige shape=invhouse style=filled]
+	"dport=32894" -- "dip=192.168.16.106"
+	Sensor -- "dport=32894"
+	"dport=50730" [label="dport=50730" color=beige shape=invhouse style=filled]
+	"dport=50730" -- "dip=192.168.16.106"
+	Sensor -- "dport=50730"
+	"dport=60864" [label="dport=60864" color=beige shape=invhouse style=filled]
+	"dport=60864" -- "dip=192.168.16.106"
+	Sensor -- "dport=60864"
+	"dport=37244" [label="dport=37244" color=beige shape=invhouse style=filled]
+	"dport=37244" -- "dip=192.168.16.106"
+	Sensor -- "dport=37244"
+	"dport=41087" [label="dport=41087" color=beige shape=invhouse style=filled]
+	"dport=41087" -- "dip=192.168.16.106"
+	Sensor -- "dport=41087"
+	"dport=46239" [label="dport=46239" color=beige shape=invhouse style=filled]
+	"dport=46239" -- "dip=192.168.16.106"
+	Sensor -- "dport=46239"
+	"dport=52828" [label="dport=52828" color=beige shape=invhouse style=filled]
+	"dport=52828" -- "dip=192.168.16.106"
+	Sensor -- "dport=52828"
+	"dport=49906" [label="dport=49906" color=beige shape=invhouse style=filled]
+	"dport=49906" -- "dip=192.168.16.106"
+	Sensor -- "dport=49906"
+	"dport=45100" [label="dport=45100" color=beige shape=invhouse style=filled]
+	"dport=45100" -- "dip=192.168.16.106"
+	Sensor -- "dport=45100"
+	"dport=47352" [label="dport=47352" color=beige shape=invhouse style=filled]
+	"dport=47352" -- "dip=192.168.16.106"
+	Sensor -- "dport=47352"
+	"dport=2048" [label="dport=2048" color=beige shape=invhouse style=filled]
+	"dport=2048" -- "dip=192.168.16.106"
+	Sensor -- "dport=2048"
+	"dport=58218" [label="dport=58218" color=beige shape=invhouse style=filled]
+	"dport=58218" -- "dip=192.168.16.106"
+	Sensor -- "dport=58218"
+	"dport=54229" [label="dport=54229" color=beige shape=invhouse style=filled]
+	"dport=54229" -- "dip=192.168.16.106"
+	Sensor -- "dport=54229"
+	"dport=51700" [label="dport=51700" color=beige shape=invhouse style=filled]
+	"dport=51700" -- "dip=192.168.16.106"
+	Sensor -- "dport=51700"
+	"dport=56434" [label="dport=56434" color=beige shape=invhouse style=filled]
+	"dport=56434" -- "dip=192.168.16.106"
+	Sensor -- "dport=56434"
+	"dport=39985" [label="dport=39985" color=beige shape=invhouse style=filled]
+	"dport=39985" -- "dip=192.168.16.106"
+	Sensor -- "dport=39985"
+	"dport=49904" [label="dport=49904" color=beige shape=invhouse style=filled]
+	"dport=49904" -- "dip=192.168.16.106"
+	Sensor -- "dport=49904"
+	"dport=35037" [label="dport=35037" color=beige shape=invhouse style=filled]
+	"dport=35037" -- "dip=192.168.16.106"
+	Sensor -- "dport=35037"
+	"dport=57595" [label="dport=57595" color=beige shape=invhouse style=filled]
+	"dport=57595" -- "dip=192.168.16.106"
+	Sensor -- "dport=57595"
+	"dport=49826" [label="dport=49826" color=beige shape=invhouse style=filled]
+	"dport=49826" -- "dip=192.168.16.106"
+	Sensor -- "dport=49826"
+	"dport=46510" [label="dport=46510" color=beige shape=invhouse style=filled]
+	"dport=46510" -- "dip=192.168.16.106"
+	Sensor -- "dport=46510"
+	"dport=59562" [label="dport=59562" color=beige shape=invhouse style=filled]
+	"dport=59562" -- "dip=192.168.16.106"
+	Sensor -- "dport=59562"
+	"dport=45103" [label="dport=45103" color=beige shape=invhouse style=filled]
+	"dport=45103" -- "dip=192.168.16.106"
+	Sensor -- "dport=45103"
+	"dport=49764" [label="dport=49764" color=beige shape=invhouse style=filled]
+	"dport=49764" -- "dip=192.168.16.106"
+	Sensor -- "dport=49764"
+	"dport=32828" [label="dport=32828" color=beige shape=invhouse style=filled]
+	"dport=32828" -- "dip=192.168.16.106"
+	Sensor -- "dport=32828"
+	"dport=49189" [label="dport=49189" color=beige shape=invhouse style=filled]
+	"dport=49189" -- "dip=192.168.16.106"
+	Sensor -- "dport=49189"
+	"dport=38028" [label="dport=38028" color=beige shape=invhouse style=filled]
+	"dport=38028" -- "dip=192.168.16.106"
+	Sensor -- "dport=38028"
+	"dport=50814" [label="dport=50814" color=beige shape=invhouse style=filled]
+	"dport=50814" -- "dip=192.168.16.106"
+	Sensor -- "dport=50814"
+	"dport=55028" [label="dport=55028" color=beige shape=invhouse style=filled]
+	"dport=55028" -- "dip=192.168.16.106"
+	Sensor -- "dport=55028"
+	"dport=49032" [label="dport=49032" color=beige shape=invhouse style=filled]
+	"dport=49032" -- "dip=192.168.16.106"
+	Sensor -- "dport=49032"
+	"dport=49588" [label="dport=49588" color=beige shape=invhouse style=filled]
+	"dport=49588" -- "dip=192.168.16.106"
+	Sensor -- "dport=49588"
+	"dport=55800" [label="dport=55800" color=beige shape=invhouse style=filled]
+	"dport=55800" -- "dip=192.168.16.106"
+	Sensor -- "dport=55800"
+	"dport=44544" [label="dport=44544" color=beige shape=invhouse style=filled]
+	"dport=44544" -- "dip=192.168.16.106"
+	Sensor -- "dport=44544"
+	"dport=42396" [label="dport=42396" color=beige shape=invhouse style=filled]
+	"dport=42396" -- "dip=192.168.16.106"
+	Sensor -- "dport=42396"
+	"dport=41591" [label="dport=41591" color=beige shape=invhouse style=filled]
+	"dport=41591" -- "dip=192.168.16.106"
+	Sensor -- "dport=41591"
+	"dport=54762" [label="dport=54762" color=beige shape=invhouse style=filled]
+	"dport=54762" -- "dip=192.168.16.106"
+	Sensor -- "dport=54762"
+	"dport=42416" [label="dport=42416" color=beige shape=invhouse style=filled]
+	"dport=42416" -- "dip=192.168.16.106"
+	Sensor -- "dport=42416"
+	"dport=60926" [label="dport=60926" color=beige shape=invhouse style=filled]
+	"dport=60926" -- "dip=192.168.16.106"
+	Sensor -- "dport=60926"
+	"dport=52793" [label="dport=52793" color=beige shape=invhouse style=filled]
+	"dport=52793" -- "dip=192.168.16.106"
+	Sensor -- "dport=52793"
+	"dport=53648" [label="dport=53648" color=beige shape=invhouse style=filled]
+	"dport=53648" -- "dip=192.168.16.106"
+	Sensor -- "dport=53648"
+	"dport=44892" [label="dport=44892" color=beige shape=invhouse style=filled]
+	"dport=44892" -- "dip=192.168.16.106"
+	Sensor -- "dport=44892"
+	"dport=34206" [label="dport=34206" color=beige shape=invhouse style=filled]
+	"dport=34206" -- "dip=192.168.16.106"
+	Sensor -- "dport=34206"
+	"dport=47094" [label="dport=47094" color=beige shape=invhouse style=filled]
+	"dport=47094" -- "dip=192.168.16.106"
+	Sensor -- "dport=47094"
+	"dport=56028" [label="dport=56028" color=beige shape=invhouse style=filled]
+	"dport=56028" -- "dip=192.168.16.106"
+	Sensor -- "dport=56028"
+	"dport=56904" [label="dport=56904" color=beige shape=invhouse style=filled]
+	"dport=56904" -- "dip=192.168.16.106"
+	Sensor -- "dport=56904"
+	"dport=42549" [label="dport=42549" color=beige shape=invhouse style=filled]
+	"dport=42549" -- "dip=192.168.16.106"
+	Sensor -- "dport=42549"
+	"dport=45079" [label="dport=45079" color=beige shape=invhouse style=filled]
+	"dport=45079" -- "dip=192.168.16.106"
+	Sensor -- "dport=45079"
+	"dport=50183" [label="dport=50183" color=beige shape=invhouse style=filled]
+	"dport=50183" -- "dip=192.168.16.106"
+	Sensor -- "dport=50183"
+	"dport=52679" [label="dport=52679" color=beige shape=invhouse style=filled]
+	"dport=52679" -- "dip=192.168.16.106"
+	Sensor -- "dport=52679"
+	"dport=32810" [label="dport=32810" color=beige shape=invhouse style=filled]
+	"dport=32810" -- "dip=192.168.16.106"
+	Sensor -- "dport=32810"
+	"dport=56352" [label="dport=56352" color=beige shape=invhouse style=filled]
+	"dport=56352" -- "dip=192.168.16.106"
+	Sensor -- "dport=56352"
+	"dport=55577" [label="dport=55577" color=beige shape=invhouse style=filled]
+	"dport=55577" -- "dip=192.168.16.106"
+	Sensor -- "dport=55577"
+	"dport=58935" [label="dport=58935" color=beige shape=invhouse style=filled]
+	"dport=58935" -- "dip=192.168.16.106"
+	Sensor -- "dport=58935"
+	"dport=48844" [label="dport=48844" color=beige shape=invhouse style=filled]
+	"dport=48844" -- "dip=192.168.16.106"
+	Sensor -- "dport=48844"
+	"dport=49452" [label="dport=49452" color=beige shape=invhouse style=filled]
+	"dport=49452" -- "dip=192.168.16.106"
+	Sensor -- "dport=49452"
+	"dport=60580" [label="dport=60580" color=beige shape=invhouse style=filled]
+	"dport=60580" -- "dip=192.168.16.106"
+	Sensor -- "dport=60580"
+	"dport=36888" [label="dport=36888" color=beige shape=invhouse style=filled]
+	"dport=36888" -- "dip=192.168.16.106"
+	Sensor -- "dport=36888"
+	"dport=33717" [label="dport=33717" color=beige shape=invhouse style=filled]
+	"dport=33717" -- "dip=192.168.16.106"
+	Sensor -- "dport=33717"
+	"dport=40158" [label="dport=40158" color=beige shape=invhouse style=filled]
+	"dport=40158" -- "dip=192.168.16.106"
+	Sensor -- "dport=40158"
+	"dport=50721" [label="dport=50721" color=beige shape=invhouse style=filled]
+	"dport=50721" -- "dip=192.168.16.106"
+	Sensor -- "dport=50721"
+	"dport=46864" [label="dport=46864" color=beige shape=invhouse style=filled]
+	"dport=46864" -- "dip=192.168.16.106"
+	Sensor -- "dport=46864"
+	"dport=443" [label="dport=443" color=beige shape=invhouse style=filled]
+	"dport=443" -- "dip=69.173.158.65"
+	Sensor -- "dport=443"
+	"dport=54738" [label="dport=54738" color=beige shape=invhouse style=filled]
+	"dport=54738" -- "dip=192.168.16.106"
+	Sensor -- "dport=54738"
+	"dport=36890" [label="dport=36890" color=beige shape=invhouse style=filled]
+	"dport=36890" -- "dip=192.168.16.106"
+	Sensor -- "dport=36890"
+	"dport=54748" [label="dport=54748" color=beige shape=invhouse style=filled]
+	"dport=54748" -- "dip=192.168.16.106"
+	Sensor -- "dport=54748"
+	"dport=47261" [label="dport=47261" color=beige shape=invhouse style=filled]
+	"dport=47261" -- "dip=192.168.16.106"
+	Sensor -- "dport=47261"
+	"dport=37074" [label="dport=37074" color=beige shape=invhouse style=filled]
+	"dport=37074" -- "dip=192.168.16.106"
+	Sensor -- "dport=37074"
+	"dport=35069" [label="dport=35069" color=beige shape=invhouse style=filled]
+	"dport=35069" -- "dip=192.168.16.106"
+	Sensor -- "dport=35069"
+	"dport=48926" [label="dport=48926" color=beige shape=invhouse style=filled]
+	"dport=48926" -- "dip=192.168.16.106"
+	Sensor -- "dport=48926"
+	"dport=42790" [label="dport=42790" color=beige shape=invhouse style=filled]
+	"dport=42790" -- "dip=192.168.16.106"
+	Sensor -- "dport=42790"
+	"dport=54742" [label="dport=54742" color=beige shape=invhouse style=filled]
+	"dport=54742" -- "dip=192.168.16.106"
+	Sensor -- "dport=54742"
+	"smac=00-0c-29-70-2e-69" [label="smac=00-0c-29-70-2e-69" color=deepskyblue shape=diamond style=filled]
+	"smac=00-0c-29-70-2e-69" -- "sip=192.168.16.106"
+	"dmac=00-0c-29-70-2e-69" [label="dmac=00-0c-29-70-2e-69" color=deepskyblue shape=diamond style=filled]
+	"dip=192.168.16.106" -- "dmac=00-0c-29-70-2e-69"
+	"smac=a0-f3-c1-51-00-02" [label="smac=a0-f3-c1-51-00-02" color=deepskyblue shape=diamond style=filled]
+	"smac=a0-f3-c1-51-00-02" -- "sip=192.168.16.1"
+	"dmac=a0-f3-c1-51-00-02" [label="dmac=a0-f3-c1-51-00-02" color=deepskyblue shape=diamond style=filled]
+	"dip=192.168.16.1" -- "dmac=a0-f3-c1-51-00-02"
+	"smac=a0-f3-c1-51-00-02" [label="smac=a0-f3-c1-51-00-02" color=deepskyblue shape=diamond style=filled]
+	"smac=a0-f3-c1-51-00-02" -- "sip=69.173.158.65"
+	"dmac=a0-f3-c1-51-00-02" [label="dmac=a0-f3-c1-51-00-02" color=deepskyblue shape=diamond style=filled]
+	"dip=69.173.158.65" -- "dmac=a0-f3-c1-51-00-02"
+	"smac=a0-f3-c1-51-00-02" [label="smac=a0-f3-c1-51-00-02" color=deepskyblue shape=diamond style=filled]
+	"smac=a0-f3-c1-51-00-02" -- "sip=185.86.139.59"
+	"dmac=a0-f3-c1-51-00-02" [label="dmac=a0-f3-c1-51-00-02" color=deepskyblue shape=diamond style=filled]
+	"dip=185.86.139.59" -- "dmac=a0-f3-c1-51-00-02"
+	"smac=a0-f3-c1-51-00-02" [label="smac=a0-f3-c1-51-00-02" color=deepskyblue shape=diamond style=filled]
+	"smac=a0-f3-c1-51-00-02" -- "sip=104.131.183.181"
+	"dmac=a0-f3-c1-51-00-02" [label="dmac=a0-f3-c1-51-00-02" color=deepskyblue shape=diamond style=filled]
+	"dip=104.131.183.181" -- "dmac=a0-f3-c1-51-00-02"
+}
