@@ -1,7 +1,7 @@
 from itertools import count
 import os
 import pyshark
-import os
+import subprocess
 from datetime import datetime
 
 class PCAPHandle:
@@ -43,19 +43,17 @@ class PCAPHandle:
         return counter
 
     def getdate(self):
-        pkg = self.cap[0]
-        _startdate = float(pkg.sniff_timestamp)
-        _startdate = datetime.utcfromtimestamp(_startdate).strftime('%Y/%m/%dT%H:%M:%S')
         
-        for pkg in self.cap:
-            continue
-        _enddate = float(pkg.sniff_timestamp)
-        _enddate = datetime.utcfromtimestamp(_enddate).strftime('%Y/%m/%dT%H:%M:%S')
+        os.chdir('uploads')
+        command = 'capinfos -a -e {file}'.format(file=self.filepath)
+        value = subprocess.getoutput(command)
+        _startdate = value.split()[6].replace('-','/') + 'T' + value.split()[7]
+        _enddate = value.split()[-2].replace('-','/') + 'T' + value.split()[-1]
+        os.chdir('..')
+
         return _startdate,_enddate
 
 
-'''
 if __name__=='__main__':
     pcap = PCAPHandle('FullPack.pcap')
-    print(pcap.match())
-'''
+    print(pcap.getdate())

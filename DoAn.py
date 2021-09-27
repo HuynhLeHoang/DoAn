@@ -249,10 +249,6 @@ def singlepathInit():
     os.chdir('data')
     os.system(command)
     os.chdir('..')
-    command = 'rm traffic1.rw;rwfilter --start={start} --end={end} --sensor={sensor} --type=in,inweb,out,outweb --any-address={ip} --pass=traffic1.rw'.format(start=_startdate,end=_enddate,sensor=_sensor,ip=_ip)
-    os.chdir('data')
-    os.system(command)
-    os.chdir('..')
 
     return redirect(url_for('overall'))
 
@@ -381,30 +377,6 @@ def analyseUploadChoseFile():
             filelist.append(file)
     return render_template('analyseUploadChoseFile.html', files=filelist)
 
-@app.route('/initfile', methods=['GET'])
-def initfile():
-    global dictionary
-    global startdateFile
-    global enddateFile
-    filename = request.args['chosedfile']
-    current = os.getcwd()
-    filelink = current + '/uploads/' + filename
-    command = 'rm traffic.rw; rm traffic.yaf;yaf --in {file} --out traffic.yaf; rwipfix2silk traffic.yaf --silk-output=traffic.rw'.format(file=filelink)
-    os.chdir('data')
-    os.system(command)
-    os.chdir('..')
-    command = 'rm traffic1.rw; rm traffic1.yaf;yaf --in {file} --out traffic1.yaf; rwipfix2silk traffic1.yaf --silk-output=traffic1.rw'.format(file=filelink)
-    os.chdir('data')
-    os.system(command)
-    os.chdir('..')
-    pcap = readPCAP.PCAPHandle(filename)
-    if pcap.count() > 0:
-        _startdate,_enddate = pcap.getdate()
-        startdateFile = _startdate
-        enddateFile = _enddate
-    dictionary = pcap.match()
-    return redirect('/overall')
-
 @app.route('/realtime')
 def realtime():
     os.chdir('data')
@@ -478,6 +450,52 @@ def modifyFile():
     return render_template('modifyFile.html',
     startdate=datetime.strptime(startdateFile,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'), 
     enddate=datetime.strptime(enddateFile,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'))
+
+@app.route('/initfile', methods=['GET'])
+def initfile():
+    global dictionary
+    global startdateFile
+    global enddateFile
+    filename = request.args['chosedfile']
+    _sip = ''
+    _dip = ''
+    _sport = ''
+    _dport = ''
+    _startdate = ''
+    _enddate = ''
+    params = ''
+    if 'startdate' in request.form and request.form['startdate'] != '':
+        if len(request.form['startdate']) == 16:
+            _startdate = request.form['startdate'] + ':00'
+        else:
+            _startdate = request.form['startdate']
+        
+    if 'enddate' in request.form  and request.form['enddate'] != '':
+        if len(request.form['enddate']) == 16:
+            _enddate = request.form['enddate'] + ':00'
+        else:
+            _enddate = request.form['enddate']
+        
+    
+    if _startdate != '' and _enddate != '':
+        _startdate = _startdate.split('T', ' ')
+        _enddate = _enddate.split('T', ' ')
+        command = "editcap -A '{start}' -B '{end}' {file} temp123321.pcap".format(file=filename,start=_startdate[0] + ' ' + _startdate[1],end=_enddate[0] + ' ' + _enddate[1])
+        filename = 'temp123321.pcap'
+    
+    current = os.getcwd()
+    filelink = current + '/uploads/' + filename
+    command = 'rm traffic.rw; rm traffic.yaf;yaf --in {file} --out traffic.yaf; rwipfix2silk traffic.yaf --silk-output=traffic.rw'.format(file=filelink)
+    os.chdir('data')
+    os.system(command)
+    os.chdir('..')
+    pcap = readPCAP.PCAPHandle(filename)
+    if pcap.count() > 0:
+        _startdate,_enddate = pcap.getdate()
+        startdateFile = _startdate
+        enddateFile = _enddate
+    dictionary = pcap.match()
+    return redirect('/overall')
 
 @app.route('/modify', methods=['POST'])
 def modify():

@@ -109,6 +109,45 @@
                                 {% endfor %}
                               </select>
                             </div>
+                            
+                          </div>
+                          <div class="form-group row">
+                            <label class="col-sm-3 form-control-label">sIP</label>
+                            <div class="col-sm-9">
+                                <input name="sip" class="form-control mb-3 mb-3" type="text"/>                          
+                            </div>                        
+                          </div>
+                          <div class="form-group row">
+                            <label class="col-sm-3 form-control-label">dIP</label>
+                            <div class="col-sm-9">
+                                <input name="dip" class="form-control mb-3 mb-3" type="text"/>                          
+                            </div>                        
+                          </div>
+                          <div class="form-group row">
+                            <label class="col-sm-3 form-control-label">sPort</label>
+                            <div class="col-sm-9">
+                                <input name="sport" class="form-control mb-3 mb-3" type="text"/>                          
+                            </div>                        
+                          </div>
+                          <div class="form-group row">
+                            <label class="col-sm-3 form-control-label">dPort</label>
+                            <div class="col-sm-9">
+                                <input name="dPort" class="form-control mb-3 mb-3" type="text"/>                          
+                            </div>                        
+                          </div>
+                          <div class="form-group row">
+                            <label class="col-sm-3 form-control-label">Start date</label>
+                            <div class="col-sm-9">
+                              <input name="startdate" class="form-control mb-3 mb-3" max="{{enddate}}" min="{{startdate}}" value="{{startdate}}" type="datetime-local"/>
+                              
+                            </div>                        
+                          </div>
+                          <div class="form-group row">
+                            <label class="col-sm-3 form-control-label">End date</label>
+                            <div class="col-sm-9">
+                              <input name="enddate" class="form-control mb-3 mb-3" max="{{enddate}}" min="{{startdate}}" value="{{enddate}}" type="datetime-local"/>
+                                                       
+                            </div>                        
                           </div>
                       <div class="form-group row">
                         <div class="col-sm-9 ml-auto">
