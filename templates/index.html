@@ -81,6 +81,12 @@
                     <li><a href="/analyseUpload">Init Uploaded file</a></li>
                     <li><a href="/realtime">Real Time</a></li>
                     <li><a href="/graphic">Graphic</a></li>
+                <li><a href="#exampledropdownDropdown" aria-expanded="false" data-toggle="collapse"> <i class="icon-windows"></i>Multi Path</a>
+                  <ul id="exampledropdownDropdown" class="collapse list-unstyled ">
+                    <li><a href="/multipathscan">Detect scan</a></li>
+                    <li><a href="/multipathstatistic">Statistic </a></li>
+                    <!--<li><a href="/singlepathdetail">....</a></li>
+                    <li><a href="/iptoipsearch">...</a></li>-->
                   </ul>
                 </li>
         </ul>
@@ -213,7 +219,8 @@
                                   {% if (x.index(y)<4) %}
                                     <td>{{y}}</td>
                                   {% else %}
-                                    <td>{{'%.2f' | format(y|float)}}%</td>
+                                    <td>{{'%.2f
+                                      ' | format(y|float)}}%</td>
                                   {% endif %}
                                 {% endfor %}
                             

@@ -104,6 +104,7 @@
                             <label class="col-sm-3 form-control-label">Select file</label>
                             <div class="col-sm-9">
                               <select onchange="update()" id="filechoser" name="chosedfile" class="form-control mb-3 mb-3" value="{{files[0]}}">
+                              <select name="chosedfile" class="form-control mb-3 mb-3">
                                 {% for file in files %}
                                     <option>{{file}}</option>
                                 {% endfor %}

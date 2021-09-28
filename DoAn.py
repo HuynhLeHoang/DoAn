@@ -3,6 +3,10 @@ from graphviz.backend import render
 from werkzeug.utils import secure_filename
 from itertools import count
 from flask import Flask, redirect, url_for, render_template, request, abort, send_file, jsonify
+from flask.sessions import NullSession
+from werkzeug.utils import secure_filename
+from itertools import count
+from flask import Flask, redirect, url_for, render_template, request, abort
 import TableFromFile
 import TableFromCommand
 import os
@@ -13,6 +17,9 @@ import SinglePath
 import pandas as pd
 import Graphic
 import readPCAP
+from datetime import datetime
+import SinglePath
+import pandas as pd
 
 dictionary = dict()
 sensor = 'Sensor'
@@ -537,6 +544,220 @@ def getdate():
     _startdate,_enddate = pcapFile.getdate()
     return jsonify({'startdate': _startdate,'enddate': _enddate})
 
+@app.route('/realtime')
+def realtime():
+    os.chdir('data')
+    command = 'rm traffic.rw; rm traffic.yaf;yaf --in {file} --out traffic.yaf; rwipfix2silk traffic.yaf --silk-output=traffic.rw'.format(file='realtime.pcap')
+    os.system(command)
+    os.chdir('..')
+    return redirect('/overall')
+@app.route('/multipathscan', methods=['POST','GET'])
+def multipathscan():
+    global startdate
+    global enddate
+    _startdate = startdate
+    _enddate = enddate
+    if 'startdate' in request.form:
+        _startdate = datetime.strptime(request.form['startdate'],'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
+    if 'enddate' in request.form:
+        _enddate = datetime.strptime(request.form['enddate'],'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
+    DetectingScanningcommand = '''rwfilter --start={_startdate} --end={_enddate} --proto=6 --type=in,inweb --pass=stdout | rwsort --fields=sip,proto,dip | rwscan --scan-model=2 --no-columns > scan.txt''' 
+    DetectingScanningcommand = DetectingScanningcommand.format(_startdate=_startdate,_enddate=_enddate)
+    DetectingScanningtable = TableFromCommand.TableFromCommand(DetectingScanningcommand, 'scan.txt')
+    DetectingScanningtable = DetectingScanningtable.execute()
+    return render_template('multipathScan.html',
+    DetectingScanningtable=DetectingScanningtable, 
+    startdate=datetime.strptime(startdate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'), 
+    enddate=datetime.strptime(enddate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
+    _startdate=datetime.strptime(_startdate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
+    _enddate=datetime.strptime(_enddate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'))
+@app.route('/multipathip', methods=['POST', 'GET'])
+def multipathsip():
+    global startdate
+    global enddate
+    _startdate = startdate
+    _enddate = enddate
+    _protocol = 6
+    _counts = 5
+    _sensor = '--sensor='
+    _num = 'all'
+    # _ip = request.form['ip']
+    _ip = request.args.get('ip')
+    if 'sensor' in request.args:
+        _num = request.args.get('sensor')
+        _sensor = _sensor + _num
+    if 'protocol' in request.args:
+        _protocol = request.args.get('protocol')
+    if 'startdate' in request.form:
+        _startdate = datetime.strptime(request.form['startdate'] ,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
+    if 'enddate' in request.form:
+        _enddate = datetime.strptime(request.form['enddate'] ,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
+    if 'protocol' in request.form:
+        _protocol = request.form['protocol']
+    if 'sensor' in request.form:
+        _num = request.form['sensor']
+        _sensor = _sensor + _num
+    if 'counts' in request.form:
+        _counts = int(request.form['counts'])
+    os.chdir('data')
+    Command0 = '''rm query.rw response.rw'''
+    Command1 = '''rwfilter --type=in,out --start={_startdate} --end={_enddate} --protocol={_protocol} --saddr={_ip} --pass=stdout | rwsort --fields=3,4,stime --output-path=query.rw'''
+    Command2 = '''rwfilter --type=in,out --start={_startdate} --end={_enddate} --protocol={_protocol} --daddr={_ip} --pass=stdout | rwsort --fields=4,3,stime --output-path=response.rw'''
+    Command1 = Command1.format(_startdate=_startdate,_enddate=_enddate,_protocol=_protocol,_ip=_ip)
+    Command2 = Command2.format(_startdate=_startdate,_enddate=_enddate,_protocol=_protocol,_ip=_ip)
+    if _num != 'all':
+        Command1 = '''rwfilter --type=in,out --start={_startdate} --end={_enddate} --protocol={_protocol} --saddr={_ip} {_sensor} --pass=stdout | rwsort --fields=2,3,4,stime --output-path=query.rw'''
+        Command2 = '''rwfilter --type=in,out --start={_startdate} --end={_enddate} --protocol={_protocol} --daddr={_ip} {_sensor} --pass=stdout | rwsort --fields=1,4,3,stime --output-path=response.rw'''
+        Command1 = Command1.format(_startdate=_startdate,_enddate=_enddate,_protocol=_protocol,_ip=_ip,_sensor=_sensor)
+        Command2 = Command2.format(_startdate=_startdate,_enddate=_enddate,_protocol=_protocol,_ip=_ip,_sensor=_sensor)
+    os.system(Command0)
+    os.system(Command1)
+
+    os.system(Command2)
+    os.chdir('..')
+    Datacommand = '''rwmatch --relate=1,2 --relate=2,1 --relate=3,4 --relate=4,3 query.rw response.rw stdout | rwcut --fields=1-4,sen,stime,etime,packets,bytes --num-recs={_counts} --no-columns>flowrelas.txt'''
+    Datacommand = Datacommand.format(_counts=_counts)
+    Datatable = TableFromCommand.TableFromCommand(Datacommand,'flowrelas.txt')
+    Datatable = Datatable.execute()
+    return render_template('multipathIP.html',
+    Datatable=Datatable,
+    startdate=datetime.strptime(startdate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'), 
+    enddate=datetime.strptime(enddate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
+    _startdate=datetime.strptime(_startdate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
+    _enddate=datetime.strptime(_enddate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
+    counts=_counts, protocol=_protocol, ip=_ip,num=_num
+    )
+@app.route('/multipathstatistic', methods=['POST', 'GET'])
+def multipathstatistic(): 
+    global startdate
+    global enddate
+    _startdate = startdate
+    _enddate = enddate 
+    _counts =10 
+    
+    if 'startdate' in request.form:
+        _startdate = datetime.strptime(request.form['startdate'] ,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
+    if 'enddate' in request.form:
+        _enddate = datetime.strptime(request.form['enddate'] ,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
+    if 'counts' in request.form:
+        _counts = int(request.form['counts'])
+    Datacommand = '''rm in_month.rw;rwfilter --start={_startdate} --end={_enddate} --type=in,inweb --protocol=0- --pass=stdout --pass=in_month.rw | rwstats --field=sip,sport --value=flows --count {_counts} --no-columns >multistatistic.txt'''
+    Datacommand = Datacommand.format(_startdate=_startdate,_enddate=_enddate,_counts=_counts)
+    Datatable = TableFromCommand.TableFromCommand(Datacommand,'multistatistic.txt')
+    Datatable = Datatable.execute()
+    
+    return render_template('multipathStatistic.html',
+    Datatable=Datatable,
+    startdate=datetime.strptime(startdate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'), 
+    enddate=datetime.strptime(enddate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
+    _startdate=datetime.strptime(_startdate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
+    _enddate=datetime.strptime(_enddate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
+    counts=_counts  
+    )
+@app.route('/multipathtcp', methods=['POST', 'GET'])
+def multipathtcp(): 
+    global startdate
+    global enddate
+    _startdate = startdate
+    _enddate = enddate 
+    _counts = 10 
+    _sensor = 'S5'
+    if 'startdate' in request.form:
+        _startdate = datetime.strptime(request.form['startdate'] ,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
+    if 'enddate' in request.form:
+        _enddate = datetime.strptime(request.form['enddate'] ,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
+    if 'counts' in request.form:
+        _counts = int(request.form['counts'])  
+    if 'sensor' in request.form:
+        _sensor = request.form['sensor']
+    Command0 = '''rm incoming-server.raw incoming-client.raw outgoing-server.raw outgoing-client.raw leftover.raw;rwfilter --start={_startdate} --end={_enddate} --sensor={_sensor} --type=in,out --protocol=6 --packets=3- --pass=stdout | rwfilter stdin --type=in --flags-initial=SA/SA --pass=incoming-server.raw --fail=stdout | rwfilter stdin --type=in --flags-initial=S/SA --pass=incoming-client.raw --fail=stdout | rwfilter stdin --type=out --flags-initial=SA/SA --pass=outgoing-server.raw --fail=stdout | rwfilter stdin --type=out --flags-initial=S/SA --pass=outgoing-client.raw --fail=leftover.raw'''
+    Command1 = '''rm lowpacket.rw synonly.rw reset.rw;rwfilter --start={_startdate} --end={_enddate} --type=in,inweb --protocol=6 --packets=1-3 --pass=lowpacket.rw --pass=stdout | rwfilter --flags-all=S/SARF --pass=synonly.rw --fail=stdout stdin | rwfilter --flags-all=R/SRF --pass=reset.rw stdin'''
+    Command1 = Command1.format(_startdate=_startdate,_enddate=_enddate)
+    os.chdir('data')
+    Command0 = Command0.format(_startdate=_startdate,_enddate=_enddate,_sensor=_sensor)
+    os.system(Command0)
+    os.system(Command1)
+    os.chdir('..')
+    Datacommand0 = '''rwcut incoming-server.raw --fields=1-4,stime,etime --num-recs={_counts} --no-columns>incoming-server.txt'''
+    Datacommand1 = '''rwcut incoming-client.raw --fields=1-4,stime,etime --num-recs={_counts} --no-columns>incoming-client.txt'''
+    Datacommand2 = '''rwcut outgoing-server.raw --fields=1-4,stime,etime --num-recs={_counts} --no-columns>outgoing-server.txt'''
+    Datacommand3 = '''rwcut outgoing-client.raw --fields=1-4,stime,etime --num-recs={_counts} --no-columns>outgoing-client.txt'''
+    Datacommand4 = '''rwcut leftover.raw --fields=1-4,stime,etime --num-recs={_counts} --no-columns>leftover.txt'''
+    Datacommand5 = '''rwcut lowpacket.rw --fields=1-4,sensor,stime,etime --num-recs={_counts} --no-columns>lowpacket.txt'''
+    Datacommand6 = '''rwcut synonly.rw --fields=1-4,sensor,stime,etime --num-recs={_counts} --no-columns>synonly.txt'''
+    Datacommand7 = '''rwcut reset.rw --fields=1-4,sensor,stime,etime --num-recs={_counts} --no-columns>reset.txt'''
+
+    Datacommand0 = Datacommand0.format(_counts=_counts)
+    Datacommand1 = Datacommand1.format(_counts=_counts)
+    Datacommand2 = Datacommand2.format(_counts=_counts)
+    Datacommand3 = Datacommand3.format(_counts=_counts)
+    Datacommand4 = Datacommand4.format(_counts=_counts)
+    Datacommand5 = Datacommand5.format(_counts=_counts)
+    Datacommand6 = Datacommand6.format(_counts=_counts)
+    Datacommand7 = Datacommand7.format(_counts=_counts)
+
+    Datatable0 = TableFromCommand.TableFromCommand(Datacommand0,'incoming-server.txt')
+    Datatable0 = Datatable0.execute()
+    Datatable1 = TableFromCommand.TableFromCommand(Datacommand1,'incoming-client.txt')
+    Datatable1 = Datatable1.execute()
+    Datatable2 = TableFromCommand.TableFromCommand(Datacommand2,'outgoing-server.txt')
+    Datatable2 = Datatable2.execute()
+    Datatable3 = TableFromCommand.TableFromCommand(Datacommand3,'outgoing-client.txt')
+    Datatable3 = Datatable3.execute()
+    Datatable4 = TableFromCommand.TableFromCommand(Datacommand4,'leftover.txt')
+    Datatable4 = Datatable4.execute()
+    Datatable5 = TableFromCommand.TableFromCommand(Datacommand5,'lowpacket.txt')
+    Datatable5 = Datatable5.execute()
+    Datatable6 = TableFromCommand.TableFromCommand(Datacommand6,'synonly.txt')
+    Datatable6 = Datatable6.execute()
+    Datatable7 = TableFromCommand.TableFromCommand(Datacommand7,'reset.txt')
+    Datatable7 = Datatable7.execute()
+
+    return render_template('multipathTCP.html',
+    Datatable0=Datatable0,Datatable1=Datatable1,Datatable2=Datatable2,Datatable3=Datatable3,Datatable4=Datatable4,
+    Datatable5=Datatable5,Datatable6=Datatable6,Datatable7=Datatable7,
+    startdate=datetime.strptime(startdate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'), 
+    enddate=datetime.strptime(enddate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
+    _startdate=datetime.strptime(_startdate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
+    _enddate=datetime.strptime(_enddate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
+    counts=_counts,sensor=_sensor
+    )
+@app.route('/multipathdns', methods=['POST', 'GET'])
+def multipathdns(): 
+    global startdate
+    global enddate
+    _startdate = startdate
+    _enddate = enddate 
+    _counts =10 
+    
+    if 'startdate' in request.form:
+        _startdate = datetime.strptime(request.form['startdate'] ,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
+    if 'enddate' in request.form:
+        _enddate = datetime.strptime(request.form['enddate'] ,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
+    if 'counts' in request.form:
+        _counts = int(request.form['counts'])
+    Command0 = '''rm in_month.rw interest.set;rwfilter --start={_startdate} --end={_enddate} --type=in,inweb --protocol=0- --pass=in_month.rw; rwfilter in_month.rw --protocol=17 --aport=53 --pass=stdout | rwset --sip-file=interest.set'''
+    Command0 = Command0.format(_startdate=_startdate,_enddate=_enddate)
+    Command1 = '''rm not-dns.rw dns-saddr.txt;rwfilter in_month.rw --sipset=interest.set --protocol=17 --pass=stdout | rwfilter stdin --aport=53 --fail=not-dns.rw --pass=stdout | rwuniq --fields=sIP --no-titles --ip-format=zero-padded --sort-output --no-columns --output-path=dns-saddr.txt'''
+    Command2 = '''rm not-dns-saddr.txt;rwuniq not-dns.rw --fields=sip --no-titles --ip-format=zero-padded --sort-output --no-columns --output-path=not-dns-saddr.txt'''
+    os.chdir('data')
+    os.system(Command0)
+    os.system(Command1)
+    os.system(Command2)
+    os.chdir('..')
+    Datacommand = '''rm dns-temp.txt;echo 'sIP|DNS||not DNS|' >dns.txt;join -t '|' dns-saddr.txt not-dns-saddr.txt | sort -t '|' -nrk2,2 | head -{_counts}>dns_temp.txt;cat dns_temp.txt>>dns.txt'''
+    Datacommand = Datacommand.format(_counts=_counts)
+    Datatable = TableFromCommand.TableFromCommand(Datacommand,'dns.txt')
+    Datatable = Datatable.execute()
+    
+    return render_template('multipathDNS.html',
+    Datatable=Datatable,
+    startdate=datetime.strptime(startdate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'), 
+    enddate=datetime.strptime(enddate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
+    _startdate=datetime.strptime(_startdate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
+    _enddate=datetime.strptime(_enddate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
+    counts=_counts
+    )
 if __name__ == '__main__':
     app.run(debug = True, host='0.0.0.0', port='2222')
    
