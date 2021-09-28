@@ -8,7 +8,7 @@ import TableFromCommand
 import os
 import ChartRender
 import asyncio
-from datetime import datetime
+from datetime import datetime, timedelta
 import SinglePath
 import pandas as pd
 import Graphic
