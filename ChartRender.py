@@ -100,7 +100,7 @@ class customPieChart():
         self.colorList = ['#F2F5A9', '#FF4000','#0000FF','#81F781','#F5A9BC','#819FF7','#F7FE2E','#E0F8F7','#FFFFFF','#FF0000','#00FF00','#0000FF','#FFFF00','#00FFFF','#FF00FF','#C0C0C0','#808080','#800000','#808000','#008000','#800080','#008080','#000080']
     
     def customPieChartRender(self, id, labels, data):
-        chart = self.customPieChart_raw.format(id = id, labels = labels, data = data, color = self.colorList[0:len(data)-1])
+        chart = self.customPieChart_raw.format(id = id, labels = labels, data = data, color = self.colorList[:len(data)])
         return chart
 
 '''

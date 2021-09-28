@@ -10,10 +10,10 @@ class TableFromFile():
     def __init__(self, filename, headerExistant=True):
         self.filename = filename
         #remove unconstruct line
-        thisfile = open('FCCX-silk/' + filename,'r')
+        thisfile = open('data/' + filename,'r')
         lines = thisfile.readlines()
         thisfile.close()
-        newfile = open('FCCX-silk/' + filename, "w")
+        newfile = open('data/' + filename, "w")
         if 'INPUT' in lines[0]:
             del lines[0]
             del lines[0]
@@ -21,11 +21,11 @@ class TableFromFile():
             newfile.write(line)
         newfile.close()
         #done remove.
-        self.Table = pd.read_csv('FCCX-silk/' + filename, sep="|", encoding="utf8")
+        self.Table = pd.read_csv('data/' + filename, sep="|", encoding="utf8")
         self.headerExistant = headerExistant
         columns = self.Table.columns.tolist()
         columns = columns[:len(columns)-1]
-        self.Table = pd.read_csv('FCCX-silk/' + filename, sep="|", encoding="utf8", usecols=columns)
+        self.Table = pd.read_csv('data/' + filename, sep="|", encoding="utf8", usecols=columns)
         
     def getRow(self,index):
         '''get all element from a row'''

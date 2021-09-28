@@ -1,13 +1,10 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
-*.py[cod]
-*$py.class
 
 # C extensions
 *.so
 
 # Distribution / packaging
-.Python
 build/
 develop-eggs/
 dist/
@@ -20,6 +17,7 @@ parts/
 sdist/
 var/
 wheels/
+data/
 pip-wheel-metadata/
 share/python-wheels/
 *.egg-info/
@@ -47,9 +45,7 @@ htmlcov/
 nosetests.xml
 coverage.xml
 *.cover
-*.py,cover
 .hypothesis/
-.pytest_cache/
 
 # Translations
 *.mo
