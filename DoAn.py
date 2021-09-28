@@ -2,7 +2,7 @@
 from graphviz.backend import render
 from werkzeug.utils import secure_filename
 from itertools import count
-from flask import Flask, redirect, url_for, render_template, request, abort, send_file
+from flask import Flask, redirect, url_for, render_template, request, abort, send_file, jsonify
 import TableFromFile
 import TableFromCommand
 import os
@@ -25,8 +25,8 @@ date=date.execute()
 startdate=date.getColumn('Start-Date')[0]
 enddate=date.getColumn('End-Date')[0]
 
-startdateFile = date.getColumn('Start-Date')[0]
-enddateFile = date.getColumn('End-Date')[0]
+startdateFile = ''
+enddateFile = ''
 
 app = Flask(__name__, static_folder="static")
 
@@ -249,7 +249,10 @@ def singlepathInit():
     os.chdir('data')
     os.system(command)
     os.chdir('..')
-
+    command = 'rm traffic1.rw;rwfilter --start={start} --end={end} --sensor={sensor} --type=in,inweb,out,outweb --any-address={ip} --pass=traffic1.rw'.format(start=_startdate,end=_enddate,sensor=_sensor,ip=_ip)
+    os.chdir('data')
+    os.system(command)
+    os.chdir('..')
     return redirect(url_for('overall'))
 
 @app.route('/overall', methods=['GET','POST'])
@@ -375,7 +378,12 @@ def analyseUploadChoseFile():
     for file in files:
         if file.endswith('.pcap') or file.endswith('.pcapng'):
             filelist.append(file)
-    return render_template('analyseUploadChoseFile.html', files=filelist)
+    global startdateFile
+    global enddateFile
+    startdateFile,enddateFile = readPCAP.PCAPHandle(filelist[0]).getdate()
+    return render_template('analyseUploadChoseFile.html', files=filelist,
+    startdate=datetime.strptime(startdateFile,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'), 
+    enddate=datetime.strptime(enddateFile,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'))
 
 @app.route('/realtime')
 def realtime():
@@ -447,48 +455,25 @@ def download():
 def modifyFile():
     global startdateFile
     global enddateFile
-    return render_template('modifyFile.html',
-    startdate=datetime.strptime(startdateFile,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'), 
-    enddate=datetime.strptime(enddateFile,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'))
+    return render_template('modifyFile.html')
 
 @app.route('/initfile', methods=['GET'])
 def initfile():
     global dictionary
     global startdateFile
     global enddateFile
-    filename = request.args['chosedfile']
-    _sip = ''
-    _dip = ''
-    _sport = ''
-    _dport = ''
-    _startdate = ''
-    _enddate = ''
-    params = ''
-    if 'startdate' in request.form and request.form['startdate'] != '':
-        if len(request.form['startdate']) == 16:
-            _startdate = request.form['startdate'] + ':00'
-        else:
-            _startdate = request.form['startdate']
-        
-    if 'enddate' in request.form  and request.form['enddate'] != '':
-        if len(request.form['enddate']) == 16:
-            _enddate = request.form['enddate'] + ':00'
-        else:
-            _enddate = request.form['enddate']
-        
-    
-    if _startdate != '' and _enddate != '':
-        _startdate = _startdate.split('T', ' ')
-        _enddate = _enddate.split('T', ' ')
-        command = "editcap -A '{start}' -B '{end}' {file} temp123321.pcap".format(file=filename,start=_startdate[0] + ' ' + _startdate[1],end=_enddate[0] + ' ' + _enddate[1])
-        filename = 'temp123321.pcap'
-    
+    filename = request.args['chosedfile']    
     current = os.getcwd()
     filelink = current + '/uploads/' + filename
     command = 'rm traffic.rw; rm traffic.yaf;yaf --in {file} --out traffic.yaf; rwipfix2silk traffic.yaf --silk-output=traffic.rw'.format(file=filelink)
     os.chdir('data')
     os.system(command)
     os.chdir('..')
+    command = 'rm traffic1.rw; rm traffic1.yaf;yaf --in {file} --out traffic1.yaf; rwipfix2silk traffic1.yaf --silk-output=traffic1.rw'.format(file=filelink)
+    os.chdir('data')
+    os.system(command)
+    os.chdir('..')
+    
     pcap = readPCAP.PCAPHandle(filename)
     if pcap.count() > 0:
         _startdate,_enddate = pcap.getdate()
@@ -496,6 +481,13 @@ def initfile():
         enddateFile = _enddate
     dictionary = pcap.match()
     return redirect('/overall')
+@app.route('/modifyRange', methods=["GET"])
+def modifyRange():
+    global startdateFile
+    global enddateFile
+    return render_template('modifyFile.html',
+    startdate=datetime.strptime(startdateFile,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'), 
+    enddate=datetime.strptime(enddateFile,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'))
 
 @app.route('/modify', methods=['POST'])
 def modify():
@@ -524,19 +516,26 @@ def modify():
         else:
             _startdate = request.form['startdate']
         _startdate = datetime.strptime(_startdate,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
-        params += ' --stime=' + _startdate.strip()
     if 'enddate' in request.form  and request.form['enddate'] != '':
         if len(request.form['enddate']) == 16:
             _enddate = request.form['enddate'] + ':00'
         else:
             _enddate = request.form['enddate']
         _enddate = datetime.strptime(_enddate,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
-        params += ' --etime=' + _enddate.strip()
+    if _startdate != '' and _enddate != '':
+        params += " --stime={start}-{end} --etime={start}-{end}".format(start=_startdate,end=_enddate)
     command = 'rm traffic.rw;rwfilter traffic1.rw {params} --type=in,inweb,out,outweb --pass=traffic.rw'.format(params = params)
     os.chdir('data')
     os.system(command)
     os.chdir('..')
     return redirect('/overall')
+
+@app.route('/getdate', methods=['POST'])
+def getdate():
+    filename = request.form['filename']
+    pcapFile = readPCAP.PCAPHandle(filename)
+    _startdate,_enddate = pcapFile.getdate()
+    return jsonify({'startdate': _startdate,'enddate': _enddate})
 
 if __name__ == '__main__':
     app.run(debug = True, host='0.0.0.0', port='2222')

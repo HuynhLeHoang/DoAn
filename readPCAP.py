@@ -47,8 +47,8 @@ class PCAPHandle:
         os.chdir('uploads')
         command = 'capinfos -a -e {file}'.format(file=self.filepath)
         value = subprocess.getoutput(command)
-        _startdate = value.split()[6].replace('-','/') + 'T' + value.split()[7]
-        _enddate = value.split()[-2].replace('-','/') + 'T' + value.split()[-1]
+        _startdate = value.split()[6].replace('-','/') + 'T' + value.split()[7][:8]
+        _enddate = value.split()[-2].replace('-','/') + 'T' + value.split()[-1][:8]
         os.chdir('..')
 
         return _startdate,_enddate

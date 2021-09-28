@@ -36,7 +36,7 @@ class Graphic:
         
         for ip in dip:
             if len(ip)>15:
-                sip.remove(ip)
+                dip.remove(ip)
         g = graphviz.Graph(filename = output + '.gv', format= 'png', encoding='utf-8')
         
         for ip in sip:            
