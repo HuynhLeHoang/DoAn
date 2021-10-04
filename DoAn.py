@@ -41,7 +41,11 @@ app.config['MAX_CONTENT_LENGTH'] = 100 * 1024 * 1024
 app.config['UPLOAD_EXTENSIONS'] = ['.pcap', '.pcapng']
 app.config['UPLOAD_PATH'] = 'uploads'
 
-@app.route('/', methods = ['GET','POST'])
+@app.route('/')
+def blankpage():
+    return redirect('/singlepathsample')
+
+@app.route('/home', methods = ['GET','POST'])
 def index():
     global startdate
     global enddate
@@ -228,13 +232,14 @@ def singlepathSampleInit():
 @app.route('/singlepathsample', methods=['POST'])
 def singlepathInit():
     global dictionary
-    dictionary = dict()
+
     global startdate
     global enddate
     global startdateFile
     global enddateFile
     startdateFile = startdate
     enddateFile = enddate
+    params = ''
     if len(request.form['startdate']) == 16:
         temp1 = request.form['startdate'] + ':00'
     else:
@@ -243,10 +248,8 @@ def singlepathInit():
         temp2 = request.form['enddate'] + ':00'
     else:
         temp2 = request.form['enddate']
-    
     _startdate = datetime.strptime(temp1,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
     _enddate = datetime.strptime(temp2,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
-    dictionary = dict()
     _sensor = request.form['sensor']
     global sensor
     sensor = _sensor
@@ -400,57 +403,77 @@ def realtime():
     os.chdir('..')
     return redirect('/overall')
 
-@app.route('/graphic')
+@app.route('/graphic', methods=['GET'])
 def graphic():
     global dictionary
+    allowip = list()
+    allowport = list()
+    if 'ips' in request.args and request.args['ips'] != '':
+        ips = request.args['ips']
+        ips = ips.split(',')
+        for ip in ips:
+            if ip not in allowip:
+                allowip.append(ip)
+    if 'ports' in request.args and request.args['ports'] != '':
+        ports = request.args['ports']
+        ports = ports.split(',')
+        for port in ports:
+            if '-' not in port:
+                if port not in allowport:
+                    allowport.append(port)
+            if '-' in port:
+                portrange = port.split('-')
+                for i in range(int(portrange[0]), int(portrange[1]) + 1):
+                    if port not in allowport:
+                        allowport.append(i)
     os.chdir('data')
     command = 'rwfilter traffic.rw --type=in --pass=stdout | rwuniq --fields=sip,sport > source_ingraphic.txt'
     os.system(command)
     command = 'rwfilter traffic.rw --type=in --pass=stdout | rwuniq --fields=dip,dport > destination_ingraphic.txt'
     os.system(command)
-    command = 'rwfilter traffic.rw --type=in --pass=stdout | rwstats --fields=sip --count=5 > sip_ingraphic.txt'
+    command = 'rwfilter traffic.rw --type=in --pass=stdout | rwstats --fields=sip --count=20 > sip_ingraphic.txt'
     os.system(command)
-    command = 'rwfilter traffic.rw --type=in --pass=stdout | rwstats --fields=dip --count=5 > dip_ingraphic.txt'
+    command = 'rwfilter traffic.rw --type=in --pass=stdout | rwstats --fields=dip --count=20 > dip_ingraphic.txt'
     os.system(command)
     os.chdir('..')
     graphic = Graphic.Graphic('sip_ingraphic.txt', 'dip_ingraphic.txt', 'source_ingraphic.txt', 'destination_ingraphic.txt')
-    graphic.render('ingraphic', 'Sensor', dictionary)
+    graphic.render('ingraphic', 'Sensor', dictionary, allowip, allowport)
     os.chdir('data')
     command = 'rwfilter traffic.rw --type=inweb --pass=stdout | rwuniq --fields=sip,sport > source_inwebgraphic.txt'
     os.system(command)
     command = 'rwfilter traffic.rw --type=inweb --pass=stdout | rwuniq --fields=dip,dport > destination_inwebgraphic.txt'
     os.system(command)
-    command = 'rwfilter traffic.rw --type=inweb --pass=stdout | rwstats --fields=sip --count=5 > sip_inwebgraphic.txt'
+    command = 'rwfilter traffic.rw --type=inweb --pass=stdout | rwstats --fields=sip --count=20 > sip_inwebgraphic.txt'
     os.system(command)
-    command = 'rwfilter traffic.rw --type=inweb --pass=stdout | rwstats --fields=dip --count=5 > dip_inwebgraphic.txt'
+    command = 'rwfilter traffic.rw --type=inweb --pass=stdout | rwstats --fields=dip --count=20 > dip_inwebgraphic.txt'
     os.system(command)
     os.chdir('..')
     graphic = Graphic.Graphic('sip_inwebgraphic.txt', 'dip_inwebgraphic.txt', 'source_inwebgraphic.txt', 'destination_inwebgraphic.txt')
-    graphic.render('inwebgraphic', 'Sensor', dictionary)
+    graphic.render('inwebgraphic', 'Sensor', dictionary, allowip, allowport)
     os.chdir('data')
     command = 'rwfilter traffic.rw --type=out --pass=stdout | rwuniq --fields=sip,sport > source_outgraphic.txt'
     os.system(command)
     command = 'rwfilter traffic.rw --type=out --pass=stdout | rwuniq --fields=dip,dport > destination_outgraphic.txt'
     os.system(command)
-    command = 'rwfilter traffic.rw --type=out --pass=stdout | rwstats --fields=sip --count=5 > sip_outgraphic.txt'
+    command = 'rwfilter traffic.rw --type=out --pass=stdout | rwstats --fields=sip --count=20 > sip_outgraphic.txt'
     os.system(command)
-    command = 'rwfilter traffic.rw --type=out --pass=stdout | rwstats --fields=dip --count=5 > dip_outgraphic.txt'
+    command = 'rwfilter traffic.rw --type=out --pass=stdout | rwstats --fields=dip --count=20 > dip_outgraphic.txt'
     os.system(command)
     os.chdir('..')
     graphic = Graphic.Graphic('sip_outgraphic.txt', 'dip_outgraphic.txt', 'source_outgraphic.txt', 'destination_outgraphic.txt')
-    graphic.render('outgraphic', 'Sensor', dictionary)
+    graphic.render('outgraphic', 'Sensor', dictionary, allowip, allowport)
     os.chdir('data')
     command = 'rwfilter traffic.rw --type=outweb --pass=stdout | rwuniq --fields=sip,sport > source_outwebgraphic.txt'
     os.system(command)
     command = 'rwfilter traffic.rw --type=outweb --pass=stdout | rwuniq --fields=dip,dport > destination_outwebgraphic.txt'
     os.system(command)
-    command = 'rwfilter traffic.rw --type=outweb --pass=stdout | rwstats --fields=sip --count=5 > sip_outwebgraphic.txt'
+    command = 'rwfilter traffic.rw --type=outweb --pass=stdout | rwstats --fields=sip --count=20 > sip_outwebgraphic.txt'
     os.system(command)
-    command = 'rwfilter traffic.rw --type=outweb --pass=stdout | rwstats --fields=dip --count=5 > dip_outwebgraphic.txt'
+    command = 'rwfilter traffic.rw --type=outweb --pass=stdout | rwstats --fields=dip --count=20 > dip_outwebgraphic.txt'
     os.system(command)
     os.chdir('..')
     graphic = Graphic.Graphic('sip_outwebgraphic.txt', 'dip_outwebgraphic.txt', 'source_outwebgraphic.txt', 'destination_outwebgraphic.txt')
-    graphic.render('outwebgraphic', 'Sensor', dictionary)
+    graphic.render('outwebgraphic', 'Sensor', dictionary, allowip, allowport)
     return render_template('download.html')
 
 @app.route('/download', methods = ['GET'])
@@ -462,7 +485,20 @@ def download():
 def modifyFile():
     global startdateFile
     global enddateFile
-    return render_template('modifyFile.html')
+    startdatecmd = 'rwsort traffic.rw --fields=stime --output-path=stdout | rwcut --no-columns| head -2 > getstart.txt'
+    enddatecmd = 'rwsort traffic.rw --fields=etime --reverse --output-path=stdout | rwcut --no-columns| head -2 > getend.txt'
+    start = TableFromCommand.TableFromCommand(startdatecmd, 'getstart.txt')
+    start = start.execute()
+    end = TableFromCommand.TableFromCommand(enddatecmd, 'getend.txt')
+    end = end.execute()
+    start = str(start.getColumn('sTime')[0]).split('.')[0]
+    start = datetime.strptime(start,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S')
+    end = str(end.getColumn('eTime')[0]).split('.')[0]
+    end = datetime.strptime(end,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S')
+    startdateFile = start
+    enddateFile = end
+    return render_template('modifyFile.html',
+    startdate=start,enddate=end)
 
 @app.route('/initfile', methods=['GET'])
 def initfile():
@@ -472,11 +508,11 @@ def initfile():
     filename = request.args['chosedfile']    
     current = os.getcwd()
     filelink = current + '/uploads/' + filename
-    command = 'rm traffic.rw; rm traffic.yaf;yaf --in {file} --out traffic.yaf; rwipfix2silk traffic.yaf --silk-output=traffic.rw'.format(file=filelink)
+    command = 'rm traffic.rw; rm traffic.yaf;yaf --in {file} --out traffic.yaf --ip4-only; rwipfix2silk traffic.yaf --silk-output=traffic.rw'.format(file=filelink)
     os.chdir('data')
     os.system(command)
     os.chdir('..')
-    command = 'rm traffic1.rw; rm traffic1.yaf;yaf --in {file} --out traffic1.yaf; rwipfix2silk traffic1.yaf --silk-output=traffic1.rw'.format(file=filelink)
+    command = 'rm traffic1.rw; rm traffic1.yaf;yaf --in {file} --out traffic1.yaf --ip4-only; rwipfix2silk traffic1.yaf --silk-output=traffic1.rw'.format(file=filelink)
     os.chdir('data')
     os.system(command)
     os.chdir('..')
@@ -544,13 +580,6 @@ def getdate():
     _startdate,_enddate = pcapFile.getdate()
     return jsonify({'startdate': _startdate,'enddate': _enddate})
 
-@app.route('/realtime')
-def realtime():
-    os.chdir('data')
-    command = 'rm traffic.rw; rm traffic.yaf;yaf --in {file} --out traffic.yaf; rwipfix2silk traffic.yaf --silk-output=traffic.rw'.format(file='realtime.pcap')
-    os.system(command)
-    os.chdir('..')
-    return redirect('/overall')
 @app.route('/multipathscan', methods=['POST','GET'])
 def multipathscan():
     global startdate
@@ -601,8 +630,8 @@ def multipathsip():
         _counts = int(request.form['counts'])
     os.chdir('data')
     Command0 = '''rm query.rw response.rw'''
-    Command1 = '''rwfilter --type=in,out --start={_startdate} --end={_enddate} --protocol={_protocol} --saddr={_ip} --pass=stdout | rwsort --fields=3,4,stime --output-path=query.rw'''
-    Command2 = '''rwfilter --type=in,out --start={_startdate} --end={_enddate} --protocol={_protocol} --daddr={_ip} --pass=stdout | rwsort --fields=4,3,stime --output-path=response.rw'''
+    Command1 = '''rwfilter --type=in,out --start={_startdate} --end={_enddate} --protocol={_protocol} --saddr={_ip} --pass=stdout | rwsort --fields=2,3,4,stime --output-path=query.rw'''
+    Command2 = '''rwfilter --type=in,out --start={_startdate} --end={_enddate} --protocol={_protocol} --daddr={_ip} --pass=stdout | rwsort --fields=1,4,3,stime --output-path=response.rw'''
     Command1 = Command1.format(_startdate=_startdate,_enddate=_enddate,_protocol=_protocol,_ip=_ip)
     Command2 = Command2.format(_startdate=_startdate,_enddate=_enddate,_protocol=_protocol,_ip=_ip)
     if _num != 'all':
@@ -756,8 +785,12 @@ def multipathdns():
     enddate=datetime.strptime(enddate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
     _startdate=datetime.strptime(_startdate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
     _enddate=datetime.strptime(_enddate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
-    counts=_counts
-    )
+    counts=_counts)
+
+@app.route('/singlegraphicinit')
+def singlePathGraphicInit():
+    return render_template('singlePathGraphic.html')
+
 if __name__ == '__main__':
     app.run(debug = True, host='0.0.0.0', port='2222')
    

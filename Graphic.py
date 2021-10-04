@@ -17,7 +17,7 @@ class Graphic:
         self.siptable = TableFromFile.TableFromFile(sipfile, True)
         self.diptable = TableFromFile.TableFromFile(dipfile, True)
     
-    def render(self, output, sensor, dictionary):
+    def render(self, output, sensor, dictionary, allowip, allowport):
         sip = [ip.strip() for ip in self.siptable.getColumn('sIP')]
         #sport = self.sporttable.getColumn('sPort')
         dip = [ip.strip() for ip in self.diptable.getColumn('dIP')]
@@ -30,15 +30,23 @@ class Graphic:
         sourcezone = self.stable.Table.values.tolist()
         destinationzone = self.dtable.Table.values.tolist()
         
-        for ip in sip:
-            if len(ip)>15:
-                sip.remove(ip)
-        
-        for ip in dip:
-            if len(ip)>15:
-                dip.remove(ip)
         g = graphviz.Graph(filename = output + '.gv', format= 'png', encoding='utf-8')
-        
+        temp_sip = sip
+        for ip in temp_sip:
+            if len(ip)>15:
+                temp_sip.remove(ip)
+                continue
+            if ip not in allowip and len(allowip)!=0:
+                temp_sip.remove(ip)
+        sip = temp_sip
+        temp_dip = dip
+        for ip in temp_dip:
+            if len(ip)>15:
+                temp_dip.remove(ip)
+                continue
+            if ip not in allowip and len(allowip)!=0:
+                temp_dip.remove(ip)       
+        dip = temp_sip
         for ip in sip:            
             ip = "sip=" + str(ip).strip()
             g.node(ip,ip,  shape="box",style="filled",color="aquamarine")                  
@@ -54,6 +62,8 @@ class Graphic:
         for row in sourcezone:
             if len(str(row[0]).strip()) > 15:
                 continue
+            if row[1] not in allowport and len(allowport)!=0:
+                continue
             if str(row[0]).strip() in sip:
                 sport = "sport=" + str(row[1]).strip()
                 g.node(sport,sport, shape="box", style="filled",color="beige") 
@@ -62,6 +72,8 @@ class Graphic:
 
         for row in destinationzone:
             if len(str(row[0]).strip()) > 15:
+                continue
+            if row[1] not in allowport and len(allowport)!=0:
                 continue
             if str(row[0]).strip() in dip:
                 dport = "dport=" + str(row[1]).strip()
