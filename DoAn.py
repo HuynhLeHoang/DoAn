@@ -376,6 +376,7 @@ def multipathscan():
         _startdate = datetime.strptime(request.form['startdate'],'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
     if 'enddate' in request.form:
         _enddate = datetime.strptime(request.form['enddate'],'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
+    # create command and data
     DetectingScanningcommand = '''rwfilter --start={_startdate} --end={_enddate} --proto=6 --type=in,inweb --pass=stdout | rwsort --fields=sip,proto,dip | rwscan --scan-model=2 --no-columns > scan.txt''' 
     DetectingScanningcommand = DetectingScanningcommand.format(_startdate=_startdate,_enddate=_enddate)
     DetectingScanningtable = TableFromCommand.TableFromCommand(DetectingScanningcommand, 'scan.txt')
@@ -390,57 +391,186 @@ def multipathscan():
 def multipathsip():
     global startdate
     global enddate
+
     _startdate = startdate
     _enddate = enddate
-    _protocol = 6
-    _counts = 5
+    _protocol = '6'
+    _protocols = list()
+    _check = list()
+    allproto = ' '
+    _paraIP1 = ''
+    _paraIP2 = ''
+    for num in range(len(protocols)):
+        _check.append(' ')
+    _counts = 10
     _sensor = '--sensor='
     _num = 'all'
-    # _ip = request.form['ip']
-    _ip = request.args.get('ip')
+    _dip = ''
+    _sip = ''
+    if 'sip' in request.args:
+        _sip = request.args.get('sip')
+        _paraIP1+='--saddr='+_sip
+        _paraIP2+='--daddr='+_sip
+    if 'dip' in request.args:
+        _dip = request.args.get('dip')
+        _paraIP1+=' --dadrr='+_dip
+        _paraIP2+='--saddr='+_dip
     if 'sensor' in request.args:
         _num = request.args.get('sensor')
         _sensor = _sensor + _num
-    if 'protocol' in request.args:
-        _protocol = request.args.get('protocol')
+       
     if 'startdate' in request.form:
         _startdate = datetime.strptime(request.form['startdate'] ,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
     if 'enddate' in request.form:
         _enddate = datetime.strptime(request.form['enddate'] ,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
-    if 'protocol' in request.form:
-        _protocol = request.form['protocol']
+    if 'protocol' in request.args:
+        _protocol = request.args.get('protocol')
+    if _protocol == '0-' or request.form.get('allproto'):
+        allproto = 'checked'
+        for num in range(len(protocols)):               
+            _check[num] = 'checked'
+    else:
+        if len(request.form.getlist('protocols'))!=len(protocols)-5 and len(request.form.getlist('protocols'))!=0:
+                _protocols = request.form.getlist('protocols')
+                _protocol = ''
+                for x in _protocols:
+                    _protocol+= str(protocols.index(x)+1)
+                    _check[int(protocols.index(x))]='checked'
+                    if _protocols.index(x)< len(_protocols)-1:
+                        _protocol+=','
+        else:
+            _check[int(_protocol)-1]='checked'
+
     if 'sensor' in request.form:
         _num = request.form['sensor']
         _sensor = _sensor + _num
     if 'counts' in request.form:
         _counts = int(request.form['counts'])
+    if 'sip' in request.form:
+        _sip = request.form['sip']
+        if _sip!='':
+            _paraIP1+='--saddr='+_sip.strip()
+            _paraIP2+='--daddr='+_sip.strip()
+    if 'dip' in request.form:
+        _dip = request.form['dip']
+        if _dip!='':
+            _paraIP1+=' --daddr='+_dip.strip()
+            _paraIP2+=' --saddr='+_dip.strip()
+    # create command and data
     os.chdir('data')
     Command0 = '''rm query.rw response.rw'''
-    Command1 = '''rwfilter --type=in,out --start={_startdate} --end={_enddate} --protocol={_protocol} --saddr={_ip} --pass=stdout | rwsort --fields=3,4,stime --output-path=query.rw'''
-    Command2 = '''rwfilter --type=in,out --start={_startdate} --end={_enddate} --protocol={_protocol} --daddr={_ip} --pass=stdout | rwsort --fields=4,3,stime --output-path=response.rw'''
-    Command1 = Command1.format(_startdate=_startdate,_enddate=_enddate,_protocol=_protocol,_ip=_ip)
-    Command2 = Command2.format(_startdate=_startdate,_enddate=_enddate,_protocol=_protocol,_ip=_ip)
+    Command1 = '''rwfilter --type=in,out --start={_startdate} --end={_enddate} --protocol={_protocol} {_paraIP1} --pass=stdout | rwsort --fields=1,2,3,4,stime --output-path=query.rw'''
+    Command2 = '''rwfilter --type=in,out --start={_startdate} --end={_enddate} --protocol={_protocol} {_paraIP2} --pass=stdout | rwsort --fields=2,1,4,3,stime --output-path=response.rw'''
+    Command1 = Command1.format(_startdate=_startdate,_enddate=_enddate,_protocol=_protocol,_paraIP1=_paraIP1)
+    Command2 = Command2.format(_startdate=_startdate,_enddate=_enddate,_protocol=_protocol,_paraIP2=_paraIP2)
     if _num != 'all':
-        Command1 = '''rwfilter --type=in,out --start={_startdate} --end={_enddate} --protocol={_protocol} --saddr={_ip} {_sensor} --pass=stdout | rwsort --fields=2,3,4,stime --output-path=query.rw'''
-        Command2 = '''rwfilter --type=in,out --start={_startdate} --end={_enddate} --protocol={_protocol} --daddr={_ip} {_sensor} --pass=stdout | rwsort --fields=1,4,3,stime --output-path=response.rw'''
-        Command1 = Command1.format(_startdate=_startdate,_enddate=_enddate,_protocol=_protocol,_ip=_ip,_sensor=_sensor)
-        Command2 = Command2.format(_startdate=_startdate,_enddate=_enddate,_protocol=_protocol,_ip=_ip,_sensor=_sensor)
+        Command1 = '''rwfilter --type=in,out --start={_startdate} --end={_enddate} --protocol={_protocol} {_paraIP1} {_sensor} --pass=stdout | rwsort --fields=1,2,3,4,stime --output-path=query.rw'''
+        Command2 = '''rwfilter --type=in,out --start={_startdate} --end={_enddate} --protocol={_protocol} {_paraIP2} {_sensor} --pass=stdout | rwsort --fields=2,1,4,3,stime --output-path=response.rw'''
+        Command1 = Command1.format(_startdate=_startdate,_enddate=_enddate,_protocol=_protocol,_paraIP1=_paraIP1,_sensor=_sensor)
+        Command2 = Command2.format(_startdate=_startdate,_enddate=_enddate,_protocol=_protocol,_paraIP2=_paraIP2,_sensor=_sensor)
     os.system(Command0)
     os.system(Command1)
 
     os.system(Command2)
     os.chdir('..')
-    Datacommand = '''rwmatch --relate=1,2 --relate=2,1 --relate=3,4 --relate=4,3 query.rw response.rw stdout | rwcut --fields=1-4,sen,stime,etime,packets,bytes --num-recs={_counts} --no-columns>flowrelas.txt'''
+    # match flow and create data
+    Datacommand = '''rwmatch --relate=1,2 --relate=2,1 --relate=3,4 --relate=4,3 query.rw response.rw stdout | rwcut --fields=1-4,sen,proto,flag,stime,etime,packets,bytes --num-recs={_counts} --no-columns>flowrelas.txt'''
     Datacommand = Datacommand.format(_counts=_counts)
     Datatable = TableFromCommand.TableFromCommand(Datacommand,'flowrelas.txt')
     Datatable = Datatable.execute()
+
+    # data for chart
+    Datacommand1 = '''rwstats query.rw --fields=1,2 --values=flows --count=10 --no-columns>query.txt'''
+    Datacommand2 = '''rwstats response.rw --fields=1,2 --values=flows --count=10 --no-columns>response.txt'''
+    Datatable1 = TableFromCommand.TableFromCommand(Datacommand1,'query.txt')
+    Datatable2 = TableFromCommand.TableFromCommand(Datacommand2,'response.txt')
+    Datatable1 = Datatable1.execute()
+    Datatable2 = Datatable2.execute()
+
+    # draw chart1
+    rows = Datatable1.getAllRow()
+    red = 0
+    green = 0
+    blue = 0
+    Datachart = list()
+    Datachartpie = list()
+    for row in rows:
+        label = row[0]+'->'+row[1]
+        data = list()
+        data.append(row[2])
+        Datachartpie.append(row[3])
+        if red < 250:
+            red += 50
+        else:
+            if green < 250:
+                green += 50
+            else:
+                if blue < 250:
+                    blue += 50
+        color = '"rgba({red}, {green}, {blue}, 1)"'
+        color = color.format(red=red, green=green, blue=blue)
+        dataset = ChartRender.dataSet(color,data, '"'+ label + '"')
+        Datachart.append(dataset)
+    chart1 = ChartRender.barChart()
+    chart1 = chart1.barChartRender([''],Datachart,'chart1','true')
+
+    if len(Datatable1.getColumn('cumul_%'))>0:
+        Datachartpie.append(100 - float(Datatable1.getColumn('cumul_%')[-1]))
+    else:
+        Datachartpie.append(100)
+    PieChart1 = ChartRender.customPieChart()
+    PieChartlabels = list()
+    for x in rows:
+        PieChartlabels.append(str(x[1]).strip())
+    PieChartlabels.append('Others')
+    PieChart1 = PieChart1.customPieChartRender('PieChart1',PieChartlabels, Datachartpie)
+
+    # draw chart2
+    rows = Datatable2.getAllRow()
+    red = 0
+    green = 0
+    blue = 0
+    Datachart = list()
+    Datachartpie = list()
+    for row in rows:
+        label = row[0]+'->'+row[1]
+        data = list()
+        data.append(row[2])
+        Datachartpie.append(row[3])
+        if red < 250:
+            red += 50
+        else:
+            if green < 250:
+                green += 50
+            else:
+                if blue < 250:
+                    blue += 50
+        color = '"rgba({red}, {green}, {blue}, 1)"'
+        color = color.format(red=red, green=green, blue=blue)
+        dataset = ChartRender.dataSet(color,data, '"'+ label + '"')
+        Datachart.append(dataset)
+    chart2 = ChartRender.barChart()
+    chart2 = chart2.barChartRender([''],Datachart,'chart2','true')
+
+    if len(Datatable2.getColumn('cumul_%'))>0:
+        Datachartpie.append(100 - float(Datatable2.getColumn('cumul_%')[-1]))
+    else:
+        Datachartpie.append(100)
+    PieChart2 = ChartRender.customPieChart()
+    PieChartlabels = list()
+    for x in rows:
+        PieChartlabels.append(str(x[0]).strip())
+    PieChartlabels.append('Others')
+    PieChart2 = PieChart2.customPieChartRender('PieChart2',PieChartlabels, Datachartpie)
+
     return render_template('multipathIP.html',
-    Datatable=Datatable,
+    table=Datatable.Table.values.tolist(), Datatable1=Datatable1, Datatable2=Datatable2,
     startdate=datetime.strptime(startdate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'), 
     enddate=datetime.strptime(enddate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
     _startdate=datetime.strptime(_startdate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
     _enddate=datetime.strptime(_enddate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
-    counts=_counts, protocol=_protocol, ip=_ip,num=_num
+    counts=_counts, protocol=_protocol, sip=_sip,dip=_dip,num=_num, protocols=protocols, zips=zip(protocols,_check), allproto=allproto,
+    chart1=chart1, chart2=chart2, PieChart1=PieChart1, PieChart2=PieChart2
     )
 @app.route('/multipathstatistic', methods=['POST', 'GET'])
 def multipathstatistic(): 
@@ -460,14 +590,52 @@ def multipathstatistic():
     Datacommand = Datacommand.format(_startdate=_startdate,_enddate=_enddate,_counts=_counts)
     Datatable = TableFromCommand.TableFromCommand(Datacommand,'multistatistic.txt')
     Datatable = Datatable.execute()
-    
+    rows = Datatable.getAllRow()
+    chart = ChartRender.barChart()
+    red = 0
+    green = 0
+    blue = 0
+    Datachart = list()
+    Datachartpie = list()
+    for row in rows:
+        label = row[0] + '-' + str(row[1])
+        data = list()
+        data.append(row[2])
+        Datachartpie.append(row[3])
+        if red < 250:
+            red += 50
+        else:
+            if green < 250:
+                green += 50
+            else:
+                if blue < 250:
+                    blue += 50
+        color = '"rgba({red}, {green}, {blue}, 1)"'
+        color = color.format(red=red, green=green, blue=blue)
+        dataset = ChartRender.dataSet(color,data, '"'+ label + '"')
+        Datachart.append(dataset)
+    chart = ChartRender.barChart()
+    chart = chart.barChartRender([''],Datachart,'chartstatistic','true')
+
+    if len(Datatable.getColumn('cumul_%'))>0:
+        Datachartpie.append(100 - float(Datatable.getColumn('cumul_%')[-1]))
+    else:
+        Datachartpie.append(100)
+    PieChart = ChartRender.customPieChart()
+    PieChartlabels = list()
+    for x in rows:
+        PieChartlabels.append(str(x[0]).strip() +'-' + str(x[1]).strip())
+    PieChartlabels.append('Others')
+    PieChart = PieChart.customPieChartRender('PieChart',PieChartlabels, Datachartpie)
+
+
     return render_template('multipathStatistic.html',
     Datatable=Datatable,
     startdate=datetime.strptime(startdate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'), 
     enddate=datetime.strptime(enddate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
     _startdate=datetime.strptime(_startdate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
     _enddate=datetime.strptime(_enddate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
-    counts=_counts  
+    counts=_counts, chart=chart, PieChart = PieChart
     )
 @app.route('/multipathtcp', methods=['POST', 'GET'])
 def multipathtcp(): 
@@ -485,22 +653,25 @@ def multipathtcp():
         _counts = int(request.form['counts'])  
     if 'sensor' in request.form:
         _sensor = request.form['sensor']
+    
     Command0 = '''rm incoming-server.raw incoming-client.raw outgoing-server.raw outgoing-client.raw leftover.raw;rwfilter --start={_startdate} --end={_enddate} --sensor={_sensor} --type=in,out --protocol=6 --packets=3- --pass=stdout | rwfilter stdin --type=in --flags-initial=SA/SA --pass=incoming-server.raw --fail=stdout | rwfilter stdin --type=in --flags-initial=S/SA --pass=incoming-client.raw --fail=stdout | rwfilter stdin --type=out --flags-initial=SA/SA --pass=outgoing-server.raw --fail=stdout | rwfilter stdin --type=out --flags-initial=S/SA --pass=outgoing-client.raw --fail=leftover.raw'''
     Command1 = '''rm lowpacket.rw synonly.rw reset.rw;rwfilter --start={_startdate} --end={_enddate} --type=in,inweb --protocol=6 --packets=1-3 --pass=lowpacket.rw --pass=stdout | rwfilter --flags-all=S/SARF --pass=synonly.rw --fail=stdout stdin | rwfilter --flags-all=R/SRF --pass=reset.rw stdin'''
     Command1 = Command1.format(_startdate=_startdate,_enddate=_enddate)
+
     os.chdir('data')
     Command0 = Command0.format(_startdate=_startdate,_enddate=_enddate,_sensor=_sensor)
     os.system(Command0)
     os.system(Command1)
     os.chdir('..')
-    Datacommand0 = '''rwcut incoming-server.raw --fields=1-4,stime,etime --num-recs={_counts} --no-columns>incoming-server.txt'''
-    Datacommand1 = '''rwcut incoming-client.raw --fields=1-4,stime,etime --num-recs={_counts} --no-columns>incoming-client.txt'''
-    Datacommand2 = '''rwcut outgoing-server.raw --fields=1-4,stime,etime --num-recs={_counts} --no-columns>outgoing-server.txt'''
-    Datacommand3 = '''rwcut outgoing-client.raw --fields=1-4,stime,etime --num-recs={_counts} --no-columns>outgoing-client.txt'''
-    Datacommand4 = '''rwcut leftover.raw --fields=1-4,stime,etime --num-recs={_counts} --no-columns>leftover.txt'''
-    Datacommand5 = '''rwcut lowpacket.rw --fields=1-4,sensor,stime,etime --num-recs={_counts} --no-columns>lowpacket.txt'''
-    Datacommand6 = '''rwcut synonly.rw --fields=1-4,sensor,stime,etime --num-recs={_counts} --no-columns>synonly.txt'''
-    Datacommand7 = '''rwcut reset.rw --fields=1-4,sensor,stime,etime --num-recs={_counts} --no-columns>reset.txt'''
+    # data command for table
+    Datacommand0 = '''rwcut incoming-server.raw --fields=1-4,sensor,proto,flag,stime,etime --num-recs={_counts} --no-columns>incoming-server.txt'''
+    Datacommand1 = '''rwcut incoming-client.raw --fields=1-4,sensor,proto,flag,stime,etime --num-recs={_counts} --no-columns>incoming-client.txt'''
+    Datacommand2 = '''rwcut outgoing-server.raw --fields=1-4,sensor,proto,flag,stime,etime --num-recs={_counts} --no-columns>outgoing-server.txt'''
+    Datacommand3 = '''rwcut outgoing-client.raw --fields=1-4,sensor,proto,flag,stime,etime --num-recs={_counts} --no-columns>outgoing-client.txt'''
+    Datacommand4 = '''rwcut leftover.raw --fields=1-4,sensor,proto,flag,stime,etime --num-recs={_counts} --no-columns>leftover.txt'''
+    Datacommand5 = '''rwcut lowpacket.rw --fields=1-4,sensor,proto,flag,stime,etime --num-recs={_counts} --no-columns>lowpacket.txt'''
+    Datacommand6 = '''rwcut synonly.rw --fields=1-4,sensor,proto,flag,stime,etime --num-recs={_counts} --no-columns>synonly.txt'''
+    Datacommand7 = '''rwcut reset.rw --fields=1-4,sensor,proto,flag,stime,etime --num-recs={_counts} --no-columns>reset.txt'''
 
     Datacommand0 = Datacommand0.format(_counts=_counts)
     Datacommand1 = Datacommand1.format(_counts=_counts)
@@ -510,7 +681,28 @@ def multipathtcp():
     Datacommand5 = Datacommand5.format(_counts=_counts)
     Datacommand6 = Datacommand6.format(_counts=_counts)
     Datacommand7 = Datacommand7.format(_counts=_counts)
+    # data command for chart
+    
 
+    Datacommandchart1 = '''rwstats --fields=dip --values=flows --no-columns incoming-server.raw --count={_counts}>chartTCP1.txt'''
+    Datacommandchart2 = '''rwstats --fields=dip --values=flows --no-columns incoming-client.raw --count={_counts}>chartTCP2.txt'''
+    Datacommandchart3 = '''rwstats --fields=sip --values=flows --no-columns outgoing-server.raw --count={_counts}>chartTCP3.txt'''
+    Datacommandchart4 = '''rwstats --fields=sip --values=flows --no-columns outgoing-client.raw --count={_counts}>chartTCP4.txt'''
+    Datacommandchart5 = '''rwstats --fields=sip --values=flows --no-columns leftover.raw --count={_counts}>chartTCP5.txt'''
+    Datacommandchart6 = '''rwstats --fields=sip --values=flows --no-columns lowpacket.rw --count={_counts}>chartTCP6.txt'''
+    Datacommandchart7 = '''rwstats --fields=sip --values=flows --no-columns synonly.rw --count={_counts}>chartTCP7.txt'''
+    Datacommandchart8 = '''rwstats --fields=sip --values=flows --no-columns reset.rw --count={_counts}>chartTCP8.txt'''
+    
+    Datacommandchart1 = Datacommandchart1.format(_counts=_counts)
+    Datacommandchart2 = Datacommandchart2.format(_counts=_counts)
+    Datacommandchart3 = Datacommandchart3.format(_counts=_counts)
+    Datacommandchart4 = Datacommandchart4.format(_counts=_counts)
+    Datacommandchart5 = Datacommandchart5.format(_counts=_counts)
+    Datacommandchart6 = Datacommandchart6.format(_counts=_counts)
+    Datacommandchart7 = Datacommandchart7.format(_counts=_counts)
+    Datacommandchart8 = Datacommandchart8.format(_counts=_counts)
+
+    # exec command
     Datatable0 = TableFromCommand.TableFromCommand(Datacommand0,'incoming-server.txt')
     Datatable0 = Datatable0.execute()
     Datatable1 = TableFromCommand.TableFromCommand(Datacommand1,'incoming-client.txt')
@@ -528,6 +720,327 @@ def multipathtcp():
     Datatable7 = TableFromCommand.TableFromCommand(Datacommand7,'reset.txt')
     Datatable7 = Datatable7.execute()
 
+    Datatablechart1 = TableFromCommand.TableFromCommand(Datacommandchart1,'chartTCP1.txt')
+    Datatablechart1 = Datatablechart1.execute()
+    Datatablechart2 = TableFromCommand.TableFromCommand(Datacommandchart2,'chartTCP2.txt')
+    Datatablechart2 = Datatablechart2.execute()
+    Datatablechart3 = TableFromCommand.TableFromCommand(Datacommandchart3,'chartTCP3.txt')
+    Datatablechart3 = Datatablechart3.execute()
+    Datatablechart4 = TableFromCommand.TableFromCommand(Datacommandchart4,'chartTCP4.txt')
+    Datatablechart4 = Datatablechart4.execute()
+    Datatablechart5 = TableFromCommand.TableFromCommand(Datacommandchart5,'chartTCP5.txt')
+    Datatablechart5 = Datatablechart5.execute()
+    Datatablechart6 = TableFromCommand.TableFromCommand(Datacommandchart6,'chartTCP6.txt')
+    Datatablechart6 = Datatablechart6.execute()
+    Datatablechart7 = TableFromCommand.TableFromCommand(Datacommandchart7,'chartTCP7.txt')
+    Datatablechart7 = Datatablechart7.execute()
+    Datatablechart8 = TableFromCommand.TableFromCommand(Datacommandchart8,'chartTCP8.txt')
+    Datatablechart8 = Datatablechart8.execute()
+    
+    # draw chart1
+    rows = Datatablechart1.getAllRow()
+    red = 0
+    green = 0
+    blue = 0
+    Datachart = list()
+    Datachartpie = list()
+    for row in rows:
+        label = row[0]
+        data = list()
+        data.append(row[1])
+        Datachartpie.append(row[2])
+        if red < 250:
+            red += 50
+        else:
+            if green < 250:
+                green += 50
+            else:
+                if blue < 250:
+                    blue += 50
+        color = '"rgba({red}, {green}, {blue}, 1)"'
+        color = color.format(red=red, green=green, blue=blue)
+        dataset = ChartRender.dataSet(color,data, '"'+ label + '"')
+        Datachart.append(dataset)
+    chart1 = ChartRender.barChart()
+    chart1 = chart1.barChartRender(['Dest-IP'],Datachart,'chart1','true')
+
+    if len(Datatablechart1.getColumn('cumul_%'))>0:
+        Datachartpie.append(100 - float(Datatablechart1.getColumn('cumul_%')[-1]))
+    else:
+        Datachartpie.append(100)
+    PieChart1 = ChartRender.customPieChart()
+    PieChartlabels = list()
+    for x in rows:
+        PieChartlabels.append(str(x[0]).strip())
+    PieChartlabels.append('Others')
+    PieChart1 = PieChart1.customPieChartRender('PieChart1',PieChartlabels, Datachartpie)
+
+    # draw chart2
+    rows = Datatablechart2.getAllRow()
+    red = 0
+    green = 0
+    blue = 0
+    Datachart = list()
+    Datachartpie = list()
+    for row in rows:
+        label = row[0]
+        data = list()
+        data.append(row[1])
+        Datachartpie.append(row[2])
+        if red < 250:
+            red += 50
+        else:
+            if green < 250:
+                green += 50
+            else:
+                if blue < 250:
+                    blue += 50
+        color = '"rgba({red}, {green}, {blue}, 1)"'
+        color = color.format(red=red, green=green, blue=blue)
+        dataset = ChartRender.dataSet(color,data, '"'+ label + '"')
+        Datachart.append(dataset)
+    chart2 = ChartRender.barChart()
+    chart2 = chart2.barChartRender(['Dest-IP'],Datachart,'chart2','true')
+
+    if len(Datatablechart2.getColumn('cumul_%'))>0:
+        Datachartpie.append(100 - float(Datatablechart2.getColumn('cumul_%')[-1]))
+    else:
+        Datachartpie.append(100)
+    PieChart2 = ChartRender.customPieChart()
+    PieChartlabels = list()
+    for x in rows:
+        PieChartlabels.append(str(x[0]).strip())
+    PieChartlabels.append('Others')
+    PieChart2 = PieChart2.customPieChartRender('PieChart2',PieChartlabels, Datachartpie)
+
+    # draw chart3
+    rows = Datatablechart3.getAllRow()
+    red = 0
+    green = 0
+    blue = 0
+    Datachart = list()
+    Datachartpie = list()
+    for row in rows:
+        label = row[0]
+        data = list()
+        data.append(row[1])
+        Datachartpie.append(row[2])
+        if red < 250:
+            red += 50
+        else:
+            if green < 250:
+                green += 50
+            else:
+                if blue < 250:
+                    blue += 50
+        color = '"rgba({red}, {green}, {blue}, 1)"'
+        color = color.format(red=red, green=green, blue=blue)
+        dataset = ChartRender.dataSet(color,data, '"'+ label + '"')
+        Datachart.append(dataset)
+    chart3 = ChartRender.barChart()
+    chart3 = chart3.barChartRender(['Dest-IP'],Datachart,'chart3','true')
+
+    if len(Datatablechart3.getColumn('cumul_%'))>0:
+        Datachartpie.append(100 - float(Datatablechart3.getColumn('cumul_%')[-1]))
+    else:
+        Datachartpie.append(100)
+    PieChart3 = ChartRender.customPieChart()
+    PieChartlabels = list()
+    for x in rows:
+        PieChartlabels.append(str(x[0]).strip())
+    PieChartlabels.append('Others')
+    PieChart3 = PieChart3.customPieChartRender('PieChart3',PieChartlabels, Datachartpie)
+
+    # draw chart4
+    rows = Datatablechart4.getAllRow()
+    red = 0
+    green = 0
+    blue = 0
+    Datachart = list()
+    Datachartpie = list()
+    for row in rows:
+        label = row[0]
+        data = list()
+        data.append(row[1])
+        Datachartpie.append(row[2])
+        if red < 250:
+            red += 50
+        else:
+            if green < 250:
+                green += 50
+            else:
+                if blue < 250:
+                    blue += 50
+        color = '"rgba({red}, {green}, {blue}, 1)"'
+        color = color.format(red=red, green=green, blue=blue)
+        dataset = ChartRender.dataSet(color,data, '"'+ label + '"')
+        Datachart.append(dataset)
+    chart4 = ChartRender.barChart()
+    chart4 = chart4.barChartRender(['Dest-IP'],Datachart,'chart4','true')
+
+    if len(Datatablechart4.getColumn('cumul_%'))>0:
+        Datachartpie.append(100 - float(Datatablechart4.getColumn('cumul_%')[-1]))
+    else:
+        Datachartpie.append(100)
+    PieChart4 = ChartRender.customPieChart()
+    PieChartlabels = list()
+    for x in rows:
+        PieChartlabels.append(str(x[0]).strip())
+    PieChartlabels.append('Others')
+    PieChart4 = PieChart4.customPieChartRender('PieChart4',PieChartlabels, Datachartpie)
+
+    # draw chart5
+    rows = Datatablechart5.getAllRow()
+    red = 0
+    green = 0
+    blue = 0
+    Datachart = list()
+    Datachartpie = list()
+    for row in rows:
+        label = row[0]
+        data = list()
+        data.append(row[1])
+        Datachartpie.append(row[2])
+        if red < 250:
+            red += 50
+        else:
+            if green < 250:
+                green += 50
+            else:
+                if blue < 250:
+                    blue += 50
+        color = '"rgba({red}, {green}, {blue}, 1)"'
+        color = color.format(red=red, green=green, blue=blue)
+        dataset = ChartRender.dataSet(color,data, '"'+ label + '"')
+        Datachart.append(dataset)
+    chart5 = ChartRender.barChart()
+    chart5 = chart5.barChartRender(['Dest-IP'],Datachart,'chart5','true')
+
+    if len(Datatablechart5.getColumn('cumul_%'))>0:
+        Datachartpie.append(100 - float(Datatablechart5.getColumn('cumul_%')[-1]))
+    else:
+        Datachartpie.append(100)
+    PieChart5 = ChartRender.customPieChart()
+    PieChartlabels = list()
+    for x in rows:
+        PieChartlabels.append(str(x[0]).strip())
+    PieChartlabels.append('Others')
+    PieChart5 = PieChart5.customPieChartRender('PieChart5',PieChartlabels, Datachartpie)
+
+    # draw chart6
+    rows = Datatablechart6.getAllRow()
+    red = 0
+    green = 0
+    blue = 0
+    Datachart = list()
+    Datachartpie = list()
+    for row in rows:
+        label = row[0]
+        data = list()
+        data.append(row[1])
+        Datachartpie.append(row[2])
+        if red < 250:
+            red += 50
+        else:
+            if green < 250:
+                green += 50
+            else:
+                if blue < 250:
+                    blue += 50
+        color = '"rgba({red}, {green}, {blue}, 1)"'
+        color = color.format(red=red, green=green, blue=blue)
+        dataset = ChartRender.dataSet(color,data, '"'+ label + '"')
+        Datachart.append(dataset)
+    chart6 = ChartRender.barChart()
+    chart6 = chart6.barChartRender(['Dest-IP'],Datachart,'chart6','true')
+
+    if len(Datatablechart6.getColumn('cumul_%'))>0:
+        Datachartpie.append(100 - float(Datatablechart6.getColumn('cumul_%')[-1]))
+    else:
+        Datachartpie.append(100)
+    PieChart6 = ChartRender.customPieChart()
+    PieChartlabels = list()
+    for x in rows:
+        PieChartlabels.append(str(x[0]).strip())
+    PieChartlabels.append('Others')
+    PieChart6 = PieChart6.customPieChartRender('PieChart6',PieChartlabels, Datachartpie)
+
+    # draw chart7
+    rows = Datatablechart7.getAllRow()
+    red = 0
+    green = 0
+    blue = 0
+    Datachart = list()
+    Datachartpie = list()
+    for row in rows:
+        label = row[0]
+        data = list()
+        data.append(row[1])
+        Datachartpie.append(row[2])
+        if red < 250:
+            red += 50
+        else:
+            if green < 250:
+                green += 50
+            else:
+                if blue < 250:
+                    blue += 50
+        color = '"rgba({red}, {green}, {blue}, 1)"'
+        color = color.format(red=red, green=green, blue=blue)
+        dataset = ChartRender.dataSet(color,data, '"'+ label + '"')
+        Datachart.append(dataset)
+    chart7 = ChartRender.barChart()
+    chart7 = chart7.barChartRender(['Dest-IP'],Datachart,'chart7','true')
+
+    if len(Datatablechart7.getColumn('cumul_%'))>0:
+        Datachartpie.append(100 - float(Datatablechart7.getColumn('cumul_%')[-1]))
+    else:
+        Datachartpie.append(100)
+    PieChart7 = ChartRender.customPieChart()
+    PieChartlabels = list()
+    for x in rows:
+        PieChartlabels.append(str(x[0]).strip())
+    PieChartlabels.append('Others')
+    PieChart7 = PieChart7.customPieChartRender('PieChart7',PieChartlabels, Datachartpie)
+
+    # draw chart8
+    rows = Datatablechart8.getAllRow()
+    red = 0
+    green = 0
+    blue = 0
+    Datachart = list()
+    Datachartpie = list()
+    for row in rows:
+        label = row[0]
+        data = list()
+        data.append(row[1])
+        Datachartpie.append(row[2])
+        if red < 250:
+            red += 50
+        else:
+            if green < 250:
+                green += 50
+            else:
+                if blue < 250:
+                    blue += 50
+        color = '"rgba({red}, {green}, {blue}, 1)"'
+        color = color.format(red=red, green=green, blue=blue)
+        dataset = ChartRender.dataSet(color,data, '"'+ label + '"')
+        Datachart.append(dataset)
+    chart8 = ChartRender.barChart()
+    chart8 = chart8.barChartRender(['Dest-IP'],Datachart,'chart8','true')
+
+    if len(Datatablechart8.getColumn('cumul_%'))>0:
+        Datachartpie.append(100 - float(Datatablechart8.getColumn('cumul_%')[-1]))
+    else:
+        Datachartpie.append(100)
+    PieChart8 = ChartRender.customPieChart()
+    PieChartlabels = list()
+    for x in rows:
+        PieChartlabels.append(str(x[0]).strip())
+    PieChartlabels.append('Others')
+    PieChart8 = PieChart8.customPieChartRender('PieChart8',PieChartlabels, Datachartpie)
+
     return render_template('multipathTCP.html',
     Datatable0=Datatable0,Datatable1=Datatable1,Datatable2=Datatable2,Datatable3=Datatable3,Datatable4=Datatable4,
     Datatable5=Datatable5,Datatable6=Datatable6,Datatable7=Datatable7,
@@ -535,7 +1048,11 @@ def multipathtcp():
     enddate=datetime.strptime(enddate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
     _startdate=datetime.strptime(_startdate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
     _enddate=datetime.strptime(_enddate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
-    counts=_counts,sensor=_sensor
+    counts=_counts,sensor=_sensor, protocols=protocols, 
+    chart1=chart1, PieChart1=PieChart1, chart2=chart2, PieChart2=PieChart2, 
+    chart3=chart3,PieChart3=PieChart3,chart4=chart4, PieChart4=PieChart4,
+    chart5=chart5, PieChart5=PieChart5,chart6=chart6, PieChart6=PieChart6,
+    chart7=chart7, PieChart7=PieChart7,chart8=chart8, PieChart8=PieChart8
     )
 @app.route('/multipathdns', methods=['POST', 'GET'])
 def multipathdns(): 
@@ -551,10 +1068,13 @@ def multipathdns():
         _enddate = datetime.strptime(request.form['enddate'] ,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
     if 'counts' in request.form:
         _counts = int(request.form['counts'])
+    # create data command for table
     Command0 = '''rm in_month.rw interest.set;rwfilter --start={_startdate} --end={_enddate} --type=in,inweb --protocol=0- --pass=in_month.rw; rwfilter in_month.rw --protocol=17 --aport=53 --pass=stdout | rwset --sip-file=interest.set'''
     Command0 = Command0.format(_startdate=_startdate,_enddate=_enddate)
-    Command1 = '''rm not-dns.rw dns-saddr.txt;rwfilter in_month.rw --sipset=interest.set --protocol=17 --pass=stdout | rwfilter stdin --aport=53 --fail=not-dns.rw --pass=stdout | rwuniq --fields=sIP --no-titles --ip-format=zero-padded --sort-output --no-columns --output-path=dns-saddr.txt'''
-    Command2 = '''rm not-dns-saddr.txt;rwuniq not-dns.rw --fields=sip --no-titles --ip-format=zero-padded --sort-output --no-columns --output-path=not-dns-saddr.txt'''
+    Command1 = '''rm not-dns.rw dns.rw dns-saddr.txt;rwfilter in_month.rw --sipset=interest.set --protocol=17 --pass=stdout | rwfilter stdin --aport=53 --fail=not-dns.rw --pass=stdout --pass=dns.rw | rwuniq --fields=sIP --no-titles  --sort-output --no-columns --output-path=dns-saddr.txt'''
+    Command2 = '''rm not-dns-saddr.txt;rwuniq not-dns.rw --fields=sip --no-titles  --sort-output --no-columns --output-path=not-dns-saddr.txt'''
+    
+    # execute command and creat data
     os.chdir('data')
     os.system(Command0)
     os.system(Command1)
@@ -564,14 +1084,101 @@ def multipathdns():
     Datacommand = Datacommand.format(_counts=_counts)
     Datatable = TableFromCommand.TableFromCommand(Datacommand,'dns.txt')
     Datatable = Datatable.execute()
-    
+    # data command for chart
+    Datacommandchart1 = '''rwstats dns.rw --fields=sIP --values=records --no-columns --count={_counts}>chart1.txt'''
+    Datacommandchart2 = '''rwstats not-dns.rw --fields=sIP --values=records --no-columns --count={_counts}>chart2.txt'''
+    Datacommandchart1 = Datacommandchart1.format(_counts=_counts)
+    Datacommandchart2 = Datacommandchart2.format(_counts=_counts)
+    Datatablechart1 = TableFromCommand.TableFromCommand(Datacommandchart1,'chart1.txt')
+    Datatablechart2 = TableFromCommand.TableFromCommand(Datacommandchart2,'chart2.txt')
+    Datatablechart1 = Datatablechart1.execute()
+    Datatablechart2 = Datatablechart2.execute()
+
+    # draw chart1
+    rows = Datatablechart1.getAllRow()
+    chart = ChartRender.barChart()
+    red = 0
+    green = 0
+    blue = 0
+    Datachart = list()
+    Datachartpie = list()
+    for row in rows:
+        label = row[0]
+        data = list()
+        data.append(row[1])
+        Datachartpie.append(row[2])
+        if red < 250:
+            red += 50
+        else:
+            if green < 250:
+                green += 50
+            else:
+                if blue < 250:
+                    blue += 50
+        color = '"rgba({red}, {green}, {blue}, 1)"'
+        color = color.format(red=red, green=green, blue=blue)
+        dataset = ChartRender.dataSet(color,data, '"'+ label + '"')
+        Datachart.append(dataset)
+    chart1 = ChartRender.barChart()
+    chart1 = chart.barChartRender(['Sourc-IP'],Datachart,'chart1','true')
+
+    if len(Datatablechart1.getColumn('cumul_%'))>0:
+        Datachartpie.append(100 - float(Datatablechart1.getColumn('cumul_%')[-1]))
+    else:
+        Datachartpie.append(100)
+    PieChart1 = ChartRender.customPieChart()
+    PieChartlabels = list()
+    for x in rows:
+        PieChartlabels.append(str(x[0]).strip())
+    PieChartlabels.append('Others')
+    PieChart1 = PieChart1.customPieChartRender('PieChart1',PieChartlabels, Datachartpie)
+
+    # draw chart2
+    rows = Datatablechart2.getAllRow()
+    chart = ChartRender.barChart()
+    red = 0
+    green = 0
+    blue = 0
+    Datachart = list()
+    Datachartpie = list()
+    for row in rows:
+        label = row[0]
+        data = list()
+        data.append(row[1])
+        Datachartpie.append(row[2])
+        if red < 250:
+            red += 50
+        else:
+            if green < 250:
+                green += 50
+            else:
+                if blue < 250:
+                    blue += 50
+        color = '"rgba({red}, {green}, {blue}, 1)"'
+        color = color.format(red=red, green=green, blue=blue)
+        dataset = ChartRender.dataSet(color,data, '"'+ label + '"')
+        Datachart.append(dataset)
+    chart2 = ChartRender.barChart()
+    chart2 = chart.barChartRender(['Sourc-IP'],Datachart,'chart2','true')
+
+    if len(Datatablechart2.getColumn('cumul_%'))>0:
+        Datachartpie.append(100 - float(Datatablechart2.getColumn('cumul_%')[-1]))
+    else:
+        Datachartpie.append(100)
+    PieChart2 = ChartRender.customPieChart()
+    PieChartlabels = list()
+    for x in rows:
+        PieChartlabels.append(str(x[0]).strip())
+    PieChartlabels.append('Others')
+    PieChart2 = PieChart2.customPieChartRender('PieChart2',PieChartlabels, Datachartpie)
+
     return render_template('multipathDNS.html',
     Datatable=Datatable,
     startdate=datetime.strptime(startdate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'), 
     enddate=datetime.strptime(enddate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
     _startdate=datetime.strptime(_startdate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
     _enddate=datetime.strptime(_enddate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
-    counts=_counts
+    counts=_counts, chart1=chart1,PieChart1=PieChart1, chart2=chart2,PieChart2=PieChart2
     )
 if __name__ == '__main__':
     app.run(debug = True, host='0.0.0.0', port='2222')

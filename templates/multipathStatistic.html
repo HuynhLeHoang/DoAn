@@ -172,7 +172,7 @@
                     <tbody>
                       {% for x in Datatable.Table.values.tolist() %}
              
-                        <tr onclick="document.location.href='/multipathip?ip={{x[0].strip()}}&protocol=0-'">
+                        <tr onclick="document.location.href='/multipathip?sip={{x[0].strip()}}&protocol=0-'">
                             <td>{{Datatable.Table.values.tolist().index(x) +1}}</td>
                             {% for y in x %}
                               {% if (x.index(y)<3) %}
@@ -192,7 +192,27 @@
                 </div>
               </div>
             </div>
-            
+
+          </div>
+          <div class="row">
+            <div class='col-lg-12'>
+              <div class="title"><strong>chart</strong></div>
+                <div class="bar-chart block no-margin-bottom">
+                  <canvas id="chartstatistic"></canvas>
+                </div>
+              </div>
+
+          </div>
+          <div class='row'>
+            <div class="col-lg-12">
+              <div class="title"><strong>Percentage</strong></div>
+              <div class="pie-chart chart block">
+                
+                <div class="pie-chart chart margin-bottom-sm">
+                  <canvas id="PieChart"></canvas>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -215,6 +235,12 @@
   <script src='static/vendor/jquery-validation/jquery.validate.min.js'></script>
   <script src='static/js/charts-home.js'></script>
   <script src='static/js/front.js'></script>
+  {% block code %}
+  <script>
+  {{chart|safe}}
+  {{PieChart|safe}}
+  </script>
+  {% endblock code %}
 </body>
 
 </html>

@@ -171,6 +171,9 @@
                         <th>Destination IP</th>
                         <th>Source Port</th>
                         <th>Destination Port</th>
+                        <th>Sensor</th>
+                        <th>Protocol</th>
+                        <th>Flag</th>
                         <th>Start time</th>
                         <th>End time</th>
                       </tr>
@@ -178,12 +181,14 @@
                     <tbody>
                       {% for x in Datatable0.Table.values.tolist() %}
                 
-                        <tr onclick="document.location.href='/multipathip?ip={{x[0].strip()}}&protocol=6&sensor={{sensor}}'">
+                        <tr onclick="document.location.href='/multipathip?sip={{x[0].strip()}}&dip={{x[1].strip()}}&protocol=6&sensor={{sensor}}'">
                             <td>{{Datatable0.Table.values.tolist().index(x) +1}}</td>
                             {% for y in x %}
-                   
+                              {% if x.index(y)==5 %}
+                                <td>{{protocols[y-1]}}</td>
+                              {% else %}
                                 <td>{{y}}</td>
-     
+                              {% endif %}
                             {% endfor %}
                         
                         </tr>
@@ -191,6 +196,23 @@
                     {% endfor %}
                     </tbody>
                   </table>               
+                </div>
+                <div class="row">
+                  <div class='col-lg-6'>
+                    <div class="title"><strong>chart</strong></div>
+                      <div class="bar-chart block no-margin-bottom">
+                        <canvas id="chart1"></canvas>
+                      </div>
+                    </div>
+                  <div class="col-lg-6">
+                    <div class="title"><strong>Percentage</strong></div>
+                    <div class="pie-chart chart block">
+                      
+                      <div class="pie-chart chart margin-bottom-sm">
+                        <canvas id="PieChart1"></canvas>
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <div class="title"><strong>Incoming client</strong></div>
                 <div class="table-responsive">
@@ -202,6 +224,9 @@
                         <th>Destination IP</th>
                         <th>Source Port</th>
                         <th>Destination Port</th>
+                        <th>Sensor</th>
+                        <th>Protocol</th>
+                        <th>Flag</th>
                         <th>Start time</th>
                         <th>End time</th>
                       </tr>
@@ -209,12 +234,15 @@
                     <tbody>
                       {% for x in Datatable1.Table.values.tolist() %}
          
-                        <tr onclick="document.location.href='/multipathip?ip={{x[0].strip()}}&protocol=6&sensor={{sensor}}'">
+                        <tr onclick="document.location.href='/multipathip?sip={{x[0].strip()}}&dip={{x[1].strip()}}&protocol=6&sensor={{sensor}}'">
                             <td>{{Datatable1.Table.values.tolist().index(x) +1}}</td>
                             {% for y in x %}
                    
+                              {% if x.index(y)==5 %}
+                                <td>{{protocols[y-1]}}</td>
+                              {% else %}
                                 <td>{{y}}</td>
-     
+                              {% endif %}
                             {% endfor %}
                         
                         </tr>
@@ -222,6 +250,23 @@
                     {% endfor %}
                     </tbody>
                   </table>               
+                </div>
+                <div class="row">
+                  <div class='col-lg-6'>
+                    <div class="title"><strong>chart</strong></div>
+                      <div class="bar-chart block no-margin-bottom">
+                        <canvas id="chart2"></canvas>
+                      </div>
+                    </div>
+                  <div class="col-lg-6">
+                    <div class="title"><strong>Percentage</strong></div>
+                    <div class="pie-chart chart block">
+                      
+                      <div class="pie-chart chart margin-bottom-sm">
+                        <canvas id="PieChart2"></canvas>
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <div class="title"><strong>Outgoing server</strong></div>
                 <div class="table-responsive">
@@ -233,6 +278,9 @@
                         <th>Destination IP</th>
                         <th>Source Port</th>
                         <th>Destination Port</th>
+                        <th>Sensor</th>
+                        <th>Protocol</th>
+                        <th>Flag</th>
                         <th>Start time</th>
                         <th>End time</th>
                       </tr>
@@ -240,12 +288,15 @@
                     <tbody>
                       {% for x in Datatable2.Table.values.tolist() %}
                       
-                        <tr onclick="document.location.href='/multipathip?ip={{x[0].strip()}}&protocol=6&sensor={{sensor}}'">
+                        <tr onclick="document.location.href='/multipathip?sip={{x[0].strip()}}&dip={{x[1].strip()}}&protocol=6&sensor={{sensor}}'">
                             <td>{{Datatable2.Table.values.tolist().index(x) +1}}</td>
                             {% for y in x %}
                    
+                              {% if x.index(y)==5 %}
+                                <td>{{protocols[y-1]}}</td>
+                              {% else %}
                                 <td>{{y}}</td>
-     
+                              {% endif %}
                             {% endfor %}
                         
                         </tr>
@@ -253,6 +304,23 @@
                     {% endfor %}
                     </tbody>
                   </table>               
+                </div>
+                <div class="row">
+                  <div class='col-lg-6'>
+                    <div class="title"><strong>chart</strong></div>
+                      <div class="bar-chart block no-margin-bottom">
+                        <canvas id="chart3"></canvas>
+                      </div>
+                    </div>
+                  <div class="col-lg-6">
+                    <div class="title"><strong>Percentage</strong></div>
+                    <div class="pie-chart chart block">
+                      
+                      <div class="pie-chart chart margin-bottom-sm">
+                        <canvas id="PieChart3"></canvas>
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <div class="title"><strong>Outgoing client</strong></div>
                 <div class="table-responsive">
@@ -264,6 +332,9 @@
                         <th>Destination IP</th>
                         <th>Source Port</th>
                         <th>Destination Port</th>
+                        <th>Sensor</th>
+                        <th>Protocol</th>
+                        <th>Flag</th>
                         <th>Start time</th>
                         <th>End time</th>
                       </tr>
@@ -271,11 +342,15 @@
                     <tbody>
                       {% for x in Datatable3.Table.values.tolist() %}
                   
-                        <tr onclick="document.location.href='/multipathip?ip={{x[0].strip()}}&protocol=6&sensor={{sensor}}'">
+                        <tr onclick="document.location.href='/multipathip?sip={{x[0].strip()}}&dip={{x[1].strip()}}&protocol=6&sensor={{sensor}}'">
                             <td>{{Datatable3.Table.values.tolist().index(x) +1}}</td>
                             {% for y in x %}
                    
+                              {% if x.index(y)==5 %}
+                                <td>{{protocols[y-1]}}</td>
+                              {% else %}
                                 <td>{{y}}</td>
+                              {% endif %}
      
                             {% endfor %}
                         
@@ -284,6 +359,23 @@
                     {% endfor %}
                     </tbody>
                   </table>               
+                </div>
+                <div class="row">
+                  <div class='col-lg-6'>
+                    <div class="title"><strong>chart</strong></div>
+                      <div class="bar-chart block no-margin-bottom">
+                        <canvas id="chart4"></canvas>
+                      </div>
+                    </div>
+                  <div class="col-lg-6">
+                    <div class="title"><strong>Percentage</strong></div>
+                    <div class="pie-chart chart block">
+                      
+                      <div class="pie-chart chart margin-bottom-sm">
+                        <canvas id="PieChart4"></canvas>
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <div class="title"><strong>Others</strong></div>
                 <div class="table-responsive">
@@ -295,6 +387,9 @@
                         <th>Destination IP</th>
                         <th>Source Port</th>
                         <th>Destination Port</th>
+                        <th>Sensor</th>
+                        <th>Protocol</th>
+                        <th>Flag</th>
                         <th>Start time</th>
                         <th>End time</th>
                       </tr>
@@ -302,11 +397,15 @@
                     <tbody>
                       {% for x in Datatable4.Table.values.tolist() %}
                       
-                        <tr onclick="document.location.href='/multipathip?ip={{x[0].strip()}}&protocol=6&sensor={{sensor}}'">
+                        <tr onclick="document.location.href='/multipathip?sip={{x[0].strip()}}&dip={{x[1].strip()}}&protocol=6&sensor={{sensor}}'">
                             <td>{{Datatable4.Table.values.tolist().index(x) +1}}</td>
                             {% for y in x %}
                    
+                              {% if x.index(y)==5 %}
+                                <td>{{protocols[y-1]}}</td>
+                              {% else %}
                                 <td>{{y}}</td>
+                              {% endif %}
      
                             {% endfor %}
                         
@@ -315,6 +414,23 @@
                     {% endfor %}
                     </tbody>
                   </table>               
+                </div>
+                <div class="row">
+                  <div class='col-lg-6'>
+                    <div class="title"><strong>chart</strong></div>
+                      <div class="bar-chart block no-margin-bottom">
+                        <canvas id="chart5"></canvas>
+                      </div>
+                    </div>
+                  <div class="col-lg-6">
+                    <div class="title"><strong>Percentage</strong></div>
+                    <div class="pie-chart chart block">
+                      
+                      <div class="pie-chart chart margin-bottom-sm">
+                        <canvas id="PieChart5"></canvas>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
               <div class="block">
@@ -329,6 +445,8 @@
                         <th>Source Port</th>
                         <th>Destination Port</th>
                         <th>Sensor</th>
+                        <th>Protocol</th>
+                        <th>Flag</th>
                         <th>Start time</th>
                         <th>End time</th>
                       </tr>
@@ -336,11 +454,15 @@
                     <tbody>
                       {% for x in Datatable5.Table.values.tolist() %}
                       
-                        <tr onclick="document.location.href='/multipathip?ip={{x[0].strip()}}&protocol=6&sensor={{x[4].strip()}}'">
+                        <tr onclick="document.location.href='/multipathip?sip={{x[0].strip()}}&dip={{x[1].strip()}}&protocol=6&sensor={{x[4].strip()}}'">
                             <td>{{Datatable5.Table.values.tolist().index(x) +1}}</td>
                             {% for y in x %}
                    
+                              {% if x.index(y)==5 %}
+                                <td>{{protocols[y-1]}}</td>
+                              {% else %}
                                 <td>{{y}}</td>
+                              {% endif %}
      
                             {% endfor %}
                         
@@ -349,6 +471,23 @@
                     {% endfor %}
                     </tbody>
                   </table>               
+                </div>
+                <div class="row">
+                  <div class='col-lg-6'>
+                    <div class="title"><strong>chart</strong></div>
+                      <div class="bar-chart block no-margin-bottom">
+                        <canvas id="chart6"></canvas>
+                      </div>
+                    </div>
+                  <div class="col-lg-6">
+                    <div class="title"><strong>Percentage</strong></div>
+                    <div class="pie-chart chart block">
+                      
+                      <div class="pie-chart chart margin-bottom-sm">
+                        <canvas id="PieChart6"></canvas>
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <div class="title"><strong>Only Syn Flag</strong></div>
                 <div class="table-responsive">
@@ -361,6 +500,8 @@
                         <th>Source Port</th>
                         <th>Destination Port</th>
                         <th>Sensor</th>
+                        <th>Protocol</th>
+                        <th>Flag</th>
                         <th>Start time</th>
                         <th>End time</th>
                       </tr>
@@ -368,11 +509,15 @@
                     <tbody>
                       {% for x in Datatable6.Table.values.tolist() %}
                       
-                        <tr onclick="document.location.href='/multipathip?ip={{x[0].strip()}}&protocol=6&sensor={{x[4].strip()}}'">
+                        <tr onclick="document.location.href='/multipathip?sip={{x[0].strip()}}&dip={{x[1].strip()}}&protocol=6&sensor={{x[4].strip()}}'">
                             <td>{{Datatable6.Table.values.tolist().index(x) +1}}</td>
                             {% for y in x %}
                    
+                              {% if x.index(y)==5 %}
+                                <td>{{protocols[y-1]}}</td>
+                              {% else %}
                                 <td>{{y}}</td>
+                              {% endif %}
      
                             {% endfor %}
                         
@@ -381,6 +526,23 @@
                     {% endfor %}
                     </tbody>
                   </table>               
+                </div>
+                <div class="row">
+                  <div class='col-lg-6'>
+                    <div class="title"><strong>chart</strong></div>
+                      <div class="bar-chart block no-margin-bottom">
+                        <canvas id="chart7"></canvas>
+                      </div>
+                    </div>
+                  <div class="col-lg-6">
+                    <div class="title"><strong>Percentage</strong></div>
+                    <div class="pie-chart chart block">
+                      
+                      <div class="pie-chart chart margin-bottom-sm">
+                        <canvas id="PieChart7"></canvas>
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <div class="title"><strong>Rest Flag</strong></div>
                 <div class="table-responsive">
@@ -393,6 +555,8 @@
                         <th>Source Port</th>
                         <th>Destination Port</th>
                         <th>Sensor</th>
+                        <th>Protocol</th>
+                        <th>Flag</th>
                         <th>Start time</th>
                         <th>End time</th>
                       </tr>
@@ -400,11 +564,15 @@
                     <tbody>
                       {% for x in Datatable7.Table.values.tolist() %}
                       
-                        <tr onclick="document.location.href='/multipathip?ip={{x[0].strip()}}&protocol=6&sensor={{x[4].strip()}}'">
+                        <tr onclick="document.location.href='/multipathip?sip={{x[0].strip()}}&dip={{x[1].strip()}}&protocol=6&sensor={{x[4].strip()}}'">
                             <td>{{Datatable7.Table.values.tolist().index(x) +1}}</td>
                             {% for y in x %}
                    
+                              {% if x.index(y)==5 %}
+                                <td>{{protocols[y-1]}}</td>
+                              {% else %}
                                 <td>{{y}}</td>
+                              {% endif %}
      
                             {% endfor %}
                         
@@ -413,6 +581,23 @@
                     {% endfor %}
                     </tbody>
                   </table>               
+                </div>
+                <div class="row">
+                  <div class='col-lg-6'>
+                    <div class="title"><strong>chart</strong></div>
+                      <div class="bar-chart block no-margin-bottom">
+                        <canvas id="chart8"></canvas>
+                      </div>
+                    </div>
+                  <div class="col-lg-6">
+                    <div class="title"><strong>Percentage</strong></div>
+                    <div class="pie-chart chart block">
+                      
+                      <div class="pie-chart chart margin-bottom-sm">
+                        <canvas id="PieChart8"></canvas>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -439,6 +624,26 @@
   <script src='static/vendor/jquery-validation/jquery.validate.min.js'></script>
   <script src='static/js/charts-home.js'></script>
   <script src='static/js/front.js'></script>
+  {% block code %}
+  <script>
+  {{chart1|safe}}
+  {{PieChart1|safe}}
+  {{chart2|safe}}
+  {{PieChart2|safe}}
+  {{chart3|safe}}
+  {{PieChart3|safe}}
+  {{chart4|safe}}
+  {{PieChart4|safe}}
+  {{chart5|safe}}
+  {{PieChart5|safe}}
+  {{chart6|safe}}
+  {{PieChart6|safe}}
+  {{chart7|safe}}
+  {{PieChart7|safe}}
+  {{chart8|safe}}
+  {{PieChart8|safe}}
+  </script>
+  {% endblock code %}
 </body>
 
 </html>
