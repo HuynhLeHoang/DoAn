@@ -31,22 +31,30 @@ class Graphic:
         destinationzone = self.dtable.Table.values.tolist()
         
         g = graphviz.Graph(filename = output + '.gv', format= 'png', encoding='utf-8')
-        temp_sip = sip
-        for ip in temp_sip:
+        temp_sip = list()
+        for ip in sip:
+            temp_sip.append(ip)
+        for ip in sip:
             if len(ip)>15:
                 temp_sip.remove(ip)
                 continue
             if ip not in allowip and len(allowip)!=0:
                 temp_sip.remove(ip)
-        sip = temp_sip
-        temp_dip = dip
-        for ip in temp_dip:
+        sip = list()
+        for ip in temp_sip:
+            sip.append(ip)
+        temp_dip = list()
+        for ip in dip:
+            temp_dip.append(ip)
+        for ip in dip:
             if len(ip)>15:
                 temp_dip.remove(ip)
                 continue
             if ip not in allowip and len(allowip)!=0:
                 temp_dip.remove(ip)       
-        dip = temp_sip
+        dip = list()
+        for ip in temp_dip:
+            dip.append(ip)
         for ip in sip:            
             ip = "sip=" + str(ip).strip()
             g.node(ip,ip,  shape="box",style="filled",color="aquamarine")                  
@@ -62,7 +70,7 @@ class Graphic:
         for row in sourcezone:
             if len(str(row[0]).strip()) > 15:
                 continue
-            if row[1] not in allowport and len(allowport)!=0:
+            if str(row[1]) not in allowport and len(allowport)!=0:
                 continue
             if str(row[0]).strip() in sip:
                 sport = "sport=" + str(row[1]).strip()
@@ -73,7 +81,7 @@ class Graphic:
         for row in destinationzone:
             if len(str(row[0]).strip()) > 15:
                 continue
-            if row[1] not in allowport and len(allowport)!=0:
+            if str(row[1]) not in allowport and len(allowport)!=0:
                 continue
             if str(row[0]).strip() in dip:
                 dport = "dport=" + str(row[1]).strip()

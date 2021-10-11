@@ -1,7 +1,4 @@
-from numpy.lib.function_base import select
 import pandas as pd
-import os
-
 from pandas.core.algorithms import isin
 
 class TableFromFile():

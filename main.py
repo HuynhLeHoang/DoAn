@@ -587,9 +587,15 @@ def multipathscan():
     _startdate = startdate
     _enddate = enddate
     if 'startdate' in request.form:
-        _startdate = datetime.strptime(request.form['startdate'],'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
+        _startdate = request.form['startdate']
+        if len(_startdate) < 17:
+            _startdate += ':00'
+        _startdate = datetime.strptime(_startdate,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
     if 'enddate' in request.form:
-        _enddate = datetime.strptime(request.form['enddate'],'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
+        _enddate = request.form['enddate']
+        if len(_enddate) < 17:
+            _enddate += ':00'
+        _enddate = datetime.strptime(_enddate,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
     DetectingScanningcommand = '''rwfilter --start={_startdate} --end={_enddate} --proto=6 --type=in,inweb --pass=stdout | rwsort --fields=sip,proto,dip | rwscan --scan-model=2 --no-columns > scan.txt''' 
     DetectingScanningcommand = DetectingScanningcommand.format(_startdate=_startdate,_enddate=_enddate)
     DetectingScanningtable = TableFromCommand.TableFromCommand(DetectingScanningcommand, 'scan.txt')
@@ -618,9 +624,15 @@ def multipathsip():
     if 'protocol' in request.args:
         _protocol = request.args.get('protocol')
     if 'startdate' in request.form:
-        _startdate = datetime.strptime(request.form['startdate'] ,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
+        _startdate = request.form['startdate']
+        if len(_startdate) < 17:
+            _startdate += ':00'
+        _startdate = datetime.strptime(_startdate,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
     if 'enddate' in request.form:
-        _enddate = datetime.strptime(request.form['enddate'] ,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
+        _enddate = request.form['enddate']
+        if len(_enddate) < 17:
+            _enddate += ':00'
+        _enddate = datetime.strptime(_enddate,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
     if 'protocol' in request.form:
         _protocol = request.form['protocol']
     if 'sensor' in request.form:
@@ -665,9 +677,15 @@ def multipathstatistic():
     _counts =10 
     
     if 'startdate' in request.form:
-        _startdate = datetime.strptime(request.form['startdate'] ,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
+        _startdate = request.form['startdate']
+        if len(_startdate) < 17:
+            _startdate += ':00'
+        _startdate = datetime.strptime(_startdate,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
     if 'enddate' in request.form:
-        _enddate = datetime.strptime(request.form['enddate'] ,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
+        _enddate = request.form['enddate']
+        if len(_enddate) < 17:
+            _enddate += ':00'
+        _enddate = datetime.strptime(_enddate,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
     if 'counts' in request.form:
         _counts = int(request.form['counts'])
     Datacommand = '''rm in_month.rw;rwfilter --start={_startdate} --end={_enddate} --type=in,inweb --protocol=0- --pass=stdout --pass=in_month.rw | rwstats --field=sip,sport --value=flows --count {_counts} --no-columns >multistatistic.txt'''
@@ -692,9 +710,15 @@ def multipathtcp():
     _counts = 10 
     _sensor = 'S5'
     if 'startdate' in request.form:
-        _startdate = datetime.strptime(request.form['startdate'] ,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
+        _startdate = request.form['startdate']
+        if len(_startdate) < 17:
+            _startdate += ':00'
+        _startdate = datetime.strptime(_startdate,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
     if 'enddate' in request.form:
-        _enddate = datetime.strptime(request.form['enddate'] ,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
+        _enddate = request.form['enddate']
+        if len(_enddate) < 17:
+            _enddate += ':00'
+        _enddate = datetime.strptime(_enddate,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
     if 'counts' in request.form:
         _counts = int(request.form['counts'])  
     if 'sensor' in request.form:
@@ -760,9 +784,15 @@ def multipathdns():
     _counts =10 
     
     if 'startdate' in request.form:
-        _startdate = datetime.strptime(request.form['startdate'] ,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
+        _startdate = request.form['startdate']
+        if len(_startdate) < 17:
+            _startdate += ':00'
+        _startdate = datetime.strptime(_startdate,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
     if 'enddate' in request.form:
-        _enddate = datetime.strptime(request.form['enddate'] ,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
+        _enddate = request.form['enddate']
+        if len(_enddate) < 17:
+            _enddate += ':00'
+        _enddate = datetime.strptime(_enddate,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
     if 'counts' in request.form:
         _counts = int(request.form['counts'])
     Command0 = '''rm in_month.rw interest.set;rwfilter --start={_startdate} --end={_enddate} --type=in,inweb --protocol=0- --pass=in_month.rw; rwfilter in_month.rw --protocol=17 --aport=53 --pass=stdout | rwset --sip-file=interest.set'''
