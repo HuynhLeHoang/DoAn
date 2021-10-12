@@ -1,0 +1,3 @@
+graph {
+	Sensor [label=Sensor color=green2 shape=invhouse style=filled]
+}

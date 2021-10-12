@@ -1,0 +1,50 @@
+graph {
+	edge [arrowhead=vee arrowsize=2]
+	"ip=10.0.40.20-port=53" [label="ip=10.0.40.20-port=53"]
+	"ip=10.0.40.27-port=0" [label="ip=10.0.40.27-port=0"]
+	"ip=10.0.40.83-port=55135" [label="ip=10.0.40.83-port=55135"]
+	"ip=10.0.40.83-port=137" [label="ip=10.0.40.83-port=137"]
+	S1 [label=S1 color=green2 shape=invhouse style=filled]
+	"ip=192.168.70.10-port=57515" [label="ip=192.168.70.10-port=57515" color=deepskyblue shape=box style=filled]
+	"ip=192.168.70.10-port=2048" [label="ip=192.168.70.10-port=2048" color=deepskyblue shape=box style=filled]
+	"ip=192.168.70.10-port=62183" [label="ip=192.168.70.10-port=62183" color=deepskyblue shape=box style=filled]
+	"ip=192.168.70.10-port=49308" [label="ip=192.168.70.10-port=49308" color=deepskyblue shape=box style=filled]
+	"ip=192.168.70.10-port=8082" [label="ip=192.168.70.10-port=8082" color=deepskyblue shape=box style=filled]
+	"ip=192.168.70.10-port=137" [label="ip=192.168.70.10-port=137" color=deepskyblue shape=box style=filled]
+	"ip=192.168.70.10-port=65025" [label="ip=192.168.70.10-port=65025" color=deepskyblue shape=box style=filled]
+	"ip=192.168.70.10-port=64954" [label="ip=192.168.70.10-port=64954" color=deepskyblue shape=box style=filled]
+	"ip=192.168.70.10-port=64882" [label="ip=192.168.70.10-port=64882" color=deepskyblue shape=box style=filled]
+	"ip=192.168.70.10-port=64730" [label="ip=192.168.70.10-port=64730" color=deepskyblue shape=box style=filled]
+	"ip=192.168.70.10-port=63176" [label="ip=192.168.70.10-port=63176" color=deepskyblue shape=box style=filled]
+	"ip=192.168.70.10-port=62579" [label="ip=192.168.70.10-port=62579" color=deepskyblue shape=box style=filled]
+	"ip=192.168.70.10-port=62567" [label="ip=192.168.70.10-port=62567" color=deepskyblue shape=box style=filled]
+	"ip=192.168.70.10-port=62191" [label="ip=192.168.70.10-port=62191" color=deepskyblue shape=box style=filled]
+	"ip=192.168.70.10-port=61814" [label="ip=192.168.70.10-port=61814" color=deepskyblue shape=box style=filled]
+	"ip=192.168.70.10-port=61426" [label="ip=192.168.70.10-port=61426" color=deepskyblue shape=box style=filled]
+	"ip=192.168.70.10-port=61409" [label="ip=192.168.70.10-port=61409" color=deepskyblue shape=box style=filled]
+	"ip=192.168.70.10-port=61300" [label="ip=192.168.70.10-port=61300" color=deepskyblue shape=box style=filled]
+	"ip=192.168.70.10-port=61189" [label="ip=192.168.70.10-port=61189" color=deepskyblue shape=box style=filled]
+	"ip=10.0.40.20-port=53" -- S1
+	"ip=10.0.40.27-port=0" -- S1
+	"ip=10.0.40.83-port=55135" -- S1
+	"ip=10.0.40.83-port=137" -- S1
+	S1 -- "ip=192.168.70.10-port=57515"
+	S1 -- "ip=192.168.70.10-port=2048"
+	S1 -- "ip=192.168.70.10-port=62183"
+	S1 -- "ip=192.168.70.10-port=49308"
+	S1 -- "ip=192.168.70.10-port=8082"
+	S1 -- "ip=192.168.70.10-port=137"
+	S1 -- "ip=192.168.70.10-port=65025"
+	S1 -- "ip=192.168.70.10-port=64954"
+	S1 -- "ip=192.168.70.10-port=64882"
+	S1 -- "ip=192.168.70.10-port=64730"
+	S1 -- "ip=192.168.70.10-port=63176"
+	S1 -- "ip=192.168.70.10-port=62579"
+	S1 -- "ip=192.168.70.10-port=62567"
+	S1 -- "ip=192.168.70.10-port=62191"
+	S1 -- "ip=192.168.70.10-port=61814"
+	S1 -- "ip=192.168.70.10-port=61426"
+	S1 -- "ip=192.168.70.10-port=61409"
+	S1 -- "ip=192.168.70.10-port=61300"
+	S1 -- "ip=192.168.70.10-port=61189"
+}
