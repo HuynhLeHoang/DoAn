@@ -1,8 +1,4 @@
 
-from graphviz.backend import render
-from werkzeug.utils import secure_filename
-from itertools import count
-from flask import Flask, redirect, url_for, render_template, request, abort, send_file, jsonify
 from flask.sessions import NullSession
 from werkzeug.utils import secure_filename
 from itertools import count
@@ -12,17 +8,10 @@ import TableFromCommand
 import os
 import ChartRender
 import asyncio
-from datetime import datetime, timedelta
-import SinglePath
-import pandas as pd
-import Graphic
-import readPCAP
 from datetime import datetime
 import SinglePath
 import pandas as pd
 
-dictionary = dict()
-sensor = 'Sensor'
 protocols = ['ICMP','IGMP','GGP','IP-in-IP','ST','TCP','CBT','EGP','IGP','BBN-RCC-MON','NVP-II','PUP','ARGUS','EMCON','XNET','CHAOS','UDP','MUX','DCN-MEAS','HMP','PRM','XNS-IDP','TRUNK-1','TRUNK-2','LEAF-1','LEAF-2','RDP','IRTP','ISO-TP4','NETBLT','MFE-NSP','MERIT-INP','DCCP','3PC','IDPR','XTP','DDP','IDPR-CMTP','TP++','IL','IPv6','SDRP','IPv6-Route','IPv6-Frag','IDRP','RSVP','GRE','DSR','BNA','ESP','AH','I-NLSP','SwIPe','NARP','MOBILE','TLSP','SKIP','IPv6-ICMP','IPv6-NoNxt','IPv6-Opts','','CFTP','','SAT-EXPAK','KRYPTOLAN','RVD','IPPC','','SAT-MON','VISA','IPCU','CPNX','CPHB','WSN','PVP','BR-SAT-MON','SUN-ND','WB-MON','WB-EXPAK','ISO-IP','VMTP','SECURE-VMTP','VINES','TTP','IPTM','NSFNET-IGP','DGP','TCF','EIGRP','OSPF','Sprite-RPC','LARP','MTP','AX.25','OS','MICP','SCC-SP','ETHERIP','ENCAP','','GMTP','IFMP','PNNI','PIM','ARIS','SCPS','QNX','A/N','IPComp','SNP','Compaq-Peer','IPX-in-IP','VRRP','PGM','','L2TP','DDX','IATP','STP','SRP','UTI','SMP','SM','PTP','IS-IS over IPv4','FIRE','CRTP','CRUDP','SSCOPMCE','IPLT','SPS','PIPE','SCTP','FC','RSVP-E2E-IGNORE','Mobility Header','UDPLite','MPLS-in-IP','manet','HIP','Shim6','WESP','ROHC','Ethernet']
 TEMPLATE_DIR = os.path.abspath('templates')
 STATIC_DIR = os.path.abspath('static')
@@ -32,20 +21,13 @@ date=date.execute()
 startdate=date.getColumn('Start-Date')[0]
 enddate=date.getColumn('End-Date')[0]
 
-startdateFile = ''
-enddateFile = ''
-
 app = Flask(__name__, static_folder="static")
 
 app.config['MAX_CONTENT_LENGTH'] = 100 * 1024 * 1024
 app.config['UPLOAD_EXTENSIONS'] = ['.pcap', '.pcapng']
 app.config['UPLOAD_PATH'] = 'uploads'
 
-@app.route('/')
-def blankpage():
-    return redirect('/singlepathsample')
-
-@app.route('/home', methods = ['GET','POST'])
+@app.route('/', methods = ['GET','POST'])
 def index():
     global startdate
     global enddate
@@ -231,35 +213,13 @@ def singlepathSampleInit():
 
 @app.route('/singlepathsample', methods=['POST'])
 def singlepathInit():
-    global dictionary
-
-    global startdate
-    global enddate
-    global startdateFile
-    global enddateFile
-    startdateFile = startdate
-    enddateFile = enddate
-    params = ''
-    if len(request.form['startdate']) == 16:
-        temp1 = request.form['startdate'] + ':00'
-    else:
-        temp1 = request.form['startdate']
-    if len(request.form['enddate']) == 16:
-        temp2 = request.form['enddate'] + ':00'
-    else:
-        temp2 = request.form['enddate']
-    _startdate = datetime.strptime(temp1,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
-    _enddate = datetime.strptime(temp2,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
+    _startdate = datetime.strptime(request.form['startdate'] + ':00','%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
+    _enddate = datetime.strptime(request.form['enddate'] + ':00','%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
+    
     _sensor = request.form['sensor']
-    global sensor
-    sensor = _sensor
     _ip = request.form['ip']
     #init data
     command = 'rm traffic.rw;rwfilter --start={start} --end={end} --sensor={sensor} --type=in,inweb,out,outweb --any-address={ip} --pass=traffic.rw'.format(start=_startdate,end=_enddate,sensor=_sensor,ip=_ip)
-    os.chdir('data')
-    os.system(command)
-    os.chdir('..')
-    command = 'rm traffic1.rw;rwfilter --start={start} --end={end} --sensor={sensor} --type=in,inweb,out,outweb --any-address={ip} --pass=traffic1.rw'.format(start=_startdate,end=_enddate,sensor=_sensor,ip=_ip)
     os.chdir('data')
     os.system(command)
     os.chdir('..')
@@ -376,8 +336,6 @@ def uploader():
         if file_ext not in app.config['UPLOAD_EXTENSIONS']:
             abort(400)
         uploaded_file.save(os.path.join(app.config['UPLOAD_PATH'], filename))
-
-    
     
     return redirect(url_for('uploadFile'))
 
@@ -388,12 +346,18 @@ def analyseUploadChoseFile():
     for file in files:
         if file.endswith('.pcap') or file.endswith('.pcapng'):
             filelist.append(file)
-    global startdateFile
-    global enddateFile
-    startdateFile,enddateFile = readPCAP.PCAPHandle(filelist[0]).getdate()
-    return render_template('analyseUploadChoseFile.html', files=filelist,
-    startdate=datetime.strptime(startdateFile,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'), 
-    enddate=datetime.strptime(enddateFile,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'))
+    return render_template('analyseUploadChoseFile.html', files=filelist)
+
+@app.route('/initfile', methods=['GET'])
+def initfile():
+    filename = request.args['chosedfile']
+    current = os.getcwd()
+    filelink = current + '/uploads/' + filename
+    command = 'rm traffic.rw; rm traffic.yaf;yaf --in {file} --out traffic.yaf; rwipfix2silk traffic.yaf --silk-output=traffic.rw'.format(file=filelink)
+    os.chdir('data')
+    os.system(command)
+    os.chdir('..')
+    return redirect('/overall')
 
 @app.route('/realtime')
 def realtime():
@@ -402,184 +366,6 @@ def realtime():
     os.system(command)
     os.chdir('..')
     return redirect('/overall')
-
-@app.route('/graphic', methods=['GET'])
-def graphic():
-    global dictionary
-    allowip = list()
-    allowport = list()
-    if 'ips' in request.args and request.args['ips'] != '':
-        ips = request.args['ips']
-        ips = ips.split(',')
-        for ip in ips:
-            if ip not in allowip:
-                allowip.append(ip)
-    if 'ports' in request.args and request.args['ports'] != '':
-        ports = request.args['ports']
-        ports = ports.split(',')
-        for port in ports:
-            if '-' not in port:
-                if port not in allowport:
-                    allowport.append(port)
-            if '-' in port:
-                portrange = port.split('-')
-                for i in range(int(portrange[0]), int(portrange[1]) + 1):
-                    if port not in allowport:
-                        allowport.append(i)
-    os.chdir('data')
-    command = 'rwfilter traffic.rw --type=in --pass=stdout | rwuniq --fields=sip,sport > source_ingraphic.txt'
-    os.system(command)
-    command = 'rwfilter traffic.rw --type=in --pass=stdout | rwuniq --fields=dip,dport > destination_ingraphic.txt'
-    os.system(command)
-    command = 'rwfilter traffic.rw --type=in --pass=stdout | rwstats --fields=sip --count=20 > sip_ingraphic.txt'
-    os.system(command)
-    command = 'rwfilter traffic.rw --type=in --pass=stdout | rwstats --fields=dip --count=20 > dip_ingraphic.txt'
-    os.system(command)
-    os.chdir('..')
-    graphic = Graphic.Graphic('sip_ingraphic.txt', 'dip_ingraphic.txt', 'source_ingraphic.txt', 'destination_ingraphic.txt')
-    graphic.render('ingraphic', 'Sensor', dictionary, allowip, allowport)
-    os.chdir('data')
-    command = 'rwfilter traffic.rw --type=inweb --pass=stdout | rwuniq --fields=sip,sport > source_inwebgraphic.txt'
-    os.system(command)
-    command = 'rwfilter traffic.rw --type=inweb --pass=stdout | rwuniq --fields=dip,dport > destination_inwebgraphic.txt'
-    os.system(command)
-    command = 'rwfilter traffic.rw --type=inweb --pass=stdout | rwstats --fields=sip --count=20 > sip_inwebgraphic.txt'
-    os.system(command)
-    command = 'rwfilter traffic.rw --type=inweb --pass=stdout | rwstats --fields=dip --count=20 > dip_inwebgraphic.txt'
-    os.system(command)
-    os.chdir('..')
-    graphic = Graphic.Graphic('sip_inwebgraphic.txt', 'dip_inwebgraphic.txt', 'source_inwebgraphic.txt', 'destination_inwebgraphic.txt')
-    graphic.render('inwebgraphic', 'Sensor', dictionary, allowip, allowport)
-    os.chdir('data')
-    command = 'rwfilter traffic.rw --type=out --pass=stdout | rwuniq --fields=sip,sport > source_outgraphic.txt'
-    os.system(command)
-    command = 'rwfilter traffic.rw --type=out --pass=stdout | rwuniq --fields=dip,dport > destination_outgraphic.txt'
-    os.system(command)
-    command = 'rwfilter traffic.rw --type=out --pass=stdout | rwstats --fields=sip --count=20 > sip_outgraphic.txt'
-    os.system(command)
-    command = 'rwfilter traffic.rw --type=out --pass=stdout | rwstats --fields=dip --count=20 > dip_outgraphic.txt'
-    os.system(command)
-    os.chdir('..')
-    graphic = Graphic.Graphic('sip_outgraphic.txt', 'dip_outgraphic.txt', 'source_outgraphic.txt', 'destination_outgraphic.txt')
-    graphic.render('outgraphic', 'Sensor', dictionary, allowip, allowport)
-    os.chdir('data')
-    command = 'rwfilter traffic.rw --type=outweb --pass=stdout | rwuniq --fields=sip,sport > source_outwebgraphic.txt'
-    os.system(command)
-    command = 'rwfilter traffic.rw --type=outweb --pass=stdout | rwuniq --fields=dip,dport > destination_outwebgraphic.txt'
-    os.system(command)
-    command = 'rwfilter traffic.rw --type=outweb --pass=stdout | rwstats --fields=sip --count=20 > sip_outwebgraphic.txt'
-    os.system(command)
-    command = 'rwfilter traffic.rw --type=outweb --pass=stdout | rwstats --fields=dip --count=20 > dip_outwebgraphic.txt'
-    os.system(command)
-    os.chdir('..')
-    graphic = Graphic.Graphic('sip_outwebgraphic.txt', 'dip_outwebgraphic.txt', 'source_outwebgraphic.txt', 'destination_outwebgraphic.txt')
-    graphic.render('outwebgraphic', 'Sensor', dictionary, allowip, allowport)
-    return render_template('download.html')
-
-@app.route('/download', methods = ['GET'])
-def download():
-    path = request.args['file']
-    return send_file(path, as_attachment=True)
-
-@app.route('/file', methods=['GET'])
-def modifyFile():
-    global startdateFile
-    global enddateFile
-    startdatecmd = 'rwsort traffic.rw --fields=stime --output-path=stdout | rwcut --no-columns| head -2 > getstart.txt'
-    enddatecmd = 'rwsort traffic.rw --fields=etime --reverse --output-path=stdout | rwcut --no-columns| head -2 > getend.txt'
-    start = TableFromCommand.TableFromCommand(startdatecmd, 'getstart.txt')
-    start = start.execute()
-    end = TableFromCommand.TableFromCommand(enddatecmd, 'getend.txt')
-    end = end.execute()
-    start = str(start.getColumn('sTime')[0]).split('.')[0]
-    start = datetime.strptime(start,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S')
-    end = str(end.getColumn('eTime')[0]).split('.')[0]
-    end = datetime.strptime(end,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S')
-    startdateFile = start
-    enddateFile = end
-    return render_template('modifyFile.html',
-    startdate=start,enddate=end)
-
-@app.route('/initfile', methods=['GET'])
-def initfile():
-    global dictionary
-    global startdateFile
-    global enddateFile
-    filename = request.args['chosedfile']    
-    current = os.getcwd()
-    filelink = current + '/uploads/' + filename
-    command = 'rm traffic.rw; rm traffic.yaf;yaf --in {file} --out traffic.yaf --ip4-only; rwipfix2silk traffic.yaf --silk-output=traffic.rw'.format(file=filelink)
-    os.chdir('data')
-    os.system(command)
-    os.chdir('..')
-    command = 'rm traffic1.rw; rm traffic1.yaf;yaf --in {file} --out traffic1.yaf --ip4-only; rwipfix2silk traffic1.yaf --silk-output=traffic1.rw'.format(file=filelink)
-    os.chdir('data')
-    os.system(command)
-    os.chdir('..')
-    
-    pcap = readPCAP.PCAPHandle(filename)
-    if pcap.count() > 0:
-        _startdate,_enddate = pcap.getdate()
-        startdateFile = _startdate
-        enddateFile = _enddate
-    dictionary = pcap.match()
-    return redirect('/overall')
-@app.route('/modifyRange', methods=["GET"])
-def modifyRange():
-    global startdateFile
-    global enddateFile
-    return render_template('modifyFile.html',
-    startdate=datetime.strptime(startdateFile,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'), 
-    enddate=datetime.strptime(enddateFile,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'))
-
-@app.route('/modify', methods=['POST'])
-def modify():
-    _sip = ''
-    _dip = ''
-    _sport = ''
-    _dport = ''
-    _startdate = ''
-    _enddate = ''
-    params = ''
-    if 'sip' in request.form  and request.form['sip'] != '':
-        _sip = request.form['sip']
-        params += ' --saddress=' + _sip.strip()
-    if 'dip' in request.form  and request.form['dip'] != '':
-        _dip = request.form['dip']
-        params += ' --daddress=' + _dip.strip()
-    if 'sport' in request.form  and request.form['sport'] != '':
-        _sport = request.form['sport']
-        params += ' --sport=' + _sport.strip()
-    if 'dport' in request.form  and request.form['dport'] != '':
-        _dport = request.form['dport']
-        params += ' --dport=' + _dport.strip()
-    if 'startdate' in request.form and request.form['startdate'] != '':
-        if len(request.form['startdate']) == 16:
-            _startdate = request.form['startdate'] + ':00'
-        else:
-            _startdate = request.form['startdate']
-        _startdate = datetime.strptime(_startdate,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
-    if 'enddate' in request.form  and request.form['enddate'] != '':
-        if len(request.form['enddate']) == 16:
-            _enddate = request.form['enddate'] + ':00'
-        else:
-            _enddate = request.form['enddate']
-        _enddate = datetime.strptime(_enddate,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
-    if _startdate != '' and _enddate != '':
-        params += " --stime={start}-{end} --etime={start}-{end}".format(start=_startdate,end=_enddate)
-    command = 'rm traffic.rw;rwfilter traffic1.rw {params} --type=in,inweb,out,outweb --pass=traffic.rw'.format(params = params)
-    os.chdir('data')
-    os.system(command)
-    os.chdir('..')
-    return redirect('/overall')
-
-@app.route('/getdate', methods=['POST'])
-def getdate():
-    filename = request.form['filename']
-    pcapFile = readPCAP.PCAPHandle(filename)
-    _startdate,_enddate = pcapFile.getdate()
-    return jsonify({'startdate': _startdate,'enddate': _enddate})
-
 @app.route('/multipathscan', methods=['POST','GET'])
 def multipathscan():
     global startdate
@@ -587,15 +373,10 @@ def multipathscan():
     _startdate = startdate
     _enddate = enddate
     if 'startdate' in request.form:
-        _startdate = request.form['startdate']
-        if len(_startdate) < 17:
-            _startdate += ':00'
-        _startdate = datetime.strptime(_startdate,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
+        _startdate = datetime.strptime(request.form['startdate'],'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
     if 'enddate' in request.form:
-        _enddate = request.form['enddate']
-        if len(_enddate) < 17:
-            _enddate += ':00'
-        _enddate = datetime.strptime(_enddate,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
+        _enddate = datetime.strptime(request.form['enddate'],'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
+    # create command and data
     DetectingScanningcommand = '''rwfilter --start={_startdate} --end={_enddate} --proto=6 --type=in,inweb --pass=stdout | rwsort --fields=sip,proto,dip | rwscan --scan-model=2 --no-columns > scan.txt''' 
     DetectingScanningcommand = DetectingScanningcommand.format(_startdate=_startdate,_enddate=_enddate)
     DetectingScanningtable = TableFromCommand.TableFromCommand(DetectingScanningcommand, 'scan.txt')
@@ -632,22 +413,16 @@ def multipathsip():
         _paraIP2+='--daddr='+_sip
     if 'dip' in request.args:
         _dip = request.args.get('dip')
-        _paraIP1+=' --daddr='+_dip
-        _paraIP2+=' --saddr='+_dip
+        _paraIP1+=' --dadrr='+_dip
+        _paraIP2+='--saddr='+_dip
     if 'sensor' in request.args:
         _num = request.args.get('sensor')
         _sensor = _sensor + _num
        
     if 'startdate' in request.form:
-        _startdate = request.form['startdate']
-        if len(_startdate) < 17:
-            _startdate += ':00'
-        _startdate = datetime.strptime(_startdate,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
+        _startdate = datetime.strptime(request.form['startdate'] ,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
     if 'enddate' in request.form:
-        _enddate = request.form['enddate']
-        if len(_enddate) < 17:
-            _enddate += ':00'
-        _enddate = datetime.strptime(_enddate,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
+        _enddate = datetime.strptime(request.form['enddate'] ,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
     if 'protocol' in request.args:
         _protocol = request.args.get('protocol')
     if _protocol == '0-' or request.form.get('allproto'):
@@ -789,7 +564,7 @@ def multipathsip():
     PieChart2 = PieChart2.customPieChartRender('PieChart2',PieChartlabels, Datachartpie)
 
     return render_template('multipathIP.html',
-    table=Datatable.Table.values.tolist(),lenoftable=len(Datatable.Table.values.tolist()), Datatable1=Datatable1, Datatable2=Datatable2,
+    table=Datatable.Table.values.tolist(), Datatable1=Datatable1, Datatable2=Datatable2,
     startdate=datetime.strptime(startdate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'), 
     enddate=datetime.strptime(enddate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
     _startdate=datetime.strptime(_startdate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
@@ -806,15 +581,9 @@ def multipathstatistic():
     _counts =10 
     
     if 'startdate' in request.form:
-        _startdate = request.form['startdate']
-        if len(_startdate) < 17:
-            _startdate += ':00'
-        _startdate = datetime.strptime(_startdate,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
+        _startdate = datetime.strptime(request.form['startdate'] ,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
     if 'enddate' in request.form:
-        _enddate = request.form['enddate']
-        if len(_enddate) < 17:
-            _enddate += ':00'
-        _enddate = datetime.strptime(_enddate,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
+        _enddate = datetime.strptime(request.form['enddate'] ,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
     if 'counts' in request.form:
         _counts = int(request.form['counts'])
     Datacommand = '''rm in_month.rw;rwfilter --start={_startdate} --end={_enddate} --type=in,inweb --protocol=0- --pass=stdout --pass=in_month.rw | rwstats --field=sip,sport --value=flows --count {_counts} --no-columns >multistatistic.txt'''
@@ -877,15 +646,9 @@ def multipathtcp():
     _counts = 10 
     _sensor = 'S5'
     if 'startdate' in request.form:
-        _startdate = request.form['startdate']
-        if len(_startdate) < 17:
-            _startdate += ':00'
-        _startdate = datetime.strptime(_startdate,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
+        _startdate = datetime.strptime(request.form['startdate'] ,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
     if 'enddate' in request.form:
-        _enddate = request.form['enddate']
-        if len(_enddate) < 17:
-            _enddate += ':00'
-        _enddate = datetime.strptime(_enddate,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
+        _enddate = datetime.strptime(request.form['enddate'] ,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
     if 'counts' in request.form:
         _counts = int(request.form['counts'])  
     if 'sensor' in request.form:
@@ -1300,15 +1063,9 @@ def multipathdns():
     _counts =10 
     
     if 'startdate' in request.form:
-        _startdate = request.form['startdate']
-        if len(_startdate) < 17:
-            _startdate += ':00'
-        _startdate = datetime.strptime(_startdate,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
+        _startdate = datetime.strptime(request.form['startdate'] ,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
     if 'enddate' in request.form:
-        _enddate = request.form['enddate']
-        if len(_enddate) < 17:
-            _enddate += ':00'
-        _enddate = datetime.strptime(_enddate,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
+        _enddate = datetime.strptime(request.form['enddate'] ,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
     if 'counts' in request.form:
         _counts = int(request.form['counts'])
     # create data command for table
@@ -1423,9 +1180,6 @@ def multipathdns():
     _enddate=datetime.strptime(_enddate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
     counts=_counts, chart1=chart1,PieChart1=PieChart1, chart2=chart2,PieChart2=PieChart2
     )
-@app.route('/singlegraphicinit')
-def singlePathGraphicInit():
-    return render_template('singlePathGraphic.html')
 if __name__ == '__main__':
     app.run(debug = True, host='0.0.0.0', port='2222')
    
