@@ -632,8 +632,8 @@ def multipathsip():
         _paraIP2+='--daddr='+_sip
     if 'dip' in request.args:
         _dip = request.args.get('dip')
-        _paraIP1+=' --dadrr='+_dip
-        _paraIP2+='--saddr='+_dip
+        _paraIP1+=' --daddr='+_dip
+        _paraIP2+=' --saddr='+_dip
     if 'sensor' in request.args:
         _num = request.args.get('sensor')
         _sensor = _sensor + _num
@@ -789,7 +789,7 @@ def multipathsip():
     PieChart2 = PieChart2.customPieChartRender('PieChart2',PieChartlabels, Datachartpie)
 
     return render_template('multipathIP.html',
-    table=Datatable.Table.values.tolist(), Datatable1=Datatable1, Datatable2=Datatable2,
+    table=Datatable.Table.values.tolist(),lenoftable=len(Datatable.Table.values.tolist()), Datatable1=Datatable1, Datatable2=Datatable2,
     startdate=datetime.strptime(startdate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'), 
     enddate=datetime.strptime(enddate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
     _startdate=datetime.strptime(_startdate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),

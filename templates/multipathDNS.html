@@ -167,7 +167,7 @@
                     <tbody>
                       {% for x in Datatable.Table.values.tolist() %}
                       
-                        <tr onclick="document.location.href='/multipathip?ip={{x[0].strip()}}&protocol=0-'">
+                        <tr onclick="document.location.href='/multipathip?sip={{x[0].strip()}}&protocol=0-'">
                             <td> </td>
                             {% for y in x %}
                               {% if x.index(y)==2 %}
