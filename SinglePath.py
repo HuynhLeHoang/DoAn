@@ -42,7 +42,7 @@ class SinglePath:
 
     def overallview(self):
         result = list()
-        command = 'rwcut --fields=1-4,protocol,bytes --num-recs={counts} traffic.rw --no-columns > overallview.txt'.format(counts=self.counts)
+        command = 'rwcut --fields=1-4,protocol,bytes --num-recs=50 traffic.rw --no-columns > overallview.txt'
         overalltable = TableFromCommand.TableFromCommand(command, 'overallview.txt')
         overalltable = overalltable.execute()
         overalltable.Table['protocol'] = overalltable.Table['protocol'].astype(str)

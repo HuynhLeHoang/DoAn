@@ -1,4 +1,7 @@
+from numpy.lib.function_base import select
 import pandas as pd
+import os
+
 from pandas.core.algorithms import isin
 
 class TableFromFile():
@@ -11,10 +14,9 @@ class TableFromFile():
         lines = thisfile.readlines()
         thisfile.close()
         newfile = open('data/' + filename, "w")
-        if len(lines)>0:
-            if 'INPUT' in lines[0]:
-                del lines[0]
-                del lines[0]
+        if 'INPUT' in lines[0]:
+            del lines[0]
+            del lines[0]
         for line in lines:
             newfile.write(line)
         newfile.close()
