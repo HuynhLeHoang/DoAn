@@ -103,11 +103,11 @@ class customPieChart():
         chart = self.customPieChart_raw.format(id = id, labels = labels, data = data, color = self.colorList[:len(data)])
         return chart
 
-'''
+
 if __name__ == "__main__":
     barchart = barChart()
     dataset1 = dataSet('"rgba(134, 77, 217, 0.57)"', [1,2],'"set1"')
     dataset2 = dataSet('"rgba(134, 77, 217, 1)"', [3,2],'"set2"')
     data = [dataset1,dataset2]
     chart = barchart.barChartRender(["req","Qwerwe"], data, "x")
-    print(chart)'''
+    print(chart)

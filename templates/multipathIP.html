@@ -110,7 +110,7 @@
             <div class="col-lg-12">
               <div class="block">
                 <div class="block-body">
-                  <form class="form-horizontal" action="/multipathip?ip={{ip}}" method="POST">
+                  <form class="form-horizontal" action="/multipathip" method="POST">
                     <div class="form-group row">
                       <label class="col-sm-3 form-control-label">Start time</label>
                       <div class="col-sm-9">
@@ -143,17 +143,35 @@
                       </div>
                     </div>
                     <div class="form-group row">
-                      <label class="col-sm-3 form-control-label">Protocol</label>
+                      <!--<label class="col-sm-3 form-control-label">Protocol</label>-->
                       <div class="col-sm-9">
                    
-                        <input name="protocol" class="form-control mb-3 mb-3" value="{{protocol}}" type="text"/>
+                        <!--<input name="protocol" class="form-control mb-3 mb-3" value="{{protocol}}" type="text"/>-->
+                        <li><a class="col-sm-3 form-control-label" href="#proto" aria-expanded="false" data-toggle="collapse"> <i
+                        ></i>Protocol</a>
+                      <ul id="proto" class="collapse list-unstyled ">
+                        <li><input type="checkbox" name="allproto" value="allproto" {{allproto}} type="text"/>all</li>
+                        {% for x,y in zips %}
+                          {% if x!= '' %}
+                          <li><input  type="checkbox" name="protocols" value="{{x}}" {{y}} type="text"/>{{x}}</li>
+                          {% endif %}
+                        {% endfor %}
+                      </ul>
+                    </li>
                       </div>
                     </div>
                     <div class="form-group row">
-                      <label class="col-sm-3 form-control-label">IP</label>
+                      <label class="col-sm-3 form-control-label">Source-IP</label>
                       <div class="col-sm-9">
                    
-                        <input name="ip" class="form-control mb-3 mb-3" value="{{ip}}" type="text"/>
+                        <input name="sip" class="form-control mb-3 mb-3" value="{{sip}}" type="text"/>
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label class="col-sm-3 form-control-label">Dest-IP</label>
+                      <div class="col-sm-9">
+                   
+                        <input name="dip" class="form-control mb-3 mb-3" value="{{dip}}" type="text"/>
                       </div>
                     </div>
                     <div class="form-group row">
@@ -184,6 +202,8 @@
                         <th>Source Port</th>
                         <th>Destination Port</th>
                         <th>Sensor</th>
+                        <th>Protocol</th>
+                        <th>Flag</th>
                         <th>Start time</th>
                         <th>End time</th>
                         <th>Packets</th>
@@ -191,13 +211,16 @@
                       </tr>
                     </thead>
                     <tbody>
-                      {% for x in Datatable.Table.values.tolist() %}
+                      {% for x in range(counts) %}
    
                         <tr>
-                            <td>{{Datatable.Table.values.tolist().index(x) +1}}</td>
-                            {% for y in x %}
-                              
-                                <td>{{y}}</td>
+                            <td>{{x +1}}</td>
+                            {% for num in range(10) %}
+                              {% if num==5 %}
+                                <td>{{protocols[(table[x])[num]-1]}}</td>
+                              {% else %}
+                                <td>{{(table[x])[num]}}</td>
+                              {% endif %}
                         
                             {% endfor %}
                         
@@ -206,6 +229,112 @@
                     {% endfor %}
                     </tbody>
                   </table>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="block">
+                <div class="title"><strong>Flow outgoing of SIP</strong></div>
+                <div class="table-responsive">
+                  <table class="table table-striped table-sm">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Source IP</th>
+                        <th>Destination IP</th>
+                        <th>Records</th>
+                        <th>Percent/Total</th>
+                        <th>Percent sum</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for x in Datatable1.Table.values.tolist() %}
+   
+                        <tr>
+                          <td>{{Datatable1.Table.values.tolist().index(x) + 1}}</td>
+                          {% for y in x %}
+                            <td>{{y}}</td>
+                        
+                          {% endfor %}
+                        
+                        </tr>
+      
+                    {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+                <div class="row">
+                  <div class='col-lg-6'>
+                    <div class="title"><strong>chart</strong></div>
+                      <div class="bar-chart block no-margin-bottom">
+                        <canvas id="chart1"></canvas>
+                      </div>
+                    </div>
+                  <div class="col-lg-6">
+                    <div class="title"><strong>Percentage</strong></div>
+                    <div class="pie-chart chart block">
+                      
+                      <div class="pie-chart chart margin-bottom-sm">
+                        <canvas id="PieChart1"></canvas>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="block">
+                <div class="title"><strong>Flow incoming of SIP</strong></div>
+                <div class="table-responsive">
+                  <table class="table table-striped table-sm">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Source IP</th>
+                        <th>Destination IP</th>
+                        <th>Records</th>
+                        <th>Percent/Total</th>
+                        <th>Percent sum</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for x in Datatable2.Table.values.tolist() %}
+   
+                        <tr>
+                          <td>{{Datatable2.Table.values.tolist().index(x) + 1}}</td>
+                          {% for y in x %}
+                            <td>{{y}}</td>
+                        
+                          {% endfor %}
+                        
+                        </tr>
+      
+                    {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+                <div class="row">
+                  <div class='col-lg-6'>
+                    <div class="title"><strong>chart</strong></div>
+                      <div class="bar-chart block no-margin-bottom">
+                        <canvas id="chart2"></canvas>
+                      </div>
+                    </div>
+                  <div class="col-lg-6">
+                    <div class="title"><strong>Percentage</strong></div>
+                    <div class="pie-chart chart block">
+                      
+                      <div class="pie-chart chart margin-bottom-sm">
+                        <canvas id="PieChart2"></canvas>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -232,6 +361,14 @@
   <script src='static/vendor/jquery-validation/jquery.validate.min.js'></script>
   <script src='static/js/charts-home.js'></script>
   <script src='static/js/front.js'></script>
+  {% block code %}
+  <script>
+  {{chart1|safe}}
+  {{PieChart1|safe}}
+  {{chart2|safe}}
+  {{PieChart2|safe}}
+  </script>
+  {% endblock code %}
 </body>
 
 </html>

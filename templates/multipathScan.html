@@ -166,7 +166,7 @@
                     <tbody>
                       {% for x in DetectingScanningtable.Table.values.tolist() %}
               
-                        <tr onclick="document.location.href='/multipathip?ip={{x[0].strip()}}'">
+                        <tr onclick="document.location.href='/multipathip?sip={{x[0].strip()}}'">
                             <td>{{DetectingScanningtable.Table.values.tolist().index(x) + 1}}</td>
                             {% for y in x %}
                               

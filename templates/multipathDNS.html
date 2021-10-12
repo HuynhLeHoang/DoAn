@@ -153,7 +153,7 @@
           <div class="row">
             <div class="col-lg-12">
               <div class="block">
-                <div class="title"><strong>DNS service</strong></div>
+                <div class="title"><strong>Infor DNS service</strong></div>
                 <div class="table-responsive" style="overflow: scroll; height: 400px;">
                   <table class="table table-striped table-sm">
                     <thead>
@@ -183,6 +183,44 @@
                   </table>
                 </div>
               </div>
+              <div class="block">
+                <div class="title"><strong>DNS service</strong></div>
+                <div class="row">
+                  <div class='col-lg-6'>
+                    <div class="title"><strong>chart</strong></div>
+                      <div class="bar-chart block no-margin-bottom">
+                        <canvas id="chart1"></canvas>
+                      </div>
+                    </div>
+                  <div class="col-lg-6">
+                    <div class="title"><strong>Percentage</strong></div>
+                    <div class="pie-chart chart block">
+                      
+                      <div class="pie-chart chart margin-bottom-sm">
+                        <canvas id="PieChart1"></canvas>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="title"><strong>Not DNS service</strong></div>
+                <div class="row">
+                  <div class='col-lg-6'>
+                    <div class="title"><strong>chart</strong></div>
+                      <div class="bar-chart block no-margin-bottom">
+                        <canvas id="chart2"></canvas>
+                      </div>
+                    </div>
+                  <div class="col-lg-6">
+                    <div class="title"><strong>Percentage</strong></div>
+                    <div class="pie-chart chart block">
+                      
+                      <div class="pie-chart chart margin-bottom-sm">
+                        <canvas id="PieChart2"></canvas>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
             
           </div>
@@ -207,6 +245,14 @@
   <script src='static/vendor/jquery-validation/jquery.validate.min.js'></script>
   <script src='static/js/charts-home.js'></script>
   <script src='static/js/front.js'></script>
+  {% block code %}
+  <script>
+  {{chart1|safe}}
+  {{PieChart1|safe}}
+  {{chart2|safe}}
+  {{PieChart2|safe}}
+  </script>
+  {% endblock code %}
 </body>
 
 </html>
