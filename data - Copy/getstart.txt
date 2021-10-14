@@ -1,2 +1,0 @@
-sIP|dIP|sPort|dPort|protocol|packets|bytes|flags|sTime|duration|eTime|sensor|
-192.168.153.129|192.168.153.130|0|2048|1|510|15185||2019/01/18T17:59:34.149|106.652|2019/01/18T18:01:20.801|S0|

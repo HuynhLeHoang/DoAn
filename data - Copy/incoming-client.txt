@@ -1,1 +1,0 @@
-sIP|dIP|sPort|dPort|sensor|protocol|flags|type|sTime|eTime|
