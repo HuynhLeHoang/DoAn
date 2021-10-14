@@ -84,6 +84,31 @@
             <li><a href="/multipathstatistic">Statistic </a></li>
             <li><a href="/multipathtcp">Detail TCP</a></li>
             <li><a href="/multipathdns">Detect DNS service</a></li>
+            <li>
+              <select id="multichose" name="multichose" class="form-control mb-3 mb-3" value="{{filechose}}" onchange="myfunction()">
+                              
+                
+                <option>Pcap</option>
+                
+                <option>SiLK</option>
+              </select>
+              
+            </li>
+            <input type="button" value="{{filechose}}"/>
+            <script language="javascript">
+               function myfunction(){
+                  {
+                         var data = document.getElementById("multichose").value;
+                         const URL = '/multichose';
+                          const xhr = new XMLHttpRequest();
+                          sender = JSON.stringify(data)
+                          //sender =2
+                          xhr.open('POST', URL);
+                          xhr.send(sender);
+                  }
+       
+              }
+            </script>
           </ul>
         </li>                
         <li><a href="#exampledropdownDropdown1" aria-expanded="false" data-toggle="collapse"> <i class="icon-windows"></i>Others</a>
@@ -110,7 +135,7 @@
             <div class="col-lg-12">
               <div class="block">
                 <div class="block-body">
-                  <form class="form-horizontal" action="/multipathscan" method="POST">
+                  <form class="form-horizontal" action="/multipathscan" method="POST" novalidate>
                     <div class="form-group row">
                       <label class="col-sm-3 form-control-label">Start time</label>
                       <div class="col-sm-9">

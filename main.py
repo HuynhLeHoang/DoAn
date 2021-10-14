@@ -40,6 +40,9 @@ app.config['MAX_CONTENT_LENGTH'] = 100 * 1024 * 1024
 app.config['UPLOAD_EXTENSIONS'] = ['.pcap', '.pcapng']
 app.config['UPLOAD_PATH'] = 'uploads'
 
+
+filechose = 'SiLK'
+
 @app.route('/')
 def blankpage():
     return redirect('/singlepathsample')
@@ -565,6 +568,8 @@ def initfile():
     global dictionary
     global startdateFile
     global enddateFile
+    global filechose
+    filechose='Pcap'
     filename = request.args['chosedfile']    
     current = os.getcwd()
     filelink = current + '/uploads/' + filename
@@ -628,7 +633,7 @@ def modify():
         _enddate = datetime.strptime(_enddate,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
     if _startdate != '' and _enddate != '':
         params += " --stime={start}-{end} --etime={start}-{end}".format(start=_startdate,end=_enddate)
-    command = 'rm traffic.rw;rwfilter traffic1.rw {params} --type=in,inweb,out,outweb --pass=traffic.rw'.format(params = params)
+    command = 'rm traffic.rw;rwfilter traffic1.rw {params} --type=all --pass=traffic.rw'.format(params = params)
     os.chdir('data')
     os.system(command)
     os.chdir('..')
@@ -645,8 +650,6 @@ def getdate():
 def multipathscan():
     global startdate
     global enddate
-    _startdate = startdate
-    _enddate = enddate
     if 'startdate' in request.form:
         _startdate = request.form['startdate']
         if len(_startdate) < 17:
@@ -657,16 +660,34 @@ def multipathscan():
         if len(_enddate) < 17:
             _enddate += ':00'
         _enddate = datetime.strptime(_enddate,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
-    DetectingScanningcommand = '''rwfilter --start={_startdate} --end={_enddate} --proto=6 --type=in,inweb --pass=stdout | rwsort --fields=sip,proto,dip | rwscan --scan-model=2 --no-columns > scan.txt''' 
-    DetectingScanningcommand = DetectingScanningcommand.format(_startdate=_startdate,_enddate=_enddate)
+    if filechose == 'SiLK':
+        _startdate = startdate
+        _enddate = enddate
+        DetectingScanningcommand = '''rwfilter --start={_startdate} --end={_enddate} --proto=6 --type=in,inweb --pass=stdout | rwsort --fields=sip,proto,dip | rwscan --scan-model=2 --no-columns > scan.txt''' 
+        DetectingScanningcommand = DetectingScanningcommand.format(_startdate=_startdate,_enddate=_enddate)
+    else:
+        _startdate = startdateFile
+        _enddate = enddateFile
+        mydir = os.getcwd() + '/data/traffic.rw'
+        DetectingScanningcommand = '''rwfilter {mydir} --stime={_startdate}-{_enddate} --etime={_startdate}-{_enddate} --proto=6 --type=in,inweb --pass=stdout | rwsort --fields=sip,proto,dip | rwscan --scan-model=2 --no-columns > scan.txt'''
+        DetectingScanningcommand = DetectingScanningcommand.format(mydir=mydir,_startdate=startdateFile,_enddate=enddateFile)
+
     DetectingScanningtable = TableFromCommand.TableFromCommand(DetectingScanningcommand, 'scan.txt')
     DetectingScanningtable = DetectingScanningtable.execute()
-    return render_template('multipathScan.html',
-    DetectingScanningtable=DetectingScanningtable, 
-    startdate=datetime.strptime(startdate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'), 
-    enddate=datetime.strptime(enddate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
-    _startdate=datetime.strptime(_startdate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
-    _enddate=datetime.strptime(_enddate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'))
+    if filechose=='SiLK':
+        return render_template('multipathScan.html',
+        DetectingScanningtable=DetectingScanningtable,filechose=filechose,
+        startdate=datetime.strptime(startdate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'), 
+        enddate=datetime.strptime(enddate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
+        _startdate=datetime.strptime(_startdate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
+        _enddate=datetime.strptime(_enddate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'))
+    else:
+        return render_template('multipathScan.html',
+        DetectingScanningtable=DetectingScanningtable,filechose=filechose,
+        startdate=datetime.strptime(startdateFile,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'), 
+        enddate=datetime.strptime(enddateFile,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
+        _startdate=datetime.strptime(_startdate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
+        _enddate=datetime.strptime(_enddate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'))
 @app.route('/multipathip', methods=['POST', 'GET'])
 def multipathsip():
     global startdate
@@ -743,33 +764,54 @@ def multipathsip():
             _paraIP1+=' --daddr='+_dip.strip()
             _paraIP2+=' --saddr='+_dip.strip()
     # create command and data
-    os.chdir('data')
+    
     Command0 = '''rm query.rw response.rw'''
     Command1 = '''rwfilter --type=in,out --start={_startdate} --end={_enddate} --protocol={_protocol} {_paraIP1} --pass=stdout | rwsort --fields=1,2,3,4,stime --output-path=query.rw'''
     Command2 = '''rwfilter --type=in,out --start={_startdate} --end={_enddate} --protocol={_protocol} {_paraIP2} --pass=stdout | rwsort --fields=2,1,4,3,stime --output-path=response.rw'''
     Command1 = Command1.format(_startdate=_startdate,_enddate=_enddate,_protocol=_protocol,_paraIP1=_paraIP1)
     Command2 = Command2.format(_startdate=_startdate,_enddate=_enddate,_protocol=_protocol,_paraIP2=_paraIP2)
+    if filechose=='Pcap':
+        _startdate = startdateFile
+        _enddate = enddateFile
+        _num='all'
+        mydir = os.getcwd() + '/data/traffic.rw'
+        Command1 = '''rwfilter {mydir} --type=in,out --stime={_startdate}-{_enddate} --etime={_startdate}-{_enddate} --protocol={_protocol} {_paraIP1}  --pass=stdout | rwsort --fields=1,2,3,4,stime --output-path=query.rw'''
+        Command2 = '''rwfilter {mydir} --type=in,out --stime={_startdate}-{_enddate} --etime={_startdate}-{_enddate} --protocol={_protocol} {_paraIP2}  --pass=stdout | rwsort --fields=2,1,4,3,stime --output-path=response.rw'''
+        
+        Command1 = Command1.format(mydir=mydir,_startdate=startdateFile,_enddate=enddateFile,_protocol=_protocol,_paraIP1=_paraIP1)
+        Command2 = Command2.format(mydir=mydir,_startdate=startdateFile,_enddate=enddateFile,_protocol=_protocol,_paraIP2=_paraIP2)
+
     if _num != 'all':
         Command1 = '''rwfilter --type=in,out --start={_startdate} --end={_enddate} --protocol={_protocol} {_paraIP1} {_sensor} --pass=stdout | rwsort --fields=1,2,3,4,stime --output-path=query.rw'''
         Command2 = '''rwfilter --type=in,out --start={_startdate} --end={_enddate} --protocol={_protocol} {_paraIP2} {_sensor} --pass=stdout | rwsort --fields=2,1,4,3,stime --output-path=response.rw'''
         Command1 = Command1.format(_startdate=_startdate,_enddate=_enddate,_protocol=_protocol,_paraIP1=_paraIP1,_sensor=_sensor)
         Command2 = Command2.format(_startdate=_startdate,_enddate=_enddate,_protocol=_protocol,_paraIP2=_paraIP2,_sensor=_sensor)
+    os.chdir('data')
     os.system(Command0)
     os.system(Command1)
 
     os.system(Command2)
     os.chdir('..')
     # match flow and create data
-    Datacommand = '''rwmatch --relate=1,2 --relate=2,1 --relate=3,4 --relate=4,3 query.rw response.rw stdout | rwcut --fields=1-4,sen,proto,flag,stime,etime,packets,bytes --num-recs={_counts} --no-columns>flowrelas.txt'''
+    Datacommand = '''rwmatch --relate=1,2 --relate=2,1 --relate=3,4 --relate=4,3 query.rw response.rw stdout | rwcut --fields=1-4,sen,proto,flag,type,stime,etime,packets,bytes --num-recs={_counts} --no-columns>flowrelas.txt'''
+    Datacommand1 = '''rwcut query.rw --fields=1-4,sensor,proto,flag,type,stime,etime --num-recs={_counts} --no-columns>incoming-server.txt'''
     Datacommand = Datacommand.format(_counts=_counts)
     Datatable = TableFromCommand.TableFromCommand(Datacommand,'flowrelas.txt')
     Datatable = Datatable.execute()
 
+    Datacommand3 = '''rwcut query.rw --fields=1-4,sen,proto,flag,type,stime,etime,packets,bytes --num-recs={_counts} --no-columns>query.txt'''
+    Datacommand4 = '''rwcut response.rw --fields=1-4,sen,proto,flag,type,stime,etime,packets,bytes --num-recs={_counts} --no-columns>response.txt'''
+    Datacommand3 = Datacommand3.format(_counts=_counts)
+    Datacommand4 = Datacommand4.format(_counts=_counts)
+    Datatable3 = TableFromCommand.TableFromCommand(Datacommand3,'query.txt')
+    Datatable4 = TableFromCommand.TableFromCommand(Datacommand4,'response.txt')
+    Datatable3 = Datatable3.execute()
+    Datatable4 = Datatable4.execute()
     # data for chart
-    Datacommand1 = '''rwstats query.rw --fields=1,2 --values=flows --count=10 --no-columns>query.txt'''
-    Datacommand2 = '''rwstats response.rw --fields=1,2 --values=flows --count=10 --no-columns>response.txt'''
-    Datatable1 = TableFromCommand.TableFromCommand(Datacommand1,'query.txt')
-    Datatable2 = TableFromCommand.TableFromCommand(Datacommand2,'response.txt')
+    Datacommand1 = '''rwstats query.rw --fields=1,2,type --values=flows --count=10 --no-columns>chart1.txt'''
+    Datacommand2 = '''rwstats response.rw --fields=1,2,type --values=flows --count=10 --no-columns>chart2.txt'''
+    Datatable1 = TableFromCommand.TableFromCommand(Datacommand1,'chart1.txt')
+    Datatable2 = TableFromCommand.TableFromCommand(Datacommand2,'chart2.txt')
     Datatable1 = Datatable1.execute()
     Datatable2 = Datatable2.execute()
 
@@ -783,8 +825,8 @@ def multipathsip():
     for row in rows:
         label = row[0]+'->'+row[1]
         data = list()
-        data.append(row[2])
-        Datachartpie.append(row[3])
+        data.append(row[3])
+        Datachartpie.append(row[4])
         if red < 250:
             red += 50
         else:
@@ -821,8 +863,8 @@ def multipathsip():
     for row in rows:
         label = row[0]+'->'+row[1]
         data = list()
-        data.append(row[2])
-        Datachartpie.append(row[3])
+        data.append(row[3])
+        Datachartpie.append(row[4])
         if red < 250:
             red += 50
         else:
@@ -848,16 +890,32 @@ def multipathsip():
         PieChartlabels.append(str(x[0]).strip())
     PieChartlabels.append('Others')
     PieChart2 = PieChart2.customPieChartRender('PieChart2',PieChartlabels, Datachartpie)
-
-    return render_template('multipathIP.html',
-    table=Datatable.Table.values.tolist(),lenoftable=len(Datatable.Table.values.tolist()), Datatable1=Datatable1, Datatable2=Datatable2,
-    startdate=datetime.strptime(startdate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'), 
-    enddate=datetime.strptime(enddate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
-    _startdate=datetime.strptime(_startdate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
-    _enddate=datetime.strptime(_enddate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
-    counts=_counts, protocol=_protocol, sip=_sip,dip=_dip,num=_num, protocols=protocols, zips=zip(protocols,_check), allproto=allproto,
-    chart1=chart1, chart2=chart2, PieChart1=PieChart1, PieChart2=PieChart2
-    )
+    if filechose=='SiLK':
+        return render_template('multipathIP.html',filechose=filechose,
+        table=Datatable.Table.values.tolist(),lenoftable=len(Datatable.Table.values.tolist()), 
+        lenoftable3=len(Datatable3.Table.values.tolist()),
+        lenoftable4=len(Datatable4.Table.values.tolist()),
+        table3=Datatable3.Table.values.tolist(), table4=Datatable4.Table.values.tolist(),
+        startdate=datetime.strptime(startdate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'), 
+        enddate=datetime.strptime(enddate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
+        _startdate=datetime.strptime(_startdate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
+        _enddate=datetime.strptime(_enddate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
+        counts=_counts, protocol=_protocol, sip=_sip,dip=_dip,num=_num, protocols=protocols, zips=zip(protocols,_check), allproto=allproto,
+        chart1=chart1, chart2=chart2, PieChart1=PieChart1, PieChart2=PieChart2
+        )
+    else:
+        return render_template('multipathIP.html',filechose=filechose,
+        table=Datatable.Table.values.tolist(),lenoftable=len(Datatable.Table.values.tolist()), 
+        lenoftable3=len(Datatable3.Table.values.tolist()),
+        lenoftable4=len(Datatable4.Table.values.tolist()),
+        table3=Datatable3.Table.values.tolist(), table4=Datatable4.Table.values.tolist(),
+        startdate=datetime.strptime(startdateFile,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'), 
+        enddate=datetime.strptime(enddateFile,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
+        _startdate=datetime.strptime(_startdate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
+        _enddate=datetime.strptime(_enddate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
+        counts=_counts, protocol=_protocol, sip=_sip,dip=_dip,num=_num, protocols=protocols, zips=zip(protocols,_check), allproto=allproto,
+        chart1=chart1, chart2=chart2, PieChart1=PieChart1, PieChart2=PieChart2
+        )
 @app.route('/multipathstatistic', methods=['POST', 'GET'])
 def multipathstatistic(): 
     global startdate
@@ -878,8 +936,13 @@ def multipathstatistic():
         _enddate = datetime.strptime(_enddate,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
     if 'counts' in request.form:
         _counts = int(request.form['counts'])
-    Datacommand = '''rm in_month.rw;rwfilter --start={_startdate} --end={_enddate} --type=in,inweb --protocol=0- --pass=stdout --pass=in_month.rw | rwstats --field=sip,sport --value=flows --count {_counts} --no-columns >multistatistic.txt'''
-    Datacommand = Datacommand.format(_startdate=_startdate,_enddate=_enddate,_counts=_counts)
+    if filechose=='Pcap':
+        mydir = os.getcwd() + '/data/traffic.rw'
+        Datacommand = '''rm in_month.rw;rwfilter {mydir} --stime={_startdate}-{_enddate} --etime={_startdate}-{_enddate} --type=in,inweb --protocol=0- --pass=stdout --pass=in_month.rw | rwstats --field=sip,sport,type --value=flows --count {_counts} --no-columns >multistatistic.txt'''
+        Datacommand = Datacommand.format(mydir=mydir,_startdate=startdateFile,_enddate=enddateFile,_counts=_counts)
+    else:
+        Datacommand = '''rm in_month.rw;rwfilter --start={_startdate} --end={_enddate} --type=in,inweb --protocol=0- --pass=stdout --pass=in_month.rw | rwstats --field=sip,sport,type --value=flows --count {_counts} --no-columns >multistatistic.txt'''
+        Datacommand = Datacommand.format(_startdate=_startdate,_enddate=_enddate,_counts=_counts)
     Datatable = TableFromCommand.TableFromCommand(Datacommand,'multistatistic.txt')
     Datatable = Datatable.execute()
     rows = Datatable.getAllRow()
@@ -892,8 +955,8 @@ def multipathstatistic():
     for row in rows:
         label = row[0] + '-' + str(row[1])
         data = list()
-        data.append(row[2])
-        Datachartpie.append(row[3])
+        data.append(row[3])
+        Datachartpie.append(row[4])
         if red < 250:
             red += 50
         else:
@@ -920,21 +983,29 @@ def multipathstatistic():
     PieChartlabels.append('Others')
     PieChart = PieChart.customPieChartRender('PieChart',PieChartlabels, Datachartpie)
 
-
-    return render_template('multipathStatistic.html',
-    Datatable=Datatable,
-    startdate=datetime.strptime(startdate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'), 
-    enddate=datetime.strptime(enddate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
-    _startdate=datetime.strptime(_startdate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
-    _enddate=datetime.strptime(_enddate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
-    counts=_counts, chart=chart, PieChart = PieChart
-    )
+    if filechose=='SiLK':
+        return render_template('multipathStatistic.html',
+        Datatable=Datatable,filechose=filechose,
+        startdate=datetime.strptime(startdate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'), 
+        enddate=datetime.strptime(enddate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
+        _startdate=datetime.strptime(_startdate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
+        _enddate=datetime.strptime(_enddate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
+        counts=_counts, chart=chart, PieChart = PieChart
+        )
+    else:
+        return render_template('multipathStatistic.html',
+        Datatable=Datatable,filechose=filechose,
+        startdate=datetime.strptime(startdateFile,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'), 
+        enddate=datetime.strptime(enddateFile,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
+        _startdate=datetime.strptime(_startdate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
+        _enddate=datetime.strptime(_enddate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
+        counts=_counts, chart=chart, PieChart = PieChart
+        )
 @app.route('/multipathtcp', methods=['POST', 'GET'])
 def multipathtcp(): 
     global startdate
     global enddate
-    _startdate = startdate
-    _enddate = enddate 
+    
     _counts = 10 
     _sensor = 'S5'
     if 'startdate' in request.form:
@@ -951,25 +1022,36 @@ def multipathtcp():
         _counts = int(request.form['counts'])  
     if 'sensor' in request.form:
         _sensor = request.form['sensor']
-    
-    Command0 = '''rm incoming-server.raw incoming-client.raw outgoing-server.raw outgoing-client.raw leftover.raw;rwfilter --start={_startdate} --end={_enddate} --sensor={_sensor} --type=in,out --protocol=6 --packets=3- --pass=stdout | rwfilter stdin --type=in --flags-initial=SA/SA --pass=incoming-server.raw --fail=stdout | rwfilter stdin --type=in --flags-initial=S/SA --pass=incoming-client.raw --fail=stdout | rwfilter stdin --type=out --flags-initial=SA/SA --pass=outgoing-server.raw --fail=stdout | rwfilter stdin --type=out --flags-initial=S/SA --pass=outgoing-client.raw --fail=leftover.raw'''
-    Command1 = '''rm lowpacket.rw synonly.rw reset.rw;rwfilter --start={_startdate} --end={_enddate} --type=in,inweb --protocol=6 --packets=1-3 --pass=lowpacket.rw --pass=stdout | rwfilter --flags-all=S/SARF --pass=synonly.rw --fail=stdout stdin | rwfilter --flags-all=R/SRF --pass=reset.rw stdin'''
-    Command1 = Command1.format(_startdate=_startdate,_enddate=_enddate)
-
+    if filechose=='SiLK':
+        _startdate = startdate
+        _enddate = enddate 
+        Command0 = '''rm incoming-server.raw incoming-client.raw outgoing-server.raw outgoing-client.raw leftover.raw;rwfilter --start={_startdate} --end={_enddate} --sensor={_sensor} --type=in,out --protocol=6 --packets=3- --pass=stdout | rwfilter stdin --type=in --flags-initial=SA/SA --pass=incoming-server.raw --fail=stdout | rwfilter stdin --type=in --flags-initial=S/SA --pass=incoming-client.raw --fail=stdout | rwfilter stdin --type=out --flags-initial=SA/SA --pass=outgoing-server.raw --fail=stdout | rwfilter stdin --type=out --flags-initial=S/SA --pass=outgoing-client.raw --fail=leftover.raw'''
+        Command1 = '''rm lowpacket.rw synonly.rw reset.rw;rwfilter --start={_startdate} --end={_enddate} --type=in,inweb --protocol=6 --packets=1-3 --pass=lowpacket.rw --pass=stdout | rwfilter --flags-all=S/SARF --pass=synonly.rw --fail=stdout stdin | rwfilter --flags-all=R/SRF --pass=reset.rw stdin'''
+        Command1 = Command1.format(_startdate=_startdate,_enddate=_enddate)
+        Command0 = Command0.format(_startdate=_startdate,_enddate=_enddate,_sensor=_sensor)
+    else:
+        _startdate = startdateFile
+        _enddate = enddateFile
+        _sensor='all'
+        mydir = os.getcwd() + '/data/traffic.rw'
+        Command0 = '''rm incoming-server.raw incoming-client.raw outgoing-server.raw outgoing-client.raw leftover.raw;rwfilter {mydir} --stime={_startdate}-{_enddate} --etime={_startdate}-{_enddate} --type=in,out --protocol=6 --packets=3- --pass=stdout | rwfilter stdin --type=in --flags-initial=SA/SA --pass=incoming-server.raw --fail=stdout | rwfilter stdin --type=in --flags-initial=S/SA --pass=incoming-client.raw --fail=stdout | rwfilter stdin --type=out --flags-initial=SA/SA --pass=outgoing-server.raw --fail=stdout | rwfilter stdin --type=out --flags-initial=S/SA --pass=outgoing-client.raw --fail=leftover.raw'''
+        Command1 = '''rm lowpacket.rw synonly.rw reset.rw;rwfilter {mydir} --stime={_startdate}-{_enddate} --etime={_startdate}-{_enddate} --type=in,inweb --protocol=6 --packets=1-3 --pass=lowpacket.rw --pass=stdout | rwfilter --flags-all=S/SARF --pass=synonly.rw --fail=stdout stdin | rwfilter --flags-all=R/SRF --pass=reset.rw stdin'''
+        Command1 = Command1.format(mydir=mydir,_startdate=startdateFile,_enddate=enddateFile)
+        Command0 = Command0.format(mydir=mydir,_startdate=startdateFile,_enddate=enddateFile)    
     os.chdir('data')
-    Command0 = Command0.format(_startdate=_startdate,_enddate=_enddate,_sensor=_sensor)
+    
     os.system(Command0)
     os.system(Command1)
     os.chdir('..')
     # data command for table
-    Datacommand0 = '''rwcut incoming-server.raw --fields=1-4,sensor,proto,flag,stime,etime --num-recs={_counts} --no-columns>incoming-server.txt'''
-    Datacommand1 = '''rwcut incoming-client.raw --fields=1-4,sensor,proto,flag,stime,etime --num-recs={_counts} --no-columns>incoming-client.txt'''
-    Datacommand2 = '''rwcut outgoing-server.raw --fields=1-4,sensor,proto,flag,stime,etime --num-recs={_counts} --no-columns>outgoing-server.txt'''
-    Datacommand3 = '''rwcut outgoing-client.raw --fields=1-4,sensor,proto,flag,stime,etime --num-recs={_counts} --no-columns>outgoing-client.txt'''
-    Datacommand4 = '''rwcut leftover.raw --fields=1-4,sensor,proto,flag,stime,etime --num-recs={_counts} --no-columns>leftover.txt'''
-    Datacommand5 = '''rwcut lowpacket.rw --fields=1-4,sensor,proto,flag,stime,etime --num-recs={_counts} --no-columns>lowpacket.txt'''
-    Datacommand6 = '''rwcut synonly.rw --fields=1-4,sensor,proto,flag,stime,etime --num-recs={_counts} --no-columns>synonly.txt'''
-    Datacommand7 = '''rwcut reset.rw --fields=1-4,sensor,proto,flag,stime,etime --num-recs={_counts} --no-columns>reset.txt'''
+    Datacommand0 = '''rwcut incoming-server.raw --fields=1-4,sensor,proto,flag,type,stime,etime --num-recs={_counts} --no-columns>incoming-server.txt'''
+    Datacommand1 = '''rwcut incoming-client.raw --fields=1-4,sensor,proto,flag,type,stime,etime --num-recs={_counts} --no-columns>incoming-client.txt'''
+    Datacommand2 = '''rwcut outgoing-server.raw --fields=1-4,sensor,proto,flag,type,stime,etime --num-recs={_counts} --no-columns>outgoing-server.txt'''
+    Datacommand3 = '''rwcut outgoing-client.raw --fields=1-4,sensor,proto,flag,type,stime,etime --num-recs={_counts} --no-columns>outgoing-client.txt'''
+    Datacommand4 = '''rwcut leftover.raw --fields=1-4,sensor,proto,flag,type,stime,etime --num-recs={_counts} --no-columns>leftover.txt'''
+    Datacommand5 = '''rwcut lowpacket.rw --fields=1-4,sensor,proto,flag,type,stime,etime --num-recs={_counts} --no-columns>lowpacket.txt'''
+    Datacommand6 = '''rwcut synonly.rw --fields=1-4,sensor,proto,flag,type,stime,etime --num-recs={_counts} --no-columns>synonly.txt'''
+    Datacommand7 = '''rwcut reset.rw --fields=1-4,sensor,proto,flag,type,stime,etime --num-recs={_counts} --no-columns>reset.txt'''
 
     Datacommand0 = Datacommand0.format(_counts=_counts)
     Datacommand1 = Datacommand1.format(_counts=_counts)
@@ -1338,26 +1420,40 @@ def multipathtcp():
         PieChartlabels.append(str(x[0]).strip())
     PieChartlabels.append('Others')
     PieChart8 = PieChart8.customPieChartRender('PieChart8',PieChartlabels, Datachartpie)
+    if filechose=='SiLK':
+        return render_template('multipathTCP.html',filechose=filechose,
+            Datatable0=Datatable0,Datatable1=Datatable1,Datatable2=Datatable2,Datatable3=Datatable3,Datatable4=Datatable4,
+            Datatable5=Datatable5,Datatable6=Datatable6,Datatable7=Datatable7,
+            startdate=datetime.strptime(startdate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'), 
+            enddate=datetime.strptime(enddate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
+            _startdate=datetime.strptime(_startdate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
+            _enddate=datetime.strptime(_enddate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
+            counts=_counts,sensor=_sensor, protocols=protocols, 
+            chart1=chart1, PieChart1=PieChart1, chart2=chart2, PieChart2=PieChart2, 
+            chart3=chart3,PieChart3=PieChart3,chart4=chart4, PieChart4=PieChart4,
+            chart5=chart5, PieChart5=PieChart5,chart6=chart6, PieChart6=PieChart6,
+            chart7=chart7, PieChart7=PieChart7,chart8=chart8, PieChart8=PieChart8
+            )
+    else:
+        return render_template('multipathTCP.html',filechose=filechose,
+            Datatable0=Datatable0,Datatable1=Datatable1,Datatable2=Datatable2,Datatable3=Datatable3,Datatable4=Datatable4,
+            Datatable5=Datatable5,Datatable6=Datatable6,Datatable7=Datatable7,
+            startdate=datetime.strptime(startdateFile,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'), 
+            enddate=datetime.strptime(enddateFile,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
+            _startdate=datetime.strptime(_startdate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
+            _enddate=datetime.strptime(_enddate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
+            counts=_counts,sensor=_sensor, protocols=protocols, 
+            chart1=chart1, PieChart1=PieChart1, chart2=chart2, PieChart2=PieChart2, 
+            chart3=chart3,PieChart3=PieChart3,chart4=chart4, PieChart4=PieChart4,
+            chart5=chart5, PieChart5=PieChart5,chart6=chart6, PieChart6=PieChart6,
+            chart7=chart7, PieChart7=PieChart7,chart8=chart8, PieChart8=PieChart8
+            )
 
-    return render_template('multipathTCP.html',
-    Datatable0=Datatable0,Datatable1=Datatable1,Datatable2=Datatable2,Datatable3=Datatable3,Datatable4=Datatable4,
-    Datatable5=Datatable5,Datatable6=Datatable6,Datatable7=Datatable7,
-    startdate=datetime.strptime(startdate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'), 
-    enddate=datetime.strptime(enddate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
-    _startdate=datetime.strptime(_startdate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
-    _enddate=datetime.strptime(_enddate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
-    counts=_counts,sensor=_sensor, protocols=protocols, 
-    chart1=chart1, PieChart1=PieChart1, chart2=chart2, PieChart2=PieChart2, 
-    chart3=chart3,PieChart3=PieChart3,chart4=chart4, PieChart4=PieChart4,
-    chart5=chart5, PieChart5=PieChart5,chart6=chart6, PieChart6=PieChart6,
-    chart7=chart7, PieChart7=PieChart7,chart8=chart8, PieChart8=PieChart8
-    )
 @app.route('/multipathdns', methods=['POST', 'GET'])
 def multipathdns(): 
     global startdate
     global enddate
-    _startdate = startdate
-    _enddate = enddate 
+    
     _counts =10 
     
     if 'startdate' in request.form:
@@ -1373,8 +1469,17 @@ def multipathdns():
     if 'counts' in request.form:
         _counts = int(request.form['counts'])
     # create data command for table
-    Command0 = '''rm in_month.rw interest.set;rwfilter --start={_startdate} --end={_enddate} --type=in,inweb --protocol=0- --pass=in_month.rw; rwfilter in_month.rw --protocol=17 --aport=53 --pass=stdout | rwset --sip-file=interest.set'''
-    Command0 = Command0.format(_startdate=_startdate,_enddate=_enddate)
+    if filechose=='SiLK':
+        _startdate = startdate
+        _enddate = enddate 
+        Command0 = '''rm in_month.rw interest.set;rwfilter --start={_startdate} --end={_enddate} --type=in,inweb --protocol=0- --pass=in_month.rw; rwfilter in_month.rw --protocol=17 --aport=53 --pass=stdout | rwset --sip-file=interest.set'''
+        Command0 = Command0.format(_startdate=_startdate,_enddate=_enddate)
+    else:
+        _startdate = startdateFile
+        _enddate = enddateFile
+        mydir = os.getcwd() + '/data/traffic.rw'
+        Command0 = '''rm in_month.rw interest.set;rwfilter {mydir} --stime={_startdate}-{_enddate} --etime={_startdate}-{_enddate} --type=in,inweb --protocol=0- --pass=in_month.rw; rwfilter in_month.rw --protocol=17 --aport=53 --pass=stdout | rwset --sip-file=interest.set'''
+        Command0 = Command0.format(mydir=mydir,_startdate=startdateFile,_enddate=enddateFile)
     Command1 = '''rm not-dns.rw dns.rw dns-saddr.txt;rwfilter in_month.rw --sipset=interest.set --protocol=17 --pass=stdout | rwfilter stdin --aport=53 --fail=not-dns.rw --pass=stdout --pass=dns.rw | rwuniq --fields=sIP --no-titles  --sort-output --no-columns --output-path=dns-saddr.txt'''
     Command2 = '''rm not-dns-saddr.txt;rwuniq not-dns.rw --fields=sip --no-titles  --sort-output --no-columns --output-path=not-dns-saddr.txt'''
     
@@ -1475,15 +1580,33 @@ def multipathdns():
         PieChartlabels.append(str(x[0]).strip())
     PieChartlabels.append('Others')
     PieChart2 = PieChart2.customPieChartRender('PieChart2',PieChartlabels, Datachartpie)
-
-    return render_template('multipathDNS.html',
-    Datatable=Datatable,
-    startdate=datetime.strptime(startdate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'), 
-    enddate=datetime.strptime(enddate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
-    _startdate=datetime.strptime(_startdate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
-    _enddate=datetime.strptime(_enddate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
-    counts=_counts, chart1=chart1,PieChart1=PieChart1, chart2=chart2,PieChart2=PieChart2
-    )
+    if filechose=='SiLK':
+        return render_template('multipathDNS.html',filechose=filechose,
+        Datatable=Datatable,
+        startdate=datetime.strptime(startdate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'), 
+        enddate=datetime.strptime(enddate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
+        _startdate=datetime.strptime(_startdate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
+        _enddate=datetime.strptime(_enddate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
+        counts=_counts, chart1=chart1,PieChart1=PieChart1, chart2=chart2,PieChart2=PieChart2
+        )
+    else:
+        return render_template('multipathDNS.html',filechose=filechose,
+        Datatable=Datatable,
+        startdate=datetime.strptime(startdateFile,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'), 
+        enddate=datetime.strptime(enddateFile,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
+        _startdate=datetime.strptime(_startdate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
+        _enddate=datetime.strptime(_enddate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
+        counts=_counts, chart1=chart1,PieChart1=PieChart1, chart2=chart2,PieChart2=PieChart2
+        )
+@app.route('/multichose', methods=['POST', 'GET'])
+def multichose():
+    global filechose
+    filechose = request.data.decode("utf-8")
+    filechose = filechose.strip('"')
+    #print(filechose)
+    #print(os.getcwd() + '/data/'+filechose)
+    #print(request.path)
+    return 0
 @app.route('/singlegraphicinit')
 def singlePathGraphicInit():
     return render_template('singlePathGraphic.html')
