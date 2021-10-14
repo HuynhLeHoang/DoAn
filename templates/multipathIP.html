@@ -84,6 +84,30 @@
             <li><a href="/multipathstatistic">Statistic </a></li>
             <li><a href="/multipathtcp">Detail TCP</a></li>
             <li><a href="/multipathdns">Detect DNS service</a></li>
+            <li>
+              <select id="multichose" name="multichose" class="form-control mb-3 mb-3" value="{{filechose}}" onchange="myfunction()">
+                              
+                
+                <option>Pcap</option>
+                
+                <option>SiLK</option>
+              </select>
+              <input type="button" value="{{filechose}}"/>
+            </li>
+            <script language="javascript">
+               function myfunction(){
+                  {
+                         var data = document.getElementById("multichose").value;
+                         const URL = '/multichose';
+                          const xhr = new XMLHttpRequest();
+                          sender = JSON.stringify(data)
+                          //sender =2
+                          xhr.open('POST', URL);
+                          xhr.send(sender);
+                  }
+       
+              }
+            </script>
           </ul>
         </li>                
         <li><a href="#exampledropdownDropdown1" aria-expanded="false" data-toggle="collapse"> <i class="icon-windows"></i>Others</a>
@@ -110,7 +134,7 @@
             <div class="col-lg-12">
               <div class="block">
                 <div class="block-body">
-                  <form class="form-horizontal" action="/multipathip" method="POST">
+                  <form class="form-horizontal" action="/multipathip" method="POST" novalidate>
                     <div class="form-group row">
                       <label class="col-sm-3 form-control-label">Start time</label>
                       <div class="col-sm-9">
@@ -204,6 +228,7 @@
                         <th>Sensor</th>
                         <th>Protocol</th>
                         <th>Flag</th>
+                        <th>Type</th>
                         <th>Start time</th>
                         <th>End time</th>
                         <th>Packets</th>
@@ -215,7 +240,7 @@
    
                         <tr>
                             <td>{{x +1}}</td>
-                            {% for num in range(11) %}
+                            {% for num in range(12) %}
                               {% if num==5 %}
                                 <td>{{protocols[(table[x])[num]-1]}}</td>
                               {% else %}
@@ -239,30 +264,37 @@
               <div class="block">
                 <div class="title"><strong>Flow outgoing of SIP</strong></div>
                 <div class="table-responsive" style="overflow: scroll; height: 400px;">
-                  <table class="table table-striped table-sm" >
+                  <table class="table table-striped table-sm">
                     <thead>
                       <tr>
                         <th>#</th>
                         <th>Source IP</th>
                         <th>Destination IP</th>
-                        <th>Records</th>
-                        <th>Percent/Total</th>
-                        <th>Percent sum</th>
+                        <th>Source Port</th>
+                        <th>Destination Port</th>
+                        <th>Sensor</th>
+                        <th>Protocol</th>
+                        <th>Flag</th>
+                        <th>Type</th>
+                        <th>Start time</th>
+                        <th>End time</th>
+                        <th>Packets</th>
+                        <th>Bytes</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {% for x in Datatable1.Table.values.tolist() %}
+                      {% for x in range(lenoftable3) %}
    
                         <tr>
-                          <td>{{Datatable1.Table.values.tolist().index(x) + 1}}</td>
-                          {% for y in x %}
-                          {% if (x.index(y)<3) %}
-                          <td>{{y}}</td>
-                        {% else %}
-                          <td>{{'%.2f' | format(y|float)}}%</td>
-                        {% endif %}
+                            <td>{{x +1}}</td>
+                            {% for num in range(12) %}
+                              {% if num==5 %}
+                                <td>{{protocols[(table3[x])[num]-1]}}</td>
+                              {% else %}
+                                <td>{{(table3[x])[num]}}</td>
+                              {% endif %}
                         
-                          {% endfor %}
+                            {% endfor %}
                         
                         </tr>
       
@@ -272,7 +304,7 @@
                 </div>
                 <div class="row">
                   <div class='col-lg-6'>
-                    <div class="title"><strong>chart</strong></div>
+                    <div class="title"><strong>Chart</strong></div>
                       <div class="bar-chart block no-margin-bottom">
                         <canvas id="chart1"></canvas>
                       </div>
@@ -296,30 +328,37 @@
               <div class="block">
                 <div class="title"><strong>Flow incoming of SIP</strong></div>
                 <div class="table-responsive" style="overflow: scroll; height: 400px;">
-                  <table class="table table-striped ">
+                  <table class="table table-striped table-sm">
                     <thead>
                       <tr>
                         <th>#</th>
                         <th>Source IP</th>
                         <th>Destination IP</th>
-                        <th>Records</th>
-                        <th>Percent/Total</th>
-                        <th>Percent sum</th>
+                        <th>Source Port</th>
+                        <th>Destination Port</th>
+                        <th>Sensor</th>
+                        <th>Protocol</th>
+                        <th>Flag</th>
+                        <th>Type</th>
+                        <th>Start time</th>
+                        <th>End time</th>
+                        <th>Packets</th>
+                        <th>Bytes</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {% for x in Datatable2.Table.values.tolist() %}
+                      {% for x in range(lenoftable4) %}
    
                         <tr>
-                          <td>{{Datatable2.Table.values.tolist().index(x) + 1}}</td>
-                          {% for y in x %}
-                          {% if (x.index(y)<3) %}
-                          <td>{{y}}</td>
-                        {% else %}
-                          <td>{{'%.2f' | format(y|float)}}%</td>
-                        {% endif %}
+                            <td>{{x +1}}</td>
+                            {% for num in range(12) %}
+                              {% if num==5 %}
+                                <td>{{protocols[(table4[x])[num]-1]}}</td>
+                              {% else %}
+                                <td>{{(table4[x])[num]}}</td>
+                              {% endif %}
                         
-                          {% endfor %}
+                            {% endfor %}
                         
                         </tr>
       
@@ -329,7 +368,7 @@
                 </div>
                 <div class="row">
                   <div class='col-lg-6'>
-                    <div class="title"><strong>chart</strong></div>
+                    <div class="title"><strong>Chart</strong></div>
                       <div class="bar-chart block no-margin-bottom">
                         <canvas id="chart2"></canvas>
                       </div>
