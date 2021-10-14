@@ -1,8 +1,7 @@
-from itertools import count
+from datetime import datetime
 import os
 import pyshark
-import subprocess
-from datetime import datetime
+import TableFromCommand
 
 class PCAPHandle:
     '''handle PCAP file that is uploaded. Extract and match MAC with IP Address'''
@@ -44,14 +43,18 @@ class PCAPHandle:
 
     def getdate(self):
         
-        os.chdir('uploads')
-        command = 'capinfos -a -e {file}'.format(file=self.filepath)
-        value = subprocess.getoutput(command)
-        _startdate = value.split()[6].replace('-','/') + 'T' + value.split()[7][:8]
-        _enddate = value.split()[-2].replace('-','/') + 'T' + value.split()[-1][:8]
-        os.chdir('..')
+        startdatecmd = 'rwsort traffic.rw --fields=stime --output-path=stdout | rwcut --no-columns| head -2 > getstart.txt'
+        enddatecmd = 'rwsort traffic.rw --fields=etime --reverse --output-path=stdout | rwcut --no-columns| head -2 > getend.txt'
+        start = TableFromCommand.TableFromCommand(startdatecmd, 'getstart.txt')
+        start = start.execute()
+        end = TableFromCommand.TableFromCommand(enddatecmd, 'getend.txt')
+        end = end.execute()
+        start = str(start.getColumn('sTime')[0]).split('.')[0]
+        start = datetime.strptime(start,'%Y/%m/%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
+        end = str(end.getColumn('eTime')[0]).split('.')[0]
+        end = datetime.strptime(end,'%Y/%m/%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
 
-        return _startdate,_enddate
+        return start,end
 
 
 if __name__=='__main__':

@@ -1,9 +1,8 @@
 
 from graphviz.backend import render
+from numpy import character
 from werkzeug.utils import secure_filename
-from itertools import count
 from flask import Flask, redirect, url_for, render_template, request, abort, send_file, jsonify
-from flask.sessions import NullSession
 from werkzeug.utils import secure_filename
 from itertools import count
 from flask import Flask, redirect, url_for, render_template, request, abort
@@ -11,15 +10,13 @@ import TableFromFile
 import TableFromCommand
 import os
 import ChartRender
-import asyncio
-from datetime import datetime, timedelta
+from datetime import datetime
 import SinglePath
-import pandas as pd
 import Graphic
 import readPCAP
 from datetime import datetime
 import SinglePath
-import pandas as pd
+import saveStatus
 
 dictionary = dict()
 sensor = 'Sensor'
@@ -31,9 +28,11 @@ date=TableFromCommand.TableFromCommand('rwsiteinfo --fields=repo-start-date,repo
 date=date.execute()
 startdate=date.getColumn('Start-Date')[0]
 enddate=date.getColumn('End-Date')[0]
-
-startdateFile = ''
-enddateFile = ''
+sfile=open('status.txt','r')
+lines = sfile.readlines()
+sfile.close()
+startdateFile = lines[0].replace('\n','')
+enddateFile = lines[1]
 
 app = Flask(__name__, static_folder="static")
 
@@ -108,7 +107,7 @@ def index():
         topFlowRecordChartlabels.append(str(x[0]).strip() +'->' + str(x[1]).strip())
     topFlowRecordChartlabels.append('Others')
     topFlowByRecordsPieChart = topFlowByRecordsPieChart.customPieChartRender('topFlowByRecordsPieChart',topFlowRecordChartlabels, dataset)
-
+    saveStatus.save(startdate,enddate)
     return render_template('index.html',
     topFlowByRecordsPieChart = topFlowByRecordsPieChart,
     topFlowByRecordsTable = topFlowByRecordsTable,
@@ -197,7 +196,7 @@ def iptoip():
     _sip = request.form['sip']
     _dip = request.form['dip']
     _counts = request.form['counts']
-    command = '''rm iptoip.rw; rwfilter traffic.rw --type=all --pass=iptoip.rw --scidr={sip}/32,{dip}/32 --dcidr={dip}/32,{sip}/32; rwsort iptoip.rw --fields=bytes --reverse | rwuniq --fields=sTime,eTime,sip,sport,dip,dport,bytes --no-columns | head -200 > iptoip.txt'''
+    command = '''rm iptoip.rw; rwfilter traffic.rw --type=all --pass=iptoip.rw --scidr={sip}/32,{dip}/32 --dcidr={dip}/32,{sip}/32; rwsort iptoip.rw --fields=bytes --reverse | rwuniq --fields=sTime,eTime,sip,sport,dip,dport,bytes --no-columns | head -{counts} > iptoip.txt'''
     command = command.format(sip = _sip, dip = _dip, counts = _counts)
     table = TableFromCommand.TableFromCommand(command, 'iptoip.txt')
     compareTable = table.execute()
@@ -232,14 +231,14 @@ def singlepathSampleInit():
 @app.route('/singlepathsample', methods=['POST'])
 def singlepathInit():
     global dictionary
-
+    _sensor = 'S1'
     global startdate
     global enddate
     global startdateFile
     global enddateFile
     startdateFile = startdate
     enddateFile = enddate
-    params = ''
+    saveStatus.save(startdateFile,enddateFile)
     if len(request.form['startdate']) == 16:
         temp1 = request.form['startdate'] + ':00'
     else:
@@ -249,17 +248,20 @@ def singlepathInit():
     else:
         temp2 = request.form['enddate']
     _startdate = datetime.strptime(temp1,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
-    _enddate = datetime.strptime(temp2,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')
+    _enddate = datetime.strptime(temp2,'%Y-%m-%dT%H:%M:%S').strftime('%Y/%m/%dT%H:%M:%S')    
     _sensor = request.form['sensor']
     global sensor
     sensor = _sensor
-    _ip = request.form['ip']
+    if 'ip' in request.form and len(request.form['ip'])>0:
+        _ip = '--any-address=' + request.form['ip']
+    else:
+        _ip = ''
     #init data
-    command = 'rm traffic.rw;rwfilter --start={start} --end={end} --sensor={sensor} --type=in,inweb,out,outweb --any-address={ip} --pass=traffic.rw'.format(start=_startdate,end=_enddate,sensor=_sensor,ip=_ip)
+    command = 'rm traffic.rw;rwfilter --proto=0- --start={start} --end={end} --sensor={sensor} --type=in,inweb,out,outweb {ip} --pass=traffic.rw'.format(start=_startdate,end=_enddate,sensor=_sensor,ip=_ip)
     os.chdir('data')
     os.system(command)
     os.chdir('..')
-    command = 'rm traffic1.rw;rwfilter --start={start} --end={end} --sensor={sensor} --type=in,inweb,out,outweb --any-address={ip} --pass=traffic1.rw'.format(start=_startdate,end=_enddate,sensor=_sensor,ip=_ip)
+    command = 'rm traffic1.rw;rwfilter --proto=0- --start={start} --end={end} --sensor={sensor} --type=in,inweb,out,outweb --any-address={ip} --pass=traffic1.rw'.format(start=_startdate,end=_enddate,sensor=_sensor,ip=_ip)
     os.chdir('data')
     os.system(command)
     os.chdir('..')
@@ -348,6 +350,7 @@ def singlepathdetailInit():
 
 @app.route('/singlepathdetailIP', methods=['GET'])
 def singlepathdetailIP():
+    global protocols
     _counts = 20
     _ip = request.args['ip']
     if 'counts' in request.args and request.args['counts'] != '':
@@ -358,10 +361,65 @@ def singlepathdetailIP():
     command = 'rwfilter traffic.rw --daddress={ip} --type=in,inweb --pass=stdout | rwstats --fields=sip,sport --count {counts} > daddress.txt'.format(ip=_ip, counts=_counts)
     daddressTable = TableFromCommand.TableFromCommand(command, 'daddress.txt')
     daddressTable = daddressTable.execute()
+    command = 'rwfilter traffic.rw --saddress={ip} --pass=stdout | rwstats --fields=proto --values=bytes,flows,packets --count {counts} > protodetail.txt'.format(ip=_ip,counts=_counts)
+    protoTable = TableFromCommand.TableFromCommand(command, 'protodetail.txt')
+    protoTable = protoTable.execute()
+    protoTable.Table['pro'] = protoTable.Table['pro'].astype(str)
+    for index, row in protoTable.Table.iterrows():
+        protoTable.Table.at[index, 'pro'] = protocols[int(protoTable.Table.at[index, 'pro']) - 1]
+    proto_percen = protoTable.getColumn('%Bytes')
+    if len(proto_percen) > 0:
+        proto_percen.append(100 - float(protoTable.getColumn('cumul_%')[-1]))
+    proto_list = protoTable.getColumn('pro')
+    proto_list.append('Others')
+    protodt = ChartRender.dataSet('"rgba(238, 139, 152, 0.7)"', proto_percen, '"Protocol"')
+    protodt = [protodt]
+    proto_pie = ChartRender.barChart()
+    proto_pie = proto_pie.barChartRender(proto_list, protodt,'protochart','true')
+
+    command = 'rwfilter traffic.rw --saddress={ip} --pass=stdout | rwstats --fields=sport --values=bytes,flows,packets --count {counts} > sportdetail.txt'.format(ip=_ip,counts=_counts)
+    sportTable = TableFromCommand.TableFromCommand(command, 'sportdetail.txt')
+    sportTable = sportTable.execute()
+    sport_percen = sportTable.getColumn('%Bytes')
+    if len(sport_percen) > 0:
+        sport_percen.append(100 - float(sportTable.getColumn('cumul_%')[-1]))
+    sport_list = sportTable.getColumn('sPort')
+    sport_list.append('Others')
+    sportdt = ChartRender.dataSet('"rgba(238, 139, 152, 0.7)"',sport_percen,'"sPort"')
+    sportdt = [sportdt]
+    sport_pie = ChartRender.barChart()
+    sport_pie = sport_pie.barChartRender(sport_list, sportdt, 'sportchart', 'true')
+    
+    command = 'rwfilter traffic.rw --saddress={ip} --pass=stdout | rwstats --fields=dport --values=bytes,flows,packets --count {counts} > dportdetail.txt'.format(ip=_ip,counts=_counts)
+    dportTable = TableFromCommand.TableFromCommand(command, 'dportdetail.txt')
+    dportTable = dportTable.execute()
+    dport_percen = dportTable.getColumn('%Bytes')
+    if len(dport_percen) > 0:
+        dport_percen.append(100 - float(dportTable.getColumn('cumul_%')[-1]))
+    dport_list = dportTable.getColumn('dPort')
+    dport_list.append('Others')
+    dportdt = ChartRender.dataSet('"rgba(238, 139, 152, 0.7)"', dport_percen, '"dPort"')
+    dportdt = [dportdt]
+    dport_pie = ChartRender.barChart()
+    dport_pie = dport_pie.barChartRender(dport_list, dportdt, 'dportchart', 'true')
+
+    command = 'rwfilter traffic.rw --saddress={ip} --pass=stdout | rwstats --fields=dip --values=bytes,flows,packets --count {counts} > dipdetail.txt'.format(ip=_ip,counts=_counts)
+    dipTable = TableFromCommand.TableFromCommand(command, 'dipdetail.txt')
+    dipTable = dipTable.execute()
+    dip_percen = dipTable.getColumn('%Bytes')
+    if len(dip_percen) > 0:
+        dip_percen.append(100 - float(dipTable.getColumn('cumul_%')[-1]))
+    dip_list = dipTable.getColumn('dIP')
+    dip_list.append('Others')
+    dipdt = ChartRender.dataSet('"rgba(238, 139, 152, 0.7)"', dip_percen, '"dIP"')
+    dipdt = [dipdt]
+    dip_pie = ChartRender.barChart()
+    dip_pie = dip_pie.barChartRender(dip_list, dipdt, 'dipchart', 'true')
 
     return render_template('singlepathDetail.html',
     counts = _counts, ip = _ip,
-    saddressTable=saddressTable,daddressTable=daddressTable)
+    saddressTable=saddressTable, daddressTable=daddressTable, protoTable=protoTable, sportTable=sportTable, dportTable=dportTable, dipTable=dipTable,
+    proto_pie=proto_pie, sport_pie=sport_pie, dport_pie=dport_pie,dip_pie=dip_pie)
 
 @app.route("/upload", methods = ['GET'])
 def uploadFile():
@@ -391,6 +449,7 @@ def analyseUploadChoseFile():
     global startdateFile
     global enddateFile
     startdateFile,enddateFile = readPCAP.PCAPHandle(filelist[0]).getdate()
+    saveStatus.save(startdateFile,enddateFile)
     return render_template('analyseUploadChoseFile.html', files=filelist,
     startdate=datetime.strptime(startdateFile,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'), 
     enddate=datetime.strptime(enddateFile,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'))
@@ -497,6 +556,7 @@ def modifyFile():
     end = datetime.strptime(end,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S')
     startdateFile = start
     enddateFile = end
+    saveStatus.save(start,end)
     return render_template('modifyFile.html',
     startdate=start,enddate=end)
 
@@ -522,6 +582,7 @@ def initfile():
         _startdate,_enddate = pcap.getdate()
         startdateFile = _startdate
         enddateFile = _enddate
+        saveStatus.save(_startdate,_enddate)
     dictionary = pcap.match()
     return redirect('/overall')
 @app.route('/modifyRange', methods=["GET"])

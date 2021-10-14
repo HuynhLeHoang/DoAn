@@ -138,6 +138,7 @@
                     <table class="table table-striped table-sm">
                       <thead>
                         <tr>
+                          <th>#</th>
                           <th>Source IP</th>
                           <th>Destination IP</th>
                           <th>Source port</th>
@@ -150,7 +151,7 @@
                         {% for x in overall[0].Table.values.tolist() %}
                           <tr>
                             {% for y in x %}
-
+                              <td>{{overall[0].Table.values.tolist().index(x) + 1}}</td>
                               <td>{{y}}</td>
 
                             {% endfor %}

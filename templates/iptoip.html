@@ -165,9 +165,7 @@
                       </thead>
                       <tbody>
                         {% for x in compareTable.Table.values.tolist() %}
-                          {% if compareTable.Table.values.tolist().index(x) == 1 %}
-                          
-                          {% else %}
+
                             <tr>
                                 <td>{{compareTable.Table.values.tolist().index(x) + 1}}</td>
                                 {% for y in x %}
@@ -176,7 +174,7 @@
 
                                 {% endfor %}
                             </tr>
-                          {% endif %}
+                     
                         {% endfor %}                      
                       </tbody>
                     </table>
