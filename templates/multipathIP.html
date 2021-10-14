@@ -302,6 +302,42 @@
                     </tbody>
                   </table>
                 </div>
+                <div class="table-responsive" style="overflow: scroll; height: 400px;"> 
+                  <table class="table table-striped table-sm">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Source IP</th>
+                        <th>Destination IP</th>
+                        <th>Type</th>
+                        <th>Packets</th>
+                        <th>Bytes</th>
+                        <th>Records</th>
+                        <th>Percent/Total</th>
+                        <th>Percent sum</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for x in Datatable1.Table.values.tolist() %}
+             
+                        <tr>
+                            <td>{{Datatable1.Table.values.tolist().index(x) +1}}</td>
+                            {% for y in x %}
+                              {% if (x.index(y)<6) %}
+                                <td>{{y}}</td>
+                              {% else %}
+                                <td>{{'%.2f
+                              ' | format(y|float)}}%</td>
+                              {% endif %}
+                            {% endfor %}
+                        
+                        </tr>
+            
+                    {% endfor %}
+                    </tbody>
+                  </table>
+                  
+                </div>
                 <div class="row">
                   <div class='col-lg-6'>
                     <div class="title"><strong>Chart</strong></div>
@@ -365,6 +401,42 @@
                     {% endfor %}
                     </tbody>
                   </table>
+                </div>
+                <div class="table-responsive" style="overflow: scroll; height: 400px;"> 
+                  <table class="table table-striped table-sm">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Source IP</th>
+                        <th>Destination IP</th>
+                        <th>Type</th>
+                        <th>Packets</th>
+                        <th>Bytes</th>
+                        <th>Records</th>
+                        <th>Percent/Total</th>
+                        <th>Percent sum</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for x in Datatable2.Table.values.tolist() %}
+             
+                        <tr>
+                            <td>{{Datatable2.Table.values.tolist().index(x) +1}}</td>
+                            {% for y in x %}
+                              {% if (x.index(y)<6) %}
+                                <td>{{y}}</td>
+                              {% else %}
+                                <td>{{'%.2f
+                              ' | format(y|float)}}%</td>
+                              {% endif %}
+                            {% endfor %}
+                        
+                        </tr>
+            
+                    {% endfor %}
+                    </tbody>
+                  </table>
+                  
                 </div>
                 <div class="row">
                   <div class='col-lg-6'>

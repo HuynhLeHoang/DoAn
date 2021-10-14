@@ -734,6 +734,7 @@ def multipathsip():
         _protocol = request.args.get('protocol')
     if _protocol == '0-' or request.form.get('allproto'):
         allproto = 'checked'
+        _protocol = '0-'
         for num in range(len(protocols)):               
             _check[num] = 'checked'
     else:
@@ -808,8 +809,8 @@ def multipathsip():
     Datatable3 = Datatable3.execute()
     Datatable4 = Datatable4.execute()
     # data for chart
-    Datacommand1 = '''rwstats query.rw --fields=1,2,type --values=flows --count=10 --no-columns>chart1.txt'''
-    Datacommand2 = '''rwstats response.rw --fields=1,2,type --values=flows --count=10 --no-columns>chart2.txt'''
+    Datacommand1 = '''rwstats query.rw --fields=1,2,type --values=packets,bytes,flows --count=10 --no-columns>chart1.txt'''
+    Datacommand2 = '''rwstats response.rw --fields=1,2,type --values=packets,bytes,flows --count=10 --no-columns>chart2.txt'''
     Datatable1 = TableFromCommand.TableFromCommand(Datacommand1,'chart1.txt')
     Datatable2 = TableFromCommand.TableFromCommand(Datacommand2,'chart2.txt')
     Datatable1 = Datatable1.execute()
@@ -826,7 +827,7 @@ def multipathsip():
         label = row[0]+'->'+row[1]
         data = list()
         data.append(row[3])
-        Datachartpie.append(row[4])
+        Datachartpie.append(row[6])
         if red < 250:
             red += 50
         else:
@@ -864,7 +865,7 @@ def multipathsip():
         label = row[0]+'->'+row[1]
         data = list()
         data.append(row[3])
-        Datachartpie.append(row[4])
+        Datachartpie.append(row[6])
         if red < 250:
             red += 50
         else:
@@ -896,6 +897,7 @@ def multipathsip():
         lenoftable3=len(Datatable3.Table.values.tolist()),
         lenoftable4=len(Datatable4.Table.values.tolist()),
         table3=Datatable3.Table.values.tolist(), table4=Datatable4.Table.values.tolist(),
+        Datatable1=Datatable1, Datatable2=Datatable2,
         startdate=datetime.strptime(startdate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'), 
         enddate=datetime.strptime(enddate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
         _startdate=datetime.strptime(_startdate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
@@ -909,6 +911,7 @@ def multipathsip():
         lenoftable3=len(Datatable3.Table.values.tolist()),
         lenoftable4=len(Datatable4.Table.values.tolist()),
         table3=Datatable3.Table.values.tolist(), table4=Datatable4.Table.values.tolist(),
+        Datatable1=Datatable1, Datatable2=Datatable2,
         startdate=datetime.strptime(startdateFile,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'), 
         enddate=datetime.strptime(enddateFile,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
         _startdate=datetime.strptime(_startdate,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'),
