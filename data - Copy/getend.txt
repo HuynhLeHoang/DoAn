@@ -1,0 +1,2 @@
+sIP|dIP|sPort|dPort|protocol|packets|bytes|flags|sTime|duration|eTime|sensor|
+192.168.153.1|192.168.153.255|17500|17500|17|4|644||2019/01/18T17:59:59.354|90.157|2019/01/18T18:01:29.511|S0|
