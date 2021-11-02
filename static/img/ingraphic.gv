@@ -1,0 +1,39 @@
+graph {
+	"sip=91.189.91.23" [label="sip=91.189.91.23" color=aquamarine shape=box style=filled]
+	"sip=192.168.153.2" [label="sip=192.168.153.2" color=aquamarine shape=box style=filled]
+	"sip=192.168.153.132" [label="sip=192.168.153.132" color=aquamarine shape=box style=filled]
+	Sensor [label=Sensor color=green2 shape=invhouse style=filled]
+	"dip=91.189.91.23" [label="dip=91.189.91.23" color=aquamarine shape=box style=filled]
+	"dip=192.168.153.2" [label="dip=192.168.153.2" color=aquamarine shape=box style=filled]
+	"dip=192.168.153.132" [label="dip=192.168.153.132" color=aquamarine shape=box style=filled]
+	"sport=80" [label="sport=80" color=beige shape=box style=filled]
+	"sip=91.189.91.23" -- "sport=80"
+	"sport=80" -- Sensor
+	"sport=80" [label="sport=80" color=beige shape=box style=filled]
+	"sip=192.168.153.2" -- "sport=80"
+	"sport=80" -- Sensor
+	"sport=443" [label="sport=443" color=beige shape=box style=filled]
+	"sip=192.168.153.2" -- "sport=443"
+	"sport=443" -- Sensor
+	"dport=80" [label="dport=80" color=beige shape=invhouse style=filled]
+	"dport=80" -- "dip=91.189.91.23"
+	Sensor -- "dport=80"
+	"dport=80" [label="dport=80" color=beige shape=invhouse style=filled]
+	"dport=80" -- "dip=192.168.153.2"
+	Sensor -- "dport=80"
+	"dport=443" [label="dport=443" color=beige shape=invhouse style=filled]
+	"dport=443" -- "dip=192.168.153.2"
+	Sensor -- "dport=443"
+	"smac=00-50-56-fc-cb-26" [label="smac=00-50-56-fc-cb-26" color=deepskyblue shape=diamond style=filled]
+	"smac=00-50-56-fc-cb-26" -- "sip=192.168.153.2"
+	"dmac=00-50-56-fc-cb-26" [label="dmac=00-50-56-fc-cb-26" color=deepskyblue shape=diamond style=filled]
+	"dip=192.168.153.2" -- "dmac=00-50-56-fc-cb-26"
+	"smac=00-0c-29-3b-96-af" [label="smac=00-0c-29-3b-96-af" color=deepskyblue shape=diamond style=filled]
+	"smac=00-0c-29-3b-96-af" -- "sip=192.168.153.132"
+	"dmac=00-0c-29-3b-96-af" [label="dmac=00-0c-29-3b-96-af" color=deepskyblue shape=diamond style=filled]
+	"dip=192.168.153.132" -- "dmac=00-0c-29-3b-96-af"
+	"smac=00-50-56-fc-cb-26" [label="smac=00-50-56-fc-cb-26" color=deepskyblue shape=diamond style=filled]
+	"smac=00-50-56-fc-cb-26" -- "sip=91.189.91.23"
+	"dmac=00-50-56-fc-cb-26" [label="dmac=00-50-56-fc-cb-26" color=deepskyblue shape=diamond style=filled]
+	"dip=91.189.91.23" -- "dmac=00-50-56-fc-cb-26"
+}

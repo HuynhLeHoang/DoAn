@@ -449,13 +449,8 @@ def analyseUploadChoseFile():
     for file in files:
         if file.endswith('.pcap') or file.endswith('.pcapng'):
             filelist.append(file)
-    global startdateFile
-    global enddateFile
-    startdateFile,enddateFile = readPCAP.PCAPHandle(filelist[0]).getdate()
-    saveStatus.save(startdateFile,enddateFile)
-    return render_template('analyseUploadChoseFile.html', files=filelist,
-    startdate=datetime.strptime(startdateFile,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'), 
-    enddate=datetime.strptime(enddateFile,'%Y/%m/%dT%H:%M:%S').strftime('%Y-%m-%dT%H:%M:%S'))
+    
+    return render_template('analyseUploadChoseFile.html', files=filelist)
 
 @app.route('/realtime')
 def realtime():

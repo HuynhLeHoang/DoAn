@@ -39,6 +39,7 @@ class PCAPHandle:
         counter = 0
         for pkg in self.cap:
             counter += 1
+            break
         return counter
 
     def getdate(self):
