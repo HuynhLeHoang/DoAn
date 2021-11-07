@@ -789,7 +789,7 @@ def multipathsip():
     os.system(Command2)
     os.chdir('..')
     # match flow and create data
-    Datacommand = '''rwmatch --relate=1,2 --relate=2,1 --relate=3,4 --relate=4,3 query.rw response.rw stdout | rwcut --fields=1-4,sen,proto,flag,type,stime,etime,packets,bytes --num-recs={_counts} --no-columns>flowrelas.txt'''
+    Datacommand = '''rwmatch --relate=1,2 --relate=2,1 query.rw response.rw stdout | rwcut --fields=1-4,sen,proto,flag,type,stime,etime,packets,bytes --num-recs={_counts} --no-columns>flowrelas.txt'''
     Datacommand1 = '''rwcut query.rw --fields=1-4,sensor,proto,flag,type,stime,etime --num-recs={_counts} --no-columns>incoming-server.txt'''
     Datacommand = Datacommand.format(_counts=_counts)
     Datatable = TableFromCommand.TableFromCommand(Datacommand,'flowrelas.txt')
