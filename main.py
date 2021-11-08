@@ -358,13 +358,13 @@ def singlepathdetailIP():
     _ip = request.args['ip']
     if 'counts' in request.args and request.args['counts'] != '':
         _counts = request.args['counts']
-    command = 'rwfilter traffic.rw --saddress={ip} --type=out,outweb --pass=stdout | rwstats --fields=dip,dport --count {counts} > saddress.txt'.format(ip=_ip, counts=_counts)
+    command = 'rwfilter traffic.rw --saddress={ip} --type=all --pass=stdout | rwstats --fields=sip,sport --count {counts} > saddress.txt'.format(ip=_ip, counts=_counts)
     saddressTable = TableFromCommand.TableFromCommand(command, 'saddress.txt')
     saddressTable = saddressTable.execute()
-    command = 'rwfilter traffic.rw --daddress={ip} --type=in,inweb --pass=stdout | rwstats --fields=sip,sport --count {counts} > daddress.txt'.format(ip=_ip, counts=_counts)
+    command = 'rwfilter traffic.rw --daddress={ip} --type=all --pass=stdout | rwstats --fields=dip,dport --count {counts} > daddress.txt'.format(ip=_ip, counts=_counts)
     daddressTable = TableFromCommand.TableFromCommand(command, 'daddress.txt')
     daddressTable = daddressTable.execute()
-    command = 'rwfilter traffic.rw --saddress={ip} --pass=stdout | rwstats --fields=proto --values=bytes,flows,packets --count {counts} > protodetail.txt'.format(ip=_ip,counts=_counts)
+    command = 'rwfilter traffic.rw --any-address={ip} --pass=stdout | rwstats --fields=proto --values=bytes,flows,packets --count {counts} > protodetail.txt'.format(ip=_ip,counts=_counts)
     protoTable = TableFromCommand.TableFromCommand(command, 'protodetail.txt')
     protoTable = protoTable.execute()
     protoTable.Table['pro'] = protoTable.Table['pro'].astype(str)
@@ -393,7 +393,7 @@ def singlepathdetailIP():
     sport_pie = ChartRender.barChart()
     sport_pie = sport_pie.barChartRender(sport_list, sportdt, 'sportchart', 'true')
     
-    command = 'rwfilter traffic.rw --saddress={ip} --pass=stdout | rwstats --fields=dport --values=bytes,flows,packets --count {counts} > dportdetail.txt'.format(ip=_ip,counts=_counts)
+    command = 'rwfilter traffic.rw --daddress={ip} --pass=stdout | rwstats --fields=dport --values=bytes,flows,packets --count {counts} > dportdetail.txt'.format(ip=_ip,counts=_counts)
     dportTable = TableFromCommand.TableFromCommand(command, 'dportdetail.txt')
     dportTable = dportTable.execute()
     dport_percen = dportTable.getColumn('%Bytes')
@@ -406,7 +406,7 @@ def singlepathdetailIP():
     dport_pie = ChartRender.barChart()
     dport_pie = dport_pie.barChartRender(dport_list, dportdt, 'dportchart', 'true')
 
-    command = 'rwfilter traffic.rw --saddress={ip} --pass=stdout | rwstats --fields=dip --values=bytes,flows,packets --count {counts} > dipdetail.txt'.format(ip=_ip,counts=_counts)
+    command = 'rwfilter traffic.rw --daddress={ip} --pass=stdout | rwstats --fields=dip --values=bytes,flows,packets --count {counts} > dipdetail.txt'.format(ip=_ip,counts=_counts)
     dipTable = TableFromCommand.TableFromCommand(command, 'dipdetail.txt')
     dipTable = dipTable.execute()
     dip_percen = dipTable.getColumn('%Bytes')
