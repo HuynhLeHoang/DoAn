@@ -175,8 +175,9 @@
                       <tbody>
                         {% for x in overall[0].Table.values.tolist() %}
                           <tr>
+                            <td>{{overall[0].Table.values.tolist().index(x) + 1}}</td>
                             {% for y in x %}
-                              <td>{{overall[0].Table.values.tolist().index(x) + 1}}</td>
+                              
                               <td>{{y}}</td>
 
                             {% endfor %}
